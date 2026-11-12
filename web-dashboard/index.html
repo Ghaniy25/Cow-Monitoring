@@ -1,0 +1,2982 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>BOVISION - Cow Monitoring Dashboard</title>
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800;900&family=Michroma&display=swap"
+    rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    :root {
+      --black: #0c0d0e;
+      --white: #ffffff;
+      --bg: #f7f8f9;
+      --border: #e6e8eb;
+      --muted: #6e7681;
+      --card-bg: #ffffff;
+      --text-main: #14171a;
+
+      /* Refined, Elegant & Muted Palette */
+      /* Hijau: Soft Sage / Muted Emerald */
+      --accent-green-bg: #f0f6f3;
+      --accent-green-border: #cfe0d8;
+      --accent-green: #2d7a58;
+      --accent-green-text: #236348;
+      --accent-green-dark: #1c523b;
+
+      /* Biru: Refined Steel Blue / Slate Cobalt */
+      --accent-blue-bg: #f0f4f8;
+      --accent-blue-border: #d0dce8;
+      --accent-blue: #2c5a85;
+      --accent-blue-secondary: #4c769e;
+      --accent-blue-dark: #244b70;
+
+      /* Kuning / Amber: Warm Muted Ochre / Golden Amber */
+      --accent-amber-bg: #f9f5ed;
+      --accent-amber-border: #e8dec6;
+      --accent-amber: #9e7328;
+      --accent-amber-text: #8a621e;
+      --accent-amber-dark: #785416;
+
+      /* Aksen Merah Muted */
+      --accent-red-bg: #fcf1f2;
+      --accent-red-border: #f3d4d7;
+      --accent-red: #c2434f;
+      --accent-red-text: #a82e3a;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Geist', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+    }
+
+    .app-container {
+      display: flex;
+      width: 100%;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 250px;
+      min-width: 250px;
+      background-color: var(--black);
+      color: var(--white);
+      padding: 30px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 26px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      border-right: 1px solid #1a1e22;
+      z-index: 10;
+    }
+
+    @keyframes logoPulseOnly {
+
+      0%,
+      100% {
+        transform: scale(1);
+        opacity: 0.96;
+      }
+
+      50% {
+        transform: scale(1.03);
+        opacity: 1;
+        filter: drop-shadow(0 0 10px rgba(45, 122, 88, 0.4));
+      }
+    }
+
+    .brand-logo-text {
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: -0.6px;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      user-select: none;
+      padding: 0 8px;
+      color: var(--white);
+    }
+
+    .brand-logo-text .brand-dot {
+      color: var(--accent-green);
+    }
+
+    .nav-label {
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 0.9px;
+      color: #717882;
+      text-transform: uppercase;
+      padding: 0 10px;
+      margin-bottom: -14px;
+    }
+
+    .nav-menu {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .nav-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      padding: 10px 14px;
+      background: transparent;
+      border: none;
+      border-radius: 8px;
+      color: #9299a4;
+      font-size: 13.5px;
+      font-weight: 500;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.15s ease;
+    }
+
+    .nav-btn:hover {
+      color: var(--white);
+      background-color: rgba(255, 255, 255, 0.06);
+    }
+
+    .nav-btn.active {
+      background-color: var(--white);
+      color: var(--black);
+      font-weight: 600;
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 16px;
+    }
+
+    .logout-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      padding: 10px 14px;
+      background: transparent;
+      border: 1px solid rgba(194, 67, 79, 0.25);
+      border-radius: 8px;
+      color: #e06d77;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.15s ease, border-color 0.15s ease;
+    }
+
+    .logout-btn:hover {
+      background-color: rgba(194, 67, 79, 0.1);
+      border-color: #c2434f;
+    }
+
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      padding: 32px 40px;
+      background-color: var(--bg);
+      overflow-y: auto;
+      max-width: 1440px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 28px;
+    }
+
+    .topbar h2 {
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--black);
+      letter-spacing: -0.6px;
+    }
+
+    .tab-section {
+      display: none;
+      animation: fadeIn 0.2s ease-in-out forwards;
+    }
+
+    .tab-section.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(3px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Welcome Banner */
+    .welcome-banner {
+      background-color: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px 34px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+    }
+
+    .welcome-text h1 {
+      font-family: Michroma, sans-serif;
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--black);
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+      line-height: 1.3;
+    }
+
+    .welcome-text p {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .cow-mascot-img {
+      height: 160px;
+      width: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.08));
+    }
+
+    /* 3 AI Stat Cards */
+    .stats-grid-ai {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .stat-card {
+      background-color: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 22px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .stat-card:hover {
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+      transform: translateY(-2px);
+    }
+
+    .stat-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .stat-title {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .stat-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .stat-icon.green-tint {
+      background: var(--accent-green-bg);
+      color: var(--accent-green-text);
+      border: 1px solid var(--accent-green-border);
+    }
+
+    .stat-icon.blue-tint {
+      background: var(--accent-blue-bg);
+      color: var(--accent-blue);
+      border: 1px solid var(--accent-blue-border);
+    }
+
+    .stat-icon.amber-tint {
+      background: var(--accent-amber-bg);
+      color: var(--accent-amber-text);
+      border: 1px solid var(--accent-amber-border);
+    }
+
+    .stat-value {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--black);
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+    }
+
+    .stat-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11.5px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 6px;
+      width: fit-content;
+    }
+
+    .stat-badge.healthy {
+      background: var(--accent-green-bg);
+      color: var(--accent-green-text);
+      border: 1px solid var(--accent-green-border);
+    }
+
+    .stat-badge.blue {
+      background: var(--accent-blue-bg);
+      color: var(--accent-blue-dark);
+      border: 1px solid var(--accent-blue-border);
+    }
+
+    .stat-badge.amber {
+      background: var(--accent-amber-bg);
+      color: var(--accent-amber-dark);
+      border: 1px solid var(--accent-amber-border);
+    }
+
+    .stat-subtext {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    /* Content Panel */
+    .content-panel {
+      background-color: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+      margin-bottom: 24px;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .panel-header h3 {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--black);
+      letter-spacing: -0.4px;
+    }
+
+    .panel-sub {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    /* Camera Switcher */
+    .cam-nav-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: #ffffff;
+      color: #4b5563;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .cam-nav-pill:hover {
+      background: #f9fafb;
+      color: #111;
+    }
+
+    .cam-nav-pill.active {
+      background: var(--black);
+      color: #ffffff;
+      border-color: var(--black);
+      font-weight: 600;
+    }
+
+    .cam-live-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #9ca3af;
+    }
+
+    .cam-nav-pill.active .cam-live-dot {
+      background: var(--accent-green);
+    }
+
+    /* Table */
+    .custom-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .custom-table th {
+      text-align: left;
+      padding: 11px 14px;
+      background-color: #fafbfc;
+      color: #5c6370;
+      font-weight: 600;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .custom-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid #f0f2f5;
+      color: #24292f;
+    }
+
+    .custom-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .table-tag {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .table-tag.success {
+      background: var(--accent-green-bg);
+      color: var(--accent-green-text);
+      border: 1px solid var(--accent-green-border);
+    }
+
+    .table-tag.warning {
+      background: var(--accent-amber-bg);
+      color: var(--accent-amber-dark);
+      border: 1px solid var(--accent-amber-border);
+    }
+
+    .table-tag.blue {
+      background: var(--accent-blue-bg);
+      color: var(--accent-blue);
+      border: 1px solid var(--accent-blue-border);
+    }
+
+    /* Alerts */
+    .alert-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .alert-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 16px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: #fafbfc;
+    }
+
+    .alert-card.critical {
+      border-left: 4px solid var(--accent-red);
+      background: var(--accent-red-bg);
+    }
+
+    .alert-card.warning-type {
+      border-left: 4px solid var(--accent-amber);
+      background: var(--accent-amber-bg);
+    }
+
+    .alert-card.info-type {
+      border-left: 4px solid var(--accent-blue);
+      background: var(--accent-blue-bg);
+    }
+
+    .alert-content h4 {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--black);
+      margin-bottom: 3px;
+    }
+
+    .alert-content p {
+      font-size: 12.5px;
+      color: #4b5563;
+      line-height: 1.5;
+    }
+
+    .alert-time {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    /* Chart filter buttons */
+    .chart-filter-btn {
+      padding: 6px 14px;
+      border-radius: 6px;
+      border: none;
+      background: transparent;
+      color: #6e7681;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .chart-filter-btn.active {
+      background: #ffffff;
+      color: #0c0d0e;
+      font-weight: 600;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    }
+
+    /* Modal Popup */
+    .snapshot-modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(12, 13, 14, 0.65);
+      backdrop-filter: blur(4px);
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .snapshot-modal-overlay.active {
+      display: flex;
+    }
+
+    .snapshot-modal-container {
+      background: #ffffff;
+      border-radius: 16px;
+      max-width: 580px;
+      width: 100%;
+      border: 1px solid var(--border);
+      box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+      animation: fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .snapshot-modal-header {
+      padding: 16px 22px;
+      border-bottom: 1px solid #f0f2f5;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .snapshot-modal-header h3 {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--black);
+    }
+
+    .snapshot-modal-close-btn {
+      background: transparent;
+      border: none;
+      font-size: 18px;
+      color: #9299a4;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .snapshot-modal-body {
+      padding: 20px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .snapshot-frame {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #000;
+      border-radius: 10px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .snapshot-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .snapshot-telemetry-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      background: #fafbfc;
+      padding: 12px 16px;
+      border-radius: 8px;
+      border: 1px solid #eef0f3;
+    }
+
+    .snapshot-telemetry-item span {
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .snapshot-telemetry-item strong {
+      font-size: 13px;
+      color: var(--black);
+    }
+
+    .snapshot-modal-footer {
+      padding: 14px 22px;
+      border-top: 1px solid #f0f2f5;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 10px;
+      background: #fafbfc;
+    }
+
+    .btn-secondary {
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #ffffff;
+      color: #374151;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: none;
+      background: var(--black);
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Full Screen Live AI Modal / Overlay */
+    .fullscreen-cctv-overlay {
+      position: fixed;
+      inset: 0;
+      background: #080a0d;
+      z-index: 10000;
+      display: none;
+      flex-direction: column;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .fullscreen-cctv-overlay.active {
+      display: flex;
+    }
+
+    .fs-header {
+      background: rgba(12, 15, 19, 0.96);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 14px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 20;
+      flex-shrink: 0;
+    }
+
+    .fs-cam-selector {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.06);
+      padding: 4px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .fs-cam-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 6px;
+      background: transparent;
+      border: none;
+      color: #9ca3af;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .fs-cam-btn:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .fs-cam-btn.active {
+      background: #ffffff;
+      color: #0c0d0e;
+    }
+
+    .fs-cam-btn.active .cam-live-dot {
+      background: var(--accent-green);
+    }
+
+    .fs-exit-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 16px;
+      border-radius: 8px;
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      color: #fca5a5;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .fs-exit-btn:hover {
+      background: rgba(239, 68, 68, 0.25);
+      color: #fff;
+      border-color: #ef4444;
+    }
+
+    .fs-viewport {
+      flex: 1;
+      position: relative;
+      width: 100%;
+      background: radial-gradient(circle at center, #151b22 0%, #080a0d 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .fs-bottom-bar {
+      background: rgba(12, 15, 19, 0.96);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 12px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      z-index: 20;
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 960px) {
+      .stats-grid-ai {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .app-container {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+        min-width: 100%;
+        height: auto;
+        position: relative;
+        padding: 18px 20px;
+      }
+
+      .main-content {
+        padding: 20px 16px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="app-container">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <!-- Pulsing Brand Logo Image EXACT from Original Dashboard -->
+      <div
+        style="text-align: center; display: flex; justify-content: center; align-items: center; padding: 0px 4px; margin-bottom: -10px;">
+        <img alt="BOVISION Logo"
+          src="https://lh3.googleusercontent.com/aida-public/AB6AXuAcq650Gq-q7BHSgbUO2iiMHhtdE-iOPbdbn4V-mUyAl0JPNPsjDAoM1R2cW1eEVxf4KfAMmbcadbPRUyBJIBECULAfkmsGFVcXxjn_pEL1uh8kqT_1BgdrdsAofqmNBLgbz7CnmGCEVgFzSTmv3aKupWCpDG_zI9ual3vxlxGnxGMoqK9PHEO9xvagaK1x3gYuPmUoycfi9j5cvVEBlq-jz5mX3fWQsxO3EidSA0f2Wn044IKcHz3L"
+          style="height: 64px; width: auto; max-width: 205px; object-fit: contain; display: inline-block; mix-blend-mode: screen; animation-duration: 1.8s; animation-timing-function: ease-in-out; animation-iteration-count: infinite; animation-direction: normal; animation-fill-mode: none; animation-play-state: running; animation-name: logoPulseOnly; animation-timeline: auto; animation-range: normal; transform-origin: center center;">
+      </div>
+
+      <div class="nav-label">MENU UTAMA</div>
+
+      <!-- Nav Menu Items -->
+      <nav class="nav-menu">
+        <button class="nav-btn active" id="btnNav-dashboard" onclick="switchView('dashboard')">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            data-lucide="layout-dashboard" class="lucide lucide-layout-dashboard" style="width:18px;height:18px;">
+            <rect width="7" height="9" x="3" y="3" rx="1"></rect>
+            <rect width="7" height="5" x="14" y="3" rx="1"></rect>
+            <rect width="7" height="9" x="14" y="12" rx="1"></rect>
+            <rect width="7" height="5" x="3" y="16" rx="1"></rect>
+          </svg>
+          <span>Dashboard</span>
+        </button>
+        <button class="nav-btn" id="btnNav-users" onclick="switchView('users')">
+          <svg fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+            stroke-width="2" style="width:18px;height:18px;" viewBox="0 0 24 24" width="24"
+            xmlns="http://www.w3.org/2000/svg">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
+          <span>User Management</span>
+        </button>
+        <button class="nav-btn" id="btnNav-stats" onclick="switchView('stats')">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            data-lucide="bar-chart-2" class="lucide lucide-bar-chart-2" style="width:18px;height:18px;">
+            <path d="M5 21v-6"></path>
+            <path d="M12 21V3"></path>
+            <path d="M19 21V9"></path>
+          </svg>
+          <span>Statistics</span>
+        </button>
+        <button class="nav-btn" id="btnNav-history" onclick="switchView('history')">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="history"
+            class="lucide lucide-history" style="width:18px;height:18px;">
+            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+            <path d="M3 3v5h5"></path>
+            <path d="M12 7v5l4 2"></path>
+          </svg>
+          <span>History</span>
+        </button>
+        <button class="nav-btn" id="btnNav-alerts" onclick="switchView('alerts')">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="bell"
+            class="lucide lucide-bell" style="width:18px;height:18px;">
+            <path d="M10.268 21a2 2 0 0 0 3.464 0"></path>
+            <path
+              d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326">
+            </path>
+          </svg>
+          <span>Alerts</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button class="logout-btn" onclick="handleLogout()">
+          <svg aria-hidden="true" class="lucide lucide-log-out" data-lucide="log-out" fill="none" height="24"
+            stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            style="width:16px;height:16px;" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+            <path d="m16 17 5-5-5-5"></path>
+            <path d="M21 12H9"></path>
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+          </svg>
+          <span>Logout</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+      <!-- TOPBAR -->
+      <header class="topbar" style="position: relative; z-index: 100; overflow: visible;">
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <h2 id="pageTitle"
+            style="font-size: 26px; font-weight: 800; color: var(--black); letter-spacing: -0.6px; margin: 0;">Dashboard
+          </h2>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 16px;">
+
+          <!-- Topbar Action Area: Only shows "Tambah Akun Baru" when in User Management tab -->
+          <div id="topbarUserAction" style="display: none;">
+            <button class="btn-primary" onclick="openAddUserModal()"
+              style="padding: 9px 18px; border-radius: 8px; background: #0c0d0e; color: #ffffff; font-size: 13.5px; font-weight: 600; cursor: pointer; border: none; display: inline-flex; align-items: center; gap: 8px; transition: all 0.15s ease; box-shadow: 0 1px 3px rgba(0,0,0,0.12);">
+              <svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                stroke-width="2.5" viewBox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 5v14M5 12h14"></path>
+              </svg>
+              <span>Tambah Akun Baru</span>
+            </button>
+          </div>
+
+          <!-- Interactive Peeking Barn Mascot Status Badge -->
+          <div class="status-badge" id="profileDropdownTrigger"
+            onclick="var m=document.getElementById('profileDropdown'); if(m){ m.style.display = (m.style.display==='block' ? 'none' : 'block'); }"
+            style="position: relative; z-index: 1000; overflow: visible; display: inline-flex; align-items: center; gap: 12px; cursor: pointer; user-select: none;">
+            <style>
+              @keyframes barnCowBob {
+
+                0%,
+                100% {
+                  transform: translateY(0px) rotate(0deg);
+                }
+
+                25% {
+                  transform: translateY(-3px) rotate(-1.5deg);
+                }
+
+                50% {
+                  transform: translateY(-1px) rotate(0deg);
+                }
+
+                75% {
+                  transform: translateY(-4px) rotate(2deg);
+                }
+              }
+
+              @keyframes barnEarWiggleLeft {
+
+                0%,
+                100% {
+                  transform: rotate(0deg);
+                }
+
+                30% {
+                  transform: rotate(-7deg);
+                }
+
+                60% {
+                  transform: rotate(4deg);
+                }
+              }
+
+              @keyframes barnEarWiggleRight {
+
+                0%,
+                100% {
+                  transform: rotate(0deg);
+                }
+
+                30% {
+                  transform: rotate(7deg);
+                }
+
+                60% {
+                  transform: rotate(-4deg);
+                }
+              }
+
+              @keyframes barnEyeBlink {
+
+                0%,
+                94%,
+                98%,
+                100% {
+                  transform: scaleY(1);
+                }
+
+                96% {
+                  transform: scaleY(0.1);
+                }
+              }
+
+              .barn-cow-peeking {
+                transform-origin: bottom center;
+                animation: barnCowBob 3.6s ease-in-out infinite;
+                transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+              }
+
+              .barn-ear-l {
+                transform-origin: 39px 38px;
+                animation: barnEarWiggleLeft 3.6s ease-in-out infinite;
+              }
+
+              .barn-ear-r {
+                transform-origin: 61px 38px;
+                animation: barnEarWiggleRight 3.6s ease-in-out infinite;
+              }
+
+              .barn-eyes {
+                transform-origin: 50px 45px;
+                animation: barnEyeBlink 4.2s infinite;
+              }
+
+              .barn-happy-eyes {
+                opacity: 0;
+                transition: opacity 0.2s ease;
+                transform-origin: 50px 45px;
+              }
+
+              .barn-speech-bubble {
+                position: absolute;
+                bottom: -32px;
+                right: 0;
+                background: #111827;
+                color: #ffffff;
+                font-size: 11px;
+                font-weight: 600;
+                padding: 4px 10px;
+                border-radius: 8px;
+                box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+                white-space: nowrap;
+                pointer-events: none;
+                opacity: 0;
+                transform: translateY(-4px) scale(0.92);
+                transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+                z-index: 50;
+                display: flex;
+                align-items: center;
+                gap: 5px;
+              }
+
+              .barn-speech-bubble::before {
+                content: '';
+                position: absolute;
+                top: -4px;
+                right: 28px;
+                width: 8px;
+                height: 8px;
+                background: #111827;
+                transform: rotate(45deg);
+              }
+
+              .status-badge:hover .barn-cow-peeking {
+                animation: none;
+                transform: translateY(-5px) scale(1.1);
+              }
+
+              .status-badge:hover .barn-eyes {
+                opacity: 0;
+              }
+
+              .status-badge:hover .barn-happy-eyes {
+                opacity: 1;
+              }
+
+              .status-badge:hover .barn-speech-bubble {
+                opacity: 1;
+                transform: translateY(0px) scale(1);
+              }
+            </style>
+
+            <div
+              style="position: relative; width: 44px; height: 42px; display: flex; align-items: flex-end; justify-content: center;">
+              <svg height="42" style="overflow: visible; display: block;" viewBox="0 0 100 95" width="44">
+                <rect fill="#71946b" height="9" rx="4.5" width="84" x="8" y="84"></rect>
+                <g fill="#ebd6d8" stroke="#d4adb3" stroke-width="0.8">
+                  <rect height="3" rx="1" width="18" x="3" y="72"></rect>
+                  <rect height="3" rx="1" width="18" x="3" y="78"></rect>
+                  <path d="M5 69 L7 66 L9 69 V85 H5 Z"></path>
+                  <path d="M13 69 L15 66 L17 69 V85 H13 Z"></path>
+                  <rect height="3" rx="1" width="18" x="79" y="72"></rect>
+                  <rect height="3" rx="1" width="18" x="79" y="78"></rect>
+                  <path d="M83 69 L85 66 L87 69 V85 H83 Z"></path>
+                  <path d="M91 69 L93 66 L95 69 V85 H91 Z"></path>
+                </g>
+                <path d="M24 45 L50 20 L76 45 V84 H24 Z" fill="#8f2b31"></path>
+                <path d="M18 47 L50 16 L82 47 L78 50 L50 23 L22 50 Z" fill="#edd6d8" stroke="#cfadb2" stroke-width="1">
+                </path>
+                <rect fill="#edd6d8" height="35" rx="1.5" width="42" x="29" y="49"></rect>
+                <rect fill="#361215" height="32" width="36" x="32" y="52"></rect>
+                <defs>
+                  <clipPath id="barnDoorClip">
+                    <rect height="33" width="36" x="32" y="51"></rect>
+                  </clipPath>
+                </defs>
+                <g clip-path="url(#barnDoorClip)">
+                  <g class="barn-cow-peeking">
+                    <rect fill="#fcf9f5" height="20" rx="6" width="28" x="36" y="65"></rect>
+                    <ellipse cx="40" cy="74" fill="#6d4c3d" rx="4.5" ry="4"></ellipse>
+                    <ellipse cx="50" cy="72" fill="#6d4c3d" rx="3.5" ry="3"></ellipse>
+                    <ellipse cx="61" cy="75" fill="#6d4c3d" rx="3" ry="3.5"></ellipse>
+                    <g class="barn-ear-l">
+                      <ellipse cx="38" cy="43" fill="#fcf9f5" rx="4" ry="2.5" stroke="#ebd6d8" stroke-width="1.5"
+                        transform="rotate(-18 38 43)"></ellipse>
+                    </g>
+                    <g class="barn-ear-r">
+                      <ellipse cx="62" cy="43" fill="#fcf9f5" rx="4" ry="2.5" stroke="#ebd6d8" stroke-width="1.5"
+                        transform="rotate(18 62 43)"></ellipse>
+                    </g>
+                    <circle cx="50" cy="47" fill="#fcf9f5" r="10"></circle>
+                    <g class="barn-eyes">
+                      <circle cx="46" cy="45" fill="#14171a" r="1.8"></circle>
+                      <circle cx="54" cy="45" fill="#14171a" r="1.8"></circle>
+                    </g>
+                    <g class="barn-happy-eyes">
+                      <path d="M44 46 Q46 43 48 46" fill="none" stroke="#14171a" stroke-linecap="round"
+                        stroke-width="1.4"></path>
+                      <path d="M52 46 Q54 43 56 46" fill="none" stroke="#14171a" stroke-linecap="round"
+                        stroke-width="1.4"></path>
+                    </g>
+                    <ellipse cx="50" cy="53" fill="#f0b6bf" rx="8.5" ry="5.5"></ellipse>
+                    <ellipse cx="47" cy="52" fill="#7d2935" rx="1" ry="1.2"></ellipse>
+                    <ellipse cx="53" cy="52" fill="#7d2935" rx="1" ry="1.2"></ellipse>
+                  </g>
+                </g>
+              </svg>
+            </div>
+
+            <div class="barn-speech-bubble">
+              <span>🐮 Sistem Kandang Ready Guys</span>
+              <span style="color: rgb(107, 179, 148);">✨</span>
+            </div>
+
+            <!-- Profile Dropdown -->
+            <div id="profileDropdown" onclick="event.stopPropagation()"
+              style="display: none; position: absolute; top: calc(100% + 8px); right: 0px; min-width: 240px; background: rgb(255, 255, 255); border: 1px solid var(--border, #e5e5e5); border-radius: 12px; box-shadow: rgba(0, 0, 0, 0.15) 0px 10px 25px -5px, rgba(0, 0, 0, 0.1) 0px 8px 10px -6px; z-index: 99999; padding: 12px; text-align: left; cursor: default;">
+              <div
+                style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; border-bottom: 1px solid #f0f2f5;">
+                <div>
+                  <div style="font-size: 14px; font-weight: 700; color: rgb(20, 23, 26);">Budi Santoso</div>
+                  <div style="font-size: 11.5px; color: rgb(110, 118, 129);">budi@bovision.id</div>
+                </div>
+                <span
+                  style="background: rgb(236, 253, 245); color: rgb(4, 120, 87); border: 1px solid rgb(167, 243, 208); padding: 2px 8px; border-radius: 6px; font-size: 11px; font-weight: 600;">Admin</span>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 2px; margin-top: 8px;">
+                <button onclick="openAccountSettingsModal()"
+                  style="display: flex; align-items: center; gap: 10px; width: 100%; padding: 8px 10px; border: none; background: transparent; border-radius: 6px; font-size: 13px; color: rgb(55, 65, 81); font-weight: 500; cursor: pointer; text-align: left; transition: background 0.15s;"
+                  onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='transparent'">
+                  <svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                    stroke-width="2" viewBox="0 0 24 24" width="16">
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path
+                      d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
+                    </path>
+                  </svg>
+                  <span>Pengaturan Akun</span>
+                </button>
+                <button onclick="openSupportHelpModal()"
+                  style="display: flex; align-items: center; gap: 10px; width: 100%; padding: 8px 10px; border: none; background: transparent; border-radius: 6px; font-size: 13px; color: rgb(55, 65, 81); font-weight: 500; cursor: pointer; text-align: left; transition: background 0.15s;"
+                  onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='transparent'">
+                  <svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                    stroke-width="2" viewBox="0 0 24 24" width="16">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M12 16v-4"></path>
+                    <path d="M12 8h.01"></path>
+                  </svg>
+                  <span>Bantuan Sistem</span>
+                </button>
+              </div>
+              <div style="height: 1px; background: #e5e7eb; margin: 8px 0;"></div>
+              <button onclick="handleLogout()"
+                style="display: flex; align-items: center; gap: 10px; width: 100%; padding: 8px 10px; border: none; background: transparent; border-radius: 6px; font-size: 13px; color: rgb(239, 68, 68); font-weight: 600; cursor: pointer; text-align: left; transition: background 0.15s;"
+                onmouseover="this.style.background='#fef2f2'" onmouseout="this.style.background='transparent'">
+                <svg fill="none" height="16" stroke="#ef4444" stroke-linecap="round" stroke-linejoin="round"
+                  stroke-width="2" viewBox="0 0 24 24" width="16">
+                  <path d="m16 17 5-5-5-5"></path>
+                  <path d="M21 12H9"></path>
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                </svg>
+                <span>Keluar</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </header>
+
+      <!-- ================= TAB 1: DASHBOARD ================= -->
+      <section class="tab-section active" id="section-dashboard">
+        <!-- Welcome Banner -->
+        <div class="welcome-banner">
+          <div class="welcome-text">
+            <h1>Welcome to BOVISION Monitor.</h1>
+            <p>Analisis perilaku kawanan sapi (Standing vs Lying) berbasis Computer Vision YOLOv11 secara real-time.</p>
+          </div>
+          <div class="welcome-media"
+            style="height: 180px; width: 220px; display: flex; align-items: center; justify-content: center;">
+            <img alt="Cow Mascot" class="cow-mascot-img"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuAUKXq3TvqtmhjjFvl9RMm7Bb0Rb35N3__exFq-kPxiK-O5xkAKVRKc_CPoW5W5q-iEMFnbh4-vx1gJL8AXPbaeZdzXD_KPzipdXanW20i4RzukWl2l2Eudy014Fzu09aAUVBFfSk6Tzu9XerBSlvnis-gidVrOee8ZjX4H-PNcb8dw_ihrFVtAUezFLBluE6LVemx4D8Hp5LhKxPVvjOECsDAbei8XTRIxoLnjfwyCcuC6o5KEZuoM">
+          </div>
+        </div>
+
+        <!-- 3 Kartu Metrik AI -->
+        <div class="stats-grid-ai">
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-title">Rata-rata Deteksi Harian</span>
+              <div class="stat-icon green-tint">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                  data-lucide="users" class="lucide lucide-users" style="width:18px;height:18px;">
+                  <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                  <path d="M16 3.128a4 4 0 0 1 0 7.744"></path>
+                  <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                </svg>
+              </div>
+            </div>
+            <div class="stat-value" id="valAvgDetections">45 <span
+                style="font-size: 15px; font-weight: 500; color: rgb(110, 118, 129);">Objek Sapi</span></div>
+            <div class="stat-badge healthy">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                data-lucide="trending-up" class="lucide lucide-trending-up" style="width:13px;height:13px;">
+                <path d="M16 7h6v6"></path>
+                <path d="m22 7-8.5 8.5-5-5L2 17"></path>
+              </svg>
+              +3.2% vs minggu lalu
+            </div>
+            <span class="stat-subtext">Deteksi konsisten kamera YOLOv11</span>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-title">Dominansi Berdiri (Standing)</span>
+              <div class="stat-icon blue-tint">
+                <img alt="Sapi Berdiri"
+                  src="https://lh3.googleusercontent.com/aida/ALJJyrCOODCxsHMPDFSr05hxBrKw-lAxH8ARvc7nvuVR2WjCs6EnyXR8h1lt70Xfatvn83W06Iid_azZM5UZl-HBnNJpJFXL_NXvAutnwGmonKWLzcMAwmXVel0s_-7eLX2A37UyXP-sjvrl8TJpiZ5w13EPA75v20Tgx3Ge6A6v6zeZmUaqsMnp0hHwUkq7geiMecaM9EMWi5valaZkMh1a56OO0nTYv71zG9qQFCOnfXs"
+                  style="width: 20px; height: 20px; object-fit: contain; filter: saturate(0.75);">
+              </div>
+            </div>
+            <div class="stat-value" id="valStandingDom" style="color: var(--accent-blue);">55%</div>
+            <div class="stat-badge blue">Postur Aktif / Makan</div>
+            <span class="stat-subtext">Rata-rata 13.2 jam / hari</span>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-title">Dominansi Berbaring (Lying)</span>
+              <div class="stat-icon amber-tint">
+                <svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                  stroke-width="1.8" viewBox="0 0 24 24" width="20">
+                  <path
+                    d="M4 17h16c.8 0 1.5-.7 1.5-1.5 0-1.5-1-2.5-2.5-3l-1-2c-.5-1-1.5-1.5-2.5-1.5h-5c-1 0-2 .6-2.5 1.5l-.8 1.5H7c-1.5 0-2.8.9-3.3 2.3L3.2 15c-.2.6.2 1.3.8 1.7.3.2.7.3 1 .3z"
+                    fill="currentColor" fill-opacity="0.12"></path>
+                  <path d="M18 9V6.5a1.5 1.5 0 0 0-1.5-1.5h-.5l-.8-1.5A1 1 0 0 0 14.3 3h-.6a1 1 0 0 0-.9.5L12 5H10">
+                  </path>
+                  <circle cx="16.5" cy="7.5" fill="currentColor" r=".75"></circle>
+                  <path d="M3 19h18"></path>
+                </svg>
+              </div>
+            </div>
+            <div class="stat-value" id="valLyingDom" style="color: var(--accent-amber-text);">45%</div>
+            <div class="stat-badge amber">Waktu Istirahat Sehat</div>
+            <span class="stat-subtext">Rata-rata 10.8 jam / hari (Waktu Istirahat Sehat)</span>
+          </div>
+        </div>
+
+        <!-- Live AI CCTV Monitoring Panel -->
+        <div class="content-panel" style="margin-bottom: 24px;">
+          <div class="panel-header" style="flex-wrap: wrap; gap: 12px;">
+            <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+              <h3 style="display: flex; align-items: center; gap: 8px; margin: 0px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                  data-lucide="video" class="lucide lucide-video"
+                  style="width:19px;height:19px;color:var(--accent-red);">
+                  <path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"></path>
+                  <rect x="2" y="6" width="14" height="12" rx="2"></rect>
+                </svg>
+                Live AI Monitoring
+              </h3>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+              <button class="cam-nav-pill active" id="btn-cam-01" onclick="switchCamera('cam-01')">
+                <span class="cam-live-dot"></span> Cam 01
+              </button>
+              <button class="cam-nav-pill" id="btn-cam-02" onclick="switchCamera('cam-02')">
+                <span class="cam-live-dot"></span> Cam 02
+              </button>
+            </div>
+          </div>
+
+          <!-- Viewport Frame -->
+          <div id="cctvViewport"
+            style="position: relative; width: 100%; aspect-ratio: 16 / 9; min-height: 380px; max-height: 500px; background: radial-gradient(circle, #1a2028 0%, #0c0f12 100%); border-radius: 10px; overflow: hidden; border: 1px solid #252d37; display: flex; flex-direction: column; justify-content: space-between;">
+            <div
+              style="position: absolute; inset: 0; background: repeating-linear-gradient(0deg, rgba(255,255,255,0.015), rgba(255,255,255,0.015) 1px, transparent 1px, transparent 3px); pointer-events: none; z-index: 1;">
+            </div>
+
+            <!-- OSD Top -->
+            <div
+              style="position: relative; z-index: 2; padding: 14px 18px; display: flex; justify-content: space-between; align-items: flex-start; background: linear-gradient(180deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%); color: #d6d9dc; font-family: monospace; font-size: 12px;">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <span
+                  style="color: rgb(224, 109, 119); font-weight: 700; display: inline-flex; align-items: center; gap: 5px;"><span
+                    style="width: 6px; height: 6px; background: #c2434f; border-radius: 50%;"></span> REC</span>
+                <span id="camOsdTitle" style="color: rgb(240, 242, 245); font-weight: 600;">CAM-01 | KANDANG A - SEKTOR
+                  UTAMA</span>
+              </div>
+              <div style="text-align: right; display: flex; gap: 14px;">
+                <span id="camOsdLatency"
+                  style="color: rgb(136, 192, 163); background: rgba(45, 122, 88, 0.2); padding: 2px 8px; border-radius: 4px; border: 1px solid rgba(45, 122, 88, 0.35);">Latency:
+                  24ms</span>
+                <span style="color: rgb(240, 242, 245);">2026-11-12 17:13:55 WIB</span>
+              </div>
+            </div>
+
+            <!-- Visual / YOLOv11 Boxes Layer -->
+            <div id="camVisualContainer"
+              style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+              <svg id="camSvgBackground" style="width: 100%; height: 100%; object-fit: cover; opacity: 0.26;"
+                viewBox="0 0 800 450">
+                <line stroke="#94a3b8" stroke-dasharray="6 4" stroke-width="3" x1="0" x2="800" y1="280" y2="280"></line>
+                <line stroke="#64748b" stroke-width="4" x1="160" x2="100" y1="280" y2="450"></line>
+                <line stroke="#64748b" stroke-width="4" x1="420" x2="400" y1="280" y2="450"></line>
+                <line stroke="#64748b" stroke-width="4" x1="680" x2="700" y1="280" y2="450"></line>
+                <ellipse cx="260" cy="330" fill="#334155" rx="95" ry="50"></ellipse>
+                <ellipse cx="550" cy="320" fill="#334155" rx="110" ry="58"></ellipse>
+                <ellipse cx="730" cy="350" fill="#334155" rx="75" ry="42"></ellipse>
+              </svg>
+
+              <!-- Central Cow Subject -->
+              <img id="cctvCowImg" alt="Bovine Tracking"
+                style="height: 65%; width: auto; object-fit: contain; position: relative; z-index: 1; filter: contrast(105%) drop-shadow(0 10px 20px rgba(0,0,0,0.8));"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuARNvjWapgE8zlgDxVAHEVK29warFTNB92JVZTcGUvmEGHsikCzNrx9hBrYoZtoj7ss-N665T2sb7nTZJESCeXDunfVXacN53ZQsGQ0lWG872oiv5KqecAwhxrKfn4Fw--WKppjAcmPpvl09hF_RQ_LlIiEkOGB_6ZQquIAZOwbJUoyeWFIXRSynpMF_IJAjxgwZoKQujOHLzXaPl7wi_GtfEJbjZn1VhZDA-0fP5IPiXXpbblXLCBg">
+
+              <div id="yoloBoundingBoxesLayer"
+                style="position: absolute; inset: 0px; pointer-events: none; z-index: 2;">
+                <div
+                  style="position: absolute; left: 20%; top: 40%; width: 26%; height: 42%; border: 2px solid #2c5a85; background: rgba(44, 90, 133, 0.12); z-index: 2; border-radius: 2px;">
+                  <div
+                    style="position: absolute; top: -20px; left: -2px; background: rgb(44, 90, 133); color: rgb(255, 255, 255); font-size: 10px; font-weight: 700; padding: 2px 6px; font-family: monospace;">
+                    cow 0.94 • STANDING
+                  </div>
+                  <div
+                    style="position: absolute; bottom: 4px; right: 4px; font-family: monospace; font-size: 9px; color: rgb(208, 220, 232); background: rgba(0, 0, 0, 0.65); padding: 1px 4px;">
+                    ID: COW-104</div>
+                </div>
+
+                <div
+                  style="position: absolute; left: 54%; top: 38%; width: 28%; height: 45%; border: 2px solid #9e7328; background: rgba(158, 115, 40, 0.12); z-index: 2; border-radius: 2px;">
+                  <div
+                    style="position: absolute; top: -20px; left: -2px; background: rgb(158, 115, 40); color: rgb(255, 255, 255); font-size: 10px; font-weight: 700; padding: 2px 6px; font-family: monospace;">
+                    cow 0.91 • LYING
+                  </div>
+                  <div
+                    style="position: absolute; bottom: 4px; right: 4px; font-family: monospace; font-size: 9px; color: rgb(232, 222, 198); background: rgba(0, 0, 0, 0.65); padding: 1px 4px;">
+                    ID: COW-105</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bottom OSD -->
+            <div
+              style="position: relative; z-index: 2; padding: 12px 18px; display: flex; justify-content: space-between; align-items: flex-end; background: linear-gradient(0deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0) 100%);">
+              <div id="camTelemetryOsd" style="font-size: 11px; color: rgb(157, 167, 179); font-family: monospace;">
+                <span style="color: rgb(114, 171, 142); font-weight: 600;">● INFERENCE:</span> 35.7 FPS • TensorRT FP16
+                • GPU: 41°C • Standing: 55% | Lying: 45%
+              </div>
+              <span
+                style="padding: 2px 7px; background: rgba(255, 255, 255, 0.12); color: rgb(255, 255, 255); font-size: 11px; border-radius: 4px; font-family: monospace;">H.264
+                RTSP CH-01</span>
+            </div>
+          </div>
+
+          <div
+            style="display: flex; justify-content: space-between; align-items: center; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border);">
+            <button onclick="captureSnapshot()"
+              style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border); background: rgb(255, 255, 255); color: var(--text-main); font-size: 12px; font-weight: 500; cursor: pointer;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                data-lucide="camera" class="lucide lucide-camera" style="width:14px;height:14px;">
+                <path
+                  d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z">
+                </path>
+                <circle cx="12" cy="13" r="3"></circle>
+              </svg>
+              Capture Snapshot
+            </button>
+            <button onclick="openFullscreenCctv()"
+              style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border); background: rgb(255, 255, 255); color: var(--text-main); font-size: 12px; font-weight: 500; cursor: pointer;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                data-lucide="expand" class="lucide lucide-expand" style="width:14px;height:14px;">
+                <path d="m15 15 6 6"></path>
+                <path d="m15 9 6-6"></path>
+                <path d="M21 16v5h-5"></path>
+                <path d="M21 8V3h-5"></path>
+                <path d="M3 16v5h5"></path>
+                <path d="m3 21 6-6"></path>
+                <path d="M3 8V3h5"></path>
+                <path d="M9 9 3 3"></path>
+              </svg>
+              Buka Mode Layar Penuh
+            </button>
+          </div>
+        </div>
+
+        <!-- Overview Panel -->
+        <div class="content-panel">
+          <div class="panel-header">
+            <div>
+              <h3>Monitoring Overview</h3>
+              <p class="panel-sub">Ringkasan kondisi kawanan dan stempel deteksi YOLOv11</p>
+            </div>
+            <button onclick="refreshDashboardData()"
+              style="padding: 6px 12px; font-size: 12px; border-radius: 6px; border: 1px solid var(--border); background: rgb(255, 255, 255); cursor: pointer; font-weight: 500; color: rgb(55, 65, 81);">
+              Muat Data Uji Coba
+            </button>
+          </div>
+          <div style="margin-top: 10px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+              <h4 style="font-size: 14px; font-weight: 700; color: var(--black);">Aktivitas Terkini (Event Kawanan)</h4>
+              <span style="font-size: 12px; color: var(--muted);">Sinkronisasi Otomatis Tiap 5 Menit</span>
+            </div>
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th>Waktu</th>
+                  <th>Perilaku Dominan</th>
+                  <th>Total Deteksi</th>
+                  <th>Bukti Snapshot</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong style="color: #14171a;">14:30 WIB</strong></td>
+                  <td>
+                    <div style="display: flex; align-items: center; gap: 6px;"><span
+                        style="width: 7px; height: 7px; border-radius: 50%; background: var(--accent-blue);"></span><span
+                        style="color: var(--accent-blue-dark); font-weight: 500;">Berdiri (Standing)</span></div>
+                  </td>
+                  <td>45 Objek (95.4%)</td>
+                  <td><button
+                      onclick="openSnapshotModal('14:30 WIB', 'Berdiri (Standing)', '45 Objek Sapi (95.4%)', 'Kamera 01 - Kandang A (Area Sektor Pakan)', '95.4%', 'Kawanan aktif berdiri dan mengonsumsi pakan teratur.')"
+                      style="display: inline-flex; align-items: center; gap: 5px; padding: 4px 9px; font-size: 11px; font-weight: 600; border-radius: 5px; border: 1px solid var(--border); background: rgb(255, 255, 255); cursor: pointer;"><svg
+                        xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        data-lucide="camera" class="lucide lucide-camera" style="width:13px;height:13px;">
+                        <path
+                          d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z">
+                        </path>
+                        <circle cx="12" cy="13" r="3"></circle>
+                      </svg>[Lihat Foto]</button></td>
+                </tr>
+                <tr>
+                  <td><strong style="color: #14171a;">14:15 WIB</strong></td>
+                  <td>
+                    <div style="display: flex; align-items: center; gap: 6px;"><span
+                        style="width: 7px; height: 7px; border-radius: 50%; background: var(--accent-amber);"></span><span
+                        style="color: var(--accent-amber-dark); font-weight: 500;">Berbaring (Lying)</span></div>
+                  </td>
+                  <td>38 Objek (92.1%)</td>
+                  <td><button
+                      onclick="openSnapshotModal('14:15 WIB', 'Berbaring (Lying)', '38 Objek Sapi (92.1%)', 'Kamera 02 - Kandang A (Sektor Ruminasi A)', '92.1%', 'Proses berbaring dan ruminasi normal.')"
+                      style="display: inline-flex; align-items: center; gap: 5px; padding: 4px 9px; font-size: 11px; font-weight: 600; border-radius: 5px; border: 1px solid var(--border); background: rgb(255, 255, 255); cursor: pointer;"><svg
+                        xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        data-lucide="camera" class="lucide lucide-camera" style="width:13px;height:13px;">
+                        <path
+                          d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z">
+                        </path>
+                        <circle cx="12" cy="13" r="3"></circle>
+                      </svg>[Lihat Foto]</button></td>
+                </tr>
+                <tr>
+                  <td><strong style="color: #14171a;">13:50 WIB</strong></td>
+                  <td>
+                    <div style="display: flex; align-items: center; gap: 6px;"><span
+                        style="width: 7px; height: 7px; border-radius: 50%; background: var(--accent-amber);"></span><span
+                        style="color: var(--accent-amber-dark); font-weight: 500;">Berbaring (Lying)</span></div>
+                  </td>
+                  <td>41 Objek (89.7%)</td>
+                  <td><button
+                      onclick="openSnapshotModal('13:50 WIB', 'Berbaring (Lying)', '41 Objek Sapi (89.7%)', 'Kamera 03 - Blok Istirahat Barat', '89.7%', 'Kawanan sedang berbaring istirahat siang.')"
+                      style="display: inline-flex; align-items: center; gap: 5px; padding: 4px 9px; font-size: 11px; font-weight: 600; border-radius: 5px; border: 1px solid var(--border); background: rgb(255, 255, 255); cursor: pointer;"><svg
+                        xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        data-lucide="camera" class="lucide lucide-camera" style="width:13px;height:13px;">
+                        <path
+                          d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z">
+                        </path>
+                        <circle cx="12" cy="13" r="3"></circle>
+                      </svg>[Lihat Foto]</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= TAB 2: USER MANAGEMENT ================= -->
+      <section class="tab-section" id="section-users">
+        <div class="content-panel"
+          style="background: #ffffff; border: 1px solid var(--border); border-radius: 16px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.02);">
+          <div
+            style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; margin-bottom: 22px;">
+            <div style="display: flex; align-items: center; gap: 10px; flex: 1; min-width: 260px; max-width: 420px;">
+              <div style="position: relative; width: 100%;">
+                <svg fill="none" height="16" stroke="#9299a4" stroke-linecap="round" stroke-linejoin="round"
+                  stroke-width="2"
+                  style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); pointer-events: none;"
+                  viewBox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <path d="m21 21-4.3-4.3"></path>
+                </svg>
+                <input id="userSearchInput" onkeyup="filterUserTable()"
+                  placeholder="Cari nama, username, atau email staf..."
+                  style="width: 100%; padding: 9px 12px 9px 38px; border-radius: 8px; border: 1px solid var(--border); background: #fafbfc; font-size: 13px; color: var(--text-main); outline: none; transition: all 0.15s ease;"
+                  type="text">
+              </div>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <span style="font-size: 12px; font-weight: 500; color: var(--muted);">Role:</span>
+                <select id="userRoleFilter" onchange="filterUserTable()"
+                  style="padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border); background: #ffffff; font-size: 12.5px; font-weight: 500; color: #374151; cursor: pointer; outline: none;">
+                  <option value="all">Semua Role</option>
+                  <option value="admin">Admin</option>
+                  <option value="operator">Operator</option>
+                </select>
+              </div>
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <span style="font-size: 12px; font-weight: 500; color: var(--muted);">Status:</span>
+                <select id="userStatusFilter" onchange="filterUserTable()"
+                  style="padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border); background: #ffffff; font-size: 12.5px; font-weight: 500; color: #374151; cursor: pointer; outline: none;">
+                  <option value="all">Semua Status</option>
+                  <option value="active">Aktif</option>
+                  <option value="inactive">Nonaktif</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div style="overflow-x: auto;">
+            <table class="custom-table" style="width: 100%; border-collapse: collapse; font-size: 13px;">
+              <thead>
+                <tr style="background: #fafbfc; border-bottom: 1px solid var(--border);">
+                  <th
+                    style="padding: 12px 16px; text-align: left; font-size: 12px; font-weight: 600; color: #5c6370; text-transform: uppercase; letter-spacing: 0.4px;">
+                    Nama &amp; Username</th>
+                  <th
+                    style="padding: 12px 16px; text-align: left; font-size: 12px; font-weight: 600; color: #5c6370; text-transform: uppercase; letter-spacing: 0.4px;">
+                    Role</th>
+                  <th
+                    style="padding: 12px 16px; text-align: left; font-size: 12px; font-weight: 600; color: #5c6370; text-transform: uppercase; letter-spacing: 0.4px;">
+                    Status</th>
+                  <th
+                    style="padding: 12px 16px; text-align: left; font-size: 12px; font-weight: 600; color: #5c6370; text-transform: uppercase; letter-spacing: 0.4px;">
+                    Terakhir Login</th>
+                  <th
+                    style="padding: 12px 16px; text-align: right; font-size: 12px; font-weight: 600; color: #5c6370; text-transform: uppercase; letter-spacing: 0.4px;">
+                    Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="userTableBody">
+                <tr style="border-bottom: 1px solid #f0f2f5;">
+                  <td style="padding: 14px 16px;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                      <div
+                        style="width: 38px; height: 38px; border-radius: 50%; background: #2c5a85; color: #ffffff; font-weight: 700; font-size: 13px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        BS</div>
+                      <div>
+                        <div style="font-weight: 700; color: var(--black); font-size: 13.5px;" class="user-name">Budi
+                          Santoso</div>
+                        <div style="color: var(--muted); font-size: 12px;" class="user-meta">@budi_admin •
+                          budi@bovision.id</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td style="padding: 14px 16px;"><span class="user-role"
+                      style="display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 6px; font-size: 11.5px; font-weight: 600; background: #eff6ff; border: 1px solid #bfdbfe; color: #1d4ed8;">Admin</span>
+                  </td>
+                  <td style="padding: 14px 16px;"><span class="user-status"
+                      style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 6px; font-size: 11.5px; font-weight: 600; background: var(--accent-green-bg); border: 1px solid var(--accent-green-border); color: var(--accent-green-text);"><span
+                        style="width: 6px; height: 6px; border-radius: 50%; background: #2d7a58;"></span>Aktif</span>
+                  </td>
+                  <td style="padding: 14px 16px; color: #374151; font-weight: 500; font-size: 12.5px;">Hari ini, 14:22
+                    WIB</td>
+                  <td style="padding: 14px 16px; text-align: right;">
+                    <div style="display: inline-flex; align-items: center; gap: 6px;">
+                      <button onclick="resetUserPassword('Budi Santoso')"
+                        style="display: inline-flex; align-items: center; gap: 5px; padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border); background: #ffffff; color: #374151; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.15s ease;"
+                        title="Reset Password"><svg fill="none" height="14" stroke="currentColor" stroke-linecap="round"
+                          stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="14"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="m21 2-2 2m-1.5 1.5L14 9l-1.5-1.5L11 9l-1.5-1.5L8 9 3 14v7h7l5-5 1.5-1.5L18 13l1.5-1.5L21 10l-1.5-1.5Z">
+                          </path>
+                        </svg>Reset</button>
+                      <button onclick="toggleUserStatus(this)"
+                        style="display: inline-flex; align-items: center; gap: 5px; padding: 6px 10px; border-radius: 6px; border: 1px solid rgba(194, 67, 79, 0.25); background: #ffffff; color: #c2434f; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.15s ease;"
+                        title="Nonaktifkan Pengguna"><svg fill="none" height="14" stroke="currentColor"
+                          stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="14"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <circle cx="12" cy="12" r="10"></circle>
+                          <path d="m4.9 4.9 14.2 14.2"></path>
+                        </svg>Nonaktifkan</button>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr style="border-bottom: 1px solid #f0f2f5;">
+                  <td style="padding: 14px 16px;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                      <div
+                        style="width: 38px; height: 38px; border-radius: 50%; background: #2d7a58; color: #ffffff; font-weight: 700; font-size: 13px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        HW</div>
+                      <div>
+                        <div style="font-weight: 700; color: var(--black); font-size: 13.5px;" class="user-name">Hendra
+                          Wijaya</div>
+                        <div style="color: var(--muted); font-size: 12px;" class="user-meta">@hendra_op •
+                          hendra@bovision.id</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td style="padding: 14px 16px;"><span class="user-role"
+                      style="display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 6px; font-size: 11.5px; font-weight: 600; background: #ecfdf5; border: 1px solid #a7f3d0; color: #047857;">Operator</span>
+                  </td>
+                  <td style="padding: 14px 16px;"><span class="user-status"
+                      style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 6px; font-size: 11.5px; font-weight: 600; background: var(--accent-green-bg); border: 1px solid var(--accent-green-border); color: var(--accent-green-text);"><span
+                        style="width: 6px; height: 6px; border-radius: 50%; background: #2d7a58;"></span>Aktif</span>
+                  </td>
+                  <td style="padding: 14px 16px; color: #374151; font-weight: 500; font-size: 12.5px;">Hari ini, 13:05
+                    WIB</td>
+                  <td style="padding: 14px 16px; text-align: right;">
+                    <div style="display: inline-flex; align-items: center; gap: 6px;">
+                      <button onclick="resetUserPassword('Hendra Wijaya')"
+                        style="display: inline-flex; align-items: center; gap: 5px; padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border); background: #ffffff; color: #374151; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.15s ease;"
+                        title="Reset Password"><svg fill="none" height="14" stroke="currentColor" stroke-linecap="round"
+                          stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="14"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="m21 2-2 2m-1.5 1.5L14 9l-1.5-1.5L11 9l-1.5-1.5L8 9 3 14v7h7l5-5 1.5-1.5L18 13l1.5-1.5L21 10l-1.5-1.5Z">
+                          </path>
+                        </svg>Reset</button>
+                      <button onclick="toggleUserStatus(this)"
+                        style="display: inline-flex; align-items: center; gap: 5px; padding: 6px 10px; border-radius: 6px; border: 1px solid rgba(194, 67, 79, 0.25); background: #ffffff; color: #c2434f; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.15s ease;"
+                        title="Nonaktifkan Pengguna"><svg fill="none" height="14" stroke="currentColor"
+                          stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="14"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <circle cx="12" cy="12" r="10"></circle>
+                          <path d="m4.9 4.9 14.2 14.2"></path>
+                        </svg>Nonaktifkan</button>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr style="border-bottom: 1px solid #f0f2f5;">
+                  <td style="padding: 14px 16px;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                      <div
+                        style="width: 38px; height: 38px; border-radius: 50%; background: #4c769e; color: #ffffff; font-weight: 700; font-size: 13px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        SR</div>
+                      <div>
+                        <div style="font-weight: 700; color: var(--black); font-size: 13.5px;" class="user-name">Siti
+                          Rahma</div>
+                        <div style="color: var(--muted); font-size: 12px;" class="user-meta">@siti_kandang •
+                          siti@bovision.id</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td style="padding: 14px 16px;"><span class="user-role"
+                      style="display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 6px; font-size: 11.5px; font-weight: 600; background: #ecfdf5; border: 1px solid #a7f3d0; color: #047857;">Operator</span>
+                  </td>
+                  <td style="padding: 14px 16px;"><span class="user-status"
+                      style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 6px; font-size: 11.5px; font-weight: 600; background: var(--accent-green-bg); border: 1px solid var(--accent-green-border); color: var(--accent-green-text);"><span
+                        style="width: 6px; height: 6px; border-radius: 50%; background: #2d7a58;"></span>Aktif</span>
+                  </td>
+                  <td style="padding: 14px 16px; color: #374151; font-weight: 500; font-size: 12.5px;">Hari ini, 11:45
+                    WIB</td>
+                  <td style="padding: 14px 16px; text-align: right;">
+                    <div style="display: inline-flex; align-items: center; gap: 6px;">
+                      <button onclick="resetUserPassword('Siti Rahma')"
+                        style="display: inline-flex; align-items: center; gap: 5px; padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border); background: #ffffff; color: #374151; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.15s ease;"
+                        title="Reset Password"><svg fill="none" height="14" stroke="currentColor" stroke-linecap="round"
+                          stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="14"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="m21 2-2 2m-1.5 1.5L14 9l-1.5-1.5L11 9l-1.5-1.5L8 9 3 14v7h7l5-5 1.5-1.5L18 13l1.5-1.5L21 10l-1.5-1.5Z">
+                          </path>
+                        </svg>Reset</button>
+                      <button onclick="toggleUserStatus(this)"
+                        style="display: inline-flex; align-items: center; gap: 5px; padding: 6px 10px; border-radius: 6px; border: 1px solid rgba(194, 67, 79, 0.25); background: #ffffff; color: #c2434f; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.15s ease;"
+                        title="Nonaktifkan Pengguna"><svg fill="none" height="14" stroke="currentColor"
+                          stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="14"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <circle cx="12" cy="12" r="10"></circle>
+                          <path d="m4.9 4.9 14.2 14.2"></path>
+                        </svg>Nonaktifkan</button>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr style="border-bottom: 1px solid #f0f2f5;">
+                  <td style="padding: 14px 16px;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                      <div
+                        style="width: 38px; height: 38px; border-radius: 50%; background: #9e7328; color: #ffffff; font-weight: 700; font-size: 13px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        AP</div>
+                      <div>
+                        <div style="font-weight: 700; color: var(--black); font-size: 13.5px;" class="user-name">Agus
+                          Pratama, S.Pt</div>
+                        <div style="color: var(--muted); font-size: 12px;" class="user-meta">@agus_vet •
+                          agus.vet@bovision.id</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td style="padding: 14px 16px;"><span class="user-role"
+                      style="display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 6px; font-size: 11.5px; font-weight: 600; background: #eff6ff; border: 1px solid #bfdbfe; color: #1d4ed8;">Admin</span>
+                  </td>
+                  <td style="padding: 14px 16px;"><span class="user-status"
+                      style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 6px; font-size: 11.5px; font-weight: 600; background: var(--accent-green-bg); border: 1px solid var(--accent-green-border); color: var(--accent-green-text);"><span
+                        style="width: 6px; height: 6px; border-radius: 50%; background: #2d7a58;"></span>Aktif</span>
+                  </td>
+                  <td style="padding: 14px 16px; color: #374151; font-weight: 500; font-size: 12.5px;">Kemarin, 19:40
+                    WIB</td>
+                  <td style="padding: 14px 16px; text-align: right;">
+                    <div style="display: inline-flex; align-items: center; gap: 6px;">
+                      <button onclick="resetUserPassword('Agus Pratama')"
+                        style="display: inline-flex; align-items: center; gap: 5px; padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border); background: #ffffff; color: #374151; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.15s ease;"
+                        title="Reset Password"><svg fill="none" height="14" stroke="currentColor" stroke-linecap="round"
+                          stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="14"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="m21 2-2 2m-1.5 1.5L14 9l-1.5-1.5L11 9l-1.5-1.5L8 9 3 14v7h7l5-5 1.5-1.5L18 13l1.5-1.5L21 10l-1.5-1.5Z">
+                          </path>
+                        </svg>Reset</button>
+                      <button onclick="toggleUserStatus(this)"
+                        style="display: inline-flex; align-items: center; gap: 5px; padding: 6px 10px; border-radius: 6px; border: 1px solid rgba(194, 67, 79, 0.25); background: #ffffff; color: #c2434f; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.15s ease;"
+                        title="Nonaktifkan Pengguna"><svg fill="none" height="14" stroke="currentColor"
+                          stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="14"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <circle cx="12" cy="12" r="10"></circle>
+                          <path d="m4.9 4.9 14.2 14.2"></path>
+                        </svg>Nonaktifkan</button>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td style="padding: 14px 16px;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                      <div
+                        style="width: 38px; height: 38px; border-radius: 50%; background: #6e7681; color: #ffffff; font-weight: 700; font-size: 13px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        DL</div>
+                      <div>
+                        <div style="font-weight: 700; color: var(--black); font-size: 13.5px;" class="user-name">Dewi
+                          Lestari</div>
+                        <div style="color: var(--muted); font-size: 12px;" class="user-meta">@dewi_op2 •
+                          dewi@bovision.id</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td style="padding: 14px 16px;"><span class="user-role"
+                      style="display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 6px; font-size: 11.5px; font-weight: 600; background: #ecfdf5; border: 1px solid #a7f3d0; color: #047857;">Operator</span>
+                  </td>
+                  <td style="padding: 14px 16px;"><span class="user-status"
+                      style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 6px; font-size: 11.5px; font-weight: 600; background: #f3f4f6; border: 1px solid #e5e7eb; color: #6b7280;"><span
+                        style="width: 6px; height: 6px; border-radius: 50%; background: #9ca3af;"></span>Nonaktif</span>
+                  </td>
+                  <td style="padding: 14px 16px; color: #374151; font-weight: 500; font-size: 12.5px;">3 hari lalu,
+                    09:12 WIB</td>
+                  <td style="padding: 14px 16px; text-align: right;">
+                    <div style="display: inline-flex; align-items: center; gap: 6px;">
+                      <button onclick="resetUserPassword('Dewi Lestari')"
+                        style="display: inline-flex; align-items: center; gap: 5px; padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border); background: #ffffff; color: #374151; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.15s ease;"
+                        title="Reset Password"><svg fill="none" height="14" stroke="currentColor" stroke-linecap="round"
+                          stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="14"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="m21 2-2 2m-1.5 1.5L14 9l-1.5-1.5L11 9l-1.5-1.5L8 9 3 14v7h7l5-5 1.5-1.5L18 13l1.5-1.5L21 10l-1.5-1.5Z">
+                          </path>
+                        </svg>Reset</button>
+                      <button onclick="toggleUserStatus(this)"
+                        style="display: inline-flex; align-items: center; gap: 5px; padding: 6px 10px; border-radius: 6px; border: 1px solid var(--accent-green-border); background: var(--accent-green-bg); color: var(--accent-green-text); font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.15s ease;"
+                        title="Aktifkan Pengguna"><svg fill="none" height="14" stroke="currentColor"
+                          stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="14"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path d="M20 6 9 17l-5-5"></path>
+                        </svg>Aktifkan</button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div
+            style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--border); flex-wrap: wrap; gap: 12px;">
+            <span style="font-size: 13px; color: var(--muted);">Menampilkan <strong>1 - 5</strong> dari
+              <strong>8</strong> staf terdaftar</span>
+            <div style="display: inline-flex; align-items: center; gap: 6px;">
+              <button disabled=""
+                style="padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border); background: #ffffff; color: var(--muted); font-size: 12.5px; font-weight: 500; cursor: pointer;">Sebelumnya</button>
+              <button class="chart-filter-btn active"
+                style="padding: 6px 12px; border-radius: 6px; font-size: 12.5px; font-weight: 600;">1</button>
+              <button class="chart-filter-btn"
+                style="padding: 6px 12px; border-radius: 6px; font-size: 12.5px; font-weight: 600;">2</button>
+              <button
+                style="padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border); background: #ffffff; color: #374151; font-size: 12.5px; font-weight: 500; cursor: pointer;">Selanjutnya</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= TAB 3: STATISTICS ================= -->
+      <section class="tab-section" id="section-stats">
+        <div class="stats-grid-ai" style="margin-bottom: 24px;">
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-title">Rata-rata Deteksi Harian</span>
+              <div class="stat-icon green-tint">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                  data-lucide="users" class="lucide lucide-users" style="width:18px;height:18px;">
+                  <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                  <path d="M16 3.128a4 4 0 0 1 0 7.744"></path>
+                  <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                </svg>
+              </div>
+            </div>
+            <div class="stat-value">45 <span style="font-size: 15px; font-weight: 500; color: rgb(110, 118, 129);">Objek
+                Sapi</span></div>
+            <div class="stat-badge healthy">+3.2% vs minggu lalu</div>
+            <span class="stat-subtext">Deteksi akurat AI konsisten per kamera</span>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-title">Dominansi Berdiri (Standing)</span>
+              <div class="stat-icon blue-tint">
+                <img alt="Sapi Berdiri"
+                  src="https://lh3.googleusercontent.com/aida/ALJJyrCOODCxsHMPDFSr05hxBrKw-lAxH8ARvc7nvuVR2WjCs6EnyXR8h1lt70Xfatvn83W06Iid_azZM5UZl-HBnNJpJFXL_NXvAutnwGmonKWLzcMAwmXVel0s_-7eLX2A37UyXP-sjvrl8TJpiZ5w13EPA75v20Tgx3Ge6A6v6zeZmUaqsMnp0hHwUkq7geiMecaM9EMWi5valaZkMh1a56OO0nTYv71zG9qQFCOnfXs"
+                  style="width: 20px; height: 20px; object-fit: contain; filter: saturate(0.75);">
+              </div>
+            </div>
+            <div class="stat-value" style="color: var(--accent-blue);">55%</div>
+            <div class="stat-badge blue">Indikator Postur Berdiri Aktif</div>
+            <span class="stat-subtext">Rata-rata 13.2 jam / hari</span>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-title">Dominansi Berbaring (Lying)</span>
+              <div class="stat-icon amber-tint">
+                <svg fill="none" height="20" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" width="20">
+                  <path
+                    d="M4 17h16c.8 0 1.5-.7 1.5-1.5 0-1.5-1-2.5-2.5-3l-1-2c-.5-1-1.5-1.5-2.5-1.5h-5c-1 0-2 .6-2.5 1.5l-.8 1.5H7c-1.5 0-2.8.9-3.3 2.3L3.2 15c-.2.6.2 1.3.8 1.7.3.2.7.3 1 .3z"
+                    fill="currentColor" fill-opacity="0.12"></path>
+                  <path d="M18 9V6.5a1.5 1.5 0 0 0-1.5-1.5h-.5l-.8-1.5A1 1 0 0 0 14.3 3h-.6a1 1 0 0 0-.9.5L12 5H10">
+                  </path>
+                  <circle cx="16.5" cy="7.5" fill="currentColor" r=".75"></circle>
+                  <path d="M3 19h18"></path>
+                </svg>
+              </div>
+            </div>
+            <div class="stat-value" style="color: var(--accent-amber-text);">45%</div>
+            <div class="stat-badge amber">Waktu Istirahat Sehat</div>
+            <span class="stat-subtext">Rata-rata 10.8 jam / hari</span>
+          </div>
+        </div>
+
+        <!-- Chart Panel -->
+        <div class="content-panel">
+          <div class="panel-header" style="flex-wrap: wrap; gap: 14px;">
+            <div>
+              <h3>Tren Perilaku Kawanan: Standing &amp; Lying</h3>
+              <p class="panel-sub" id="chartPeriodSubtitle">Komparasi proporsi postur kawanan (Hari Ini - interval 4
+                jam)</p>
+            </div>
+            <div
+              style="display: inline-flex; background: #f0f2f5; padding: 3px; border-radius: 8px; gap: 3px; border: 1px solid var(--border);">
+              <button class="chart-filter-btn active" id="btnFilterToday" onclick="updateBehaviorChart('today')">Hari
+                Ini (24 Jam)</button>
+              <button class="chart-filter-btn" id="btnFilterWeek" onclick="updateBehaviorChart('week')">Minggu Ini (7
+                Hari)</button>
+              <button class="chart-filter-btn" id="btnFilterMonth" onclick="updateBehaviorChart('month')">Bulan Ini (30
+                Hari)</button>
+            </div>
+          </div>
+
+          <div
+            style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; padding: 12px 16px; background: #fafbfc; border-radius: 10px; border: 1px solid var(--border);">
+            <div style="display: flex; align-items: center; gap: 20px;">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span
+                  style="display: inline-block; width: 12px; height: 12px; border-radius: 3px; background: var(--accent-blue);"></span>
+                <span>Berdiri (Standing)</span>
+                <strong id="legendStandingVal" style="color: var(--accent-blue); margin-left: 4px;">55%</strong>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span
+                  style="display: inline-block; width: 12px; height: 12px; border-radius: 3px; background: var(--accent-amber);"></span>
+                <span>Berbaring (Lying)</span>
+                <strong id="legendLyingVal" style="color: var(--accent-amber-text); margin-left: 4px;">45%</strong>
+              </div>
+            </div>
+            <div style="font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 8px;">
+              <span
+                style="display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--accent-green);"></span>
+              <span>Status Kawanan: <strong style="color: #14171a;">Keseimbangan Istirahat Optimal (10.8
+                  Jam)</strong></span>
+            </div>
+          </div>
+
+          <div style="position: relative; width: 100%; overflow-x: auto; padding-bottom: 8px;">
+            <div id="behaviorChartContainer" style="min-width: 620px; height: 320px; position: relative;"></div>
+          </div>
+
+          <div
+            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--border);">
+            <div
+              style="background: var(--accent-blue-bg); border: 1px solid var(--accent-blue-border); border-radius: 8px; padding: 12px 14px;">
+              <span
+                style="font-size: 11px; font-weight: 600; color: var(--accent-blue-dark); text-transform: uppercase;">Puncak
+                Aktivitas Berdiri</span>
+              <div id="insightPeakStanding"
+                style="font-size: 15px; font-weight: 700; color: var(--accent-blue-dark); margin-top: 2px;">08:00 -
+                12:00 WIB (68%)</div>
+              <span style="font-size: 11px; color: var(--accent-blue-secondary);">Jam makan konsentrat &amp;
+                silase</span>
+            </div>
+            <div
+              style="background: var(--accent-amber-bg); border: 1px solid var(--accent-amber-border); border-radius: 8px; padding: 12px 14px;">
+              <span
+                style="font-size: 11px; font-weight: 600; color: var(--accent-amber-dark); text-transform: uppercase;">Puncak
+                Waktu Istirahat (Lying)</span>
+              <div id="insightPeakLying"
+                style="font-size: 15px; font-weight: 700; color: var(--accent-amber-dark); margin-top: 2px;">00:00 -
+                04:00 WIB (64%)</div>
+              <span style="font-size: 11px; color: var(--accent-amber-text);">Fase ruminasi istirahat malam
+                optimal</span>
+            </div>
+            <div
+              style="background: var(--accent-green-bg); border: 1px solid var(--accent-green-border); border-radius: 8px; padding: 12px 14px;">
+              <span
+                style="font-size: 11px; font-weight: 600; color: var(--accent-green-dark); text-transform: uppercase;">Akurasi
+                Klasifikasi AI</span>
+              <div style="font-size: 15px; font-weight: 700; color: var(--accent-green-dark); margin-top: 2px;">96.4%
+                IoU Detection</div>
+              <span style="font-size: 11px; color: var(--accent-green-text);">Kalibrasi model YOLOv11
+                terverifikasi</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= TAB 4: HISTORY ================= -->
+      <section class="tab-section" id="section-history">
+        <div class="content-panel">
+          <div class="panel-header">
+            <div>
+              <h3>Riwayat Monitoring AI &amp; Event Kawanan</h3>
+              <p class="panel-sub">Log berkala inferensi klasifikasi postur Standing vs Lying per kandang</p>
+            </div>
+          </div>
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th>Waktu Pencatatan</th>
+                <th>Sektor Kamera</th>
+                <th>Klasifikasi Dominan</th>
+                <th>Rasio (Standing : Lying)</th>
+                <th>Keterangan AI</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Hari ini, 14:00 WIB</td>
+                <td>Kamera 01 - Kandang A</td>
+                <td>Standing (Berdiri)</td>
+                <td>58% : 42%</td>
+                <td><span class="table-tag success">Aktivitas Makan Normal</span></td>
+              </tr>
+              <tr>
+                <td>Hari ini, 10:00 WIB</td>
+                <td>Kamera 03 - Blok Medis</td>
+                <td>Lying (Berbaring)</td>
+                <td>35% : 65%</td>
+                <td><span class="table-tag warning">COW-108 Masih Berbaring</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ================= TAB 5: ALERTS ================= -->
+      <section class="tab-section" id="section-alerts">
+        <div class="content-panel">
+          <div class="panel-header">
+            <div>
+              <h3>Notifikasi &amp; Peringatan Terkini</h3>
+              <p class="panel-sub">Peringatan anomali postur tubuh, durasi berbaring berlebih, dan status kandang</p>
+            </div>
+          </div>
+          <div class="alert-list">
+            <div class="alert-card critical">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                data-lucide="alert-octagon" class="lucide lucide-alert-octagon"
+                style="color: var(--accent-red); width: 20px; height: 20px;">
+                <path d="M12 16h.01"></path>
+                <path d="M12 8v4"></path>
+                <path
+                  d="M15.312 2a2 2 0 0 1 1.414.586l4.688 4.688A2 2 0 0 1 22 8.688v6.624a2 2 0 0 1-.586 1.414l-4.688 4.688a2 2 0 0 1-1.414.586H8.688a2 2 0 0 1-1.414-.586l-4.688-4.688A2 2 0 0 1 2 15.312V8.688a2 2 0 0 1 .586-1.414l4.688-4.688A2 2 0 0 1 8.688 2z">
+                </path>
+              </svg>
+              <div class="alert-content">
+                <h4>Peringatan Inaktivitas Ekstrem</h4>
+                <p>Durasi berbaring (Lying) terdeteksi berturut-turut lebih dari 16 jam tanpa gerak berdiri.</p>
+                <div class="alert-time">15 menit yang lalu • Deteksi AI YOLOv11</div>
+              </div>
+            </div>
+            <div class="alert-card warning-type">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                data-lucide="alert-triangle" class="lucide lucide-alert-triangle"
+                style="color: var(--accent-amber); width: 20px; height: 20px;">
+                <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"></path>
+                <path d="M12 9v4"></path>
+                <path d="M12 17h.01"></path>
+              </svg>
+              <div class="alert-content">
+                <h4>Kepadatan Area Pakan Tinggi</h4>
+                <p>Kamera 02 mendeteksi penumpukan postur berdiri aktif lebih dari 8 ekor pada seksi palung barat.</p>
+                <div class="alert-time">1 jam yang lalu • Kamera 02 Sektor Pakan</div>
+              </div>
+            </div>
+            <div class="alert-card info-type">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="info"
+                class="lucide lucide-info" style="color: var(--accent-blue); width: 20px; height: 20px;">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M12 16v-4"></path>
+                <path d="M12 8h.01"></path>
+              </svg>
+              <div class="alert-content">
+                <h4>Laporan Keseimbangan Istirahat Harian</h4>
+                <p>Proporsi Standing 55% dan Lying 45% kawanan hari ini berada pada batas indeks kesejahteraan ternak.
+                </p>
+                <div class="alert-time">3 jam yang lalu • BOVISION Automated Report</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ================= MODAL FULLSCREEN CCTV ================= -->
+  <div class="fullscreen-cctv-overlay" id="fullscreenCctvOverlay">
+    <header class="fs-header">
+      <div style="display: flex; align-items: center; gap: 14px;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span
+            style="display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: #ef4444; box-shadow: 0 0 10px #ef4444; animation: pulseRed 1.6s infinite;"></span>
+          <span
+            style="color: rgb(248, 113, 113); font-weight: 800; font-size: 13px; font-family: monospace; letter-spacing: 0.5px;">LIVE
+            FEED</span>
+        </div>
+        <div style="height: 18px; width: 1px; background: rgba(255, 255, 255, 0.15);"></div>
+        <h3 id="fsCamTitle"
+          style="color: rgb(255, 255, 255); font-size: 15px; font-weight: 700; letter-spacing: -0.2px;">CAM-01 | Kandang
+          A - Sektor Utama</h3>
+      </div>
+      <div class="fs-cam-selector">
+        <button class="fs-cam-btn active" id="fs-btn-cam-01" onclick="switchCamera('cam-01')">
+          <span class="cam-live-dot"></span> Sektor Utama (Cam 01)
+        </button>
+        <button class="fs-cam-btn" id="fs-btn-cam-02" onclick="switchCamera('cam-02')">
+          <span class="cam-live-dot"></span> Sektor Pakan (Cam 02)
+        </button>
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <div
+          style="font-family: monospace; font-size: 12px; color: rgb(161, 161, 170); background: rgba(255, 255, 255, 0.05); padding: 5px 10px; border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.08);">
+          <span style="color: rgb(52, 211, 153);">● 35.7 FPS</span> • 1080p FP16
+        </div>
+        <button class="fs-exit-btn" onclick="closeFullscreenCctv()" title="Tutup Full Screen (Esc)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            data-lucide="minimize-2" class="lucide lucide-minimize-2" style="width:15px;height:15px;">
+            <path d="m14 10 7-7"></path>
+            <path d="M20 10h-6V4"></path>
+            <path d="m3 21 7-7"></path>
+            <path d="M4 14h6v6"></path>
+          </svg>
+          <span>Exit Full Screen (ESC)</span>
+        </button>
+      </div>
+    </header>
+
+    <div class="fs-viewport">
+      <div
+        style="position: absolute; inset: 0; background: repeating-linear-gradient(0deg, rgba(255,255,255,0.02), rgba(255,255,255,0.02) 1px, transparent 1px, transparent 3px); pointer-events: none; z-index: 2;">
+      </div>
+      <svg id="fsCamSvgBackground" preserveAspectRatio="none"
+        style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.35;"
+        viewBox="0 0 1200 675">
+        <defs>
+          <radialGradient cx="50%" cy="50%" id="fsGlow" r="50%">
+            <stop offset="0%" stop-color="#1e293b" stop-opacity="0.8"></stop>
+            <stop offset="100%" stop-color="#0b0f15" stop-opacity="0.95"></stop>
+          </radialGradient>
+        </defs>
+        <rect fill="url(#fsGlow)" height="675" width="1200"></rect>
+        <line stroke="#475569" stroke-dasharray="8 6" stroke-width="3" x1="0" x2="1200" y1="420" y2="420"></line>
+        <line stroke="#475569" stroke-width="4" x1="220" x2="120" y1="420" y2="675"></line>
+        <line stroke="#475569" stroke-width="4" x1="620" x2="580" y1="420" y2="675"></line>
+        <line stroke="#475569" stroke-width="4" x1="980" x2="1020" y1="420" y2="675"></line>
+        <ellipse cx="380" cy="500" fill="#1e293b" rx="140" ry="75"></ellipse>
+        <ellipse cx="800" cy="485" fill="#1e293b" rx="160" ry="85"></ellipse>
+        <ellipse cx="1060" cy="530" fill="#1e293b" rx="110" ry="60"></ellipse>
+      </svg>
+      <div id="fsYoloLayer" style="position: absolute; inset: 0; pointer-events: none; z-index: 3;">
+        <div
+          style="position: absolute; left: 24%; top: 38%; width: 25%; height: 44%; border: 2.5px solid #3b82f6; background: rgba(59, 130, 246, 0.12); border-radius: 4px; box-shadow: 0 0 16px rgba(59, 130, 246, 0.25);">
+          <div
+            style="position: absolute; top: -26px; left: -2px; background: #2563eb; color: #ffffff; font-size: 11px; font-weight: 700; padding: 3px 8px; font-family: monospace; border-radius: 4px 4px 0 0; letter-spacing: 0.5px; display: flex; align-items: gap: 5px;">
+            <span>cow 0.94</span>
+            <span style="background: rgba(255, 255, 255, 0.25); padding: 1px 4px; border-radius: 3px;">STANDING</span>
+          </div>
+          <div
+            style="position: absolute; bottom: 8px; right: 8px; font-family: monospace; font-size: 11px; color: rgb(191, 219, 254); background: rgba(0, 0, 0, 0.75); padding: 3px 6px; border-radius: 4px; border: 1px solid rgba(59, 130, 246, 0.3);">
+            ID: COW-104 • Postur Berdiri
+          </div>
+        </div>
+        <div
+          style="position: absolute; left: 58%; top: 36%; width: 28%; height: 46%; border: 2.5px solid #eab308; background: rgba(234, 179, 8, 0.12); border-radius: 4px; box-shadow: 0 0 16px rgba(234, 179, 8, 0.25);">
+          <div
+            style="position: absolute; top: -26px; left: -2px; background: #ca8a04; color: #ffffff; font-size: 11px; font-weight: 700; padding: 3px 8px; font-family: monospace; border-radius: 4px 4px 0 0; letter-spacing: 0.5px; display: flex; align-items: gap: 5px;">
+            <span>cow 0.91</span>
+            <span style="background: rgba(255, 255, 255, 0.25); padding: 1px 4px; border-radius: 3px;">LYING</span>
+          </div>
+          <div
+            style="position: absolute; bottom: 8px; right: 8px; font-family: monospace; font-size: 11px; color: rgb(254, 240, 138); background: rgba(0, 0, 0, 0.75); padding: 3px 6px; border-radius: 4px; border: 1px solid rgba(234, 179, 8, 0.3);">
+            ID: COW-105 • Berbaring Ruminasi
+          </div>
+        </div>
+      </div>
+      <div
+        style="position: absolute; top: 20px; left: 24px; z-index: 5; display: flex; flex-direction: column; gap: 8px;">
+        <div
+          style="background: rgba(0, 0, 0, 0.65); backdrop-filter: blur(8px); padding: 6px 12px; border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.1); color: rgb(226, 232, 240); font-family: monospace; font-size: 12px; display: flex; align-items: center; gap: 8px;">
+          <span style="width: 7px; height: 7px; border-radius: 50%; background: #22c55e;"></span>
+          Model YOLOv8x-Cattle: v2.4.1 (FP16 Optimized)
+        </div>
+        <div
+          style="background: rgba(0, 0, 0, 0.65); backdrop-filter: blur(8px); padding: 6px 12px; border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.1); color: rgb(203, 213, 225); font-family: monospace; font-size: 12px;">
+          Resolution: 1920 × 1080 (1080p Full HD)
+        </div>
+      </div>
+      <div style="position: absolute; top: 20px; right: 24px; z-index: 5; text-align: right;">
+        <div
+          style="background: rgba(0, 0, 0, 0.65); backdrop-filter: blur(8px); padding: 6px 12px; border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.1); color: rgb(226, 232, 240); font-family: monospace; font-size: 12px;">
+          Latency: <span style="color: rgb(52, 211, 153); font-weight: 700;">24 ms</span> • RTSP H.264
+        </div>
+      </div>
+    </div>
+
+    <footer class="fs-bottom-bar">
+      <div style="display: flex; align-items: center; gap: 24px; flex-wrap: wrap;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span
+            style="font-size: 12px; color: rgb(156, 163, 175); text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">Deteksi
+            Kawanan:</span>
+          <span style="font-size: 15px; font-weight: 700; color: rgb(255, 255, 255); font-family: monospace;">45 Ekor
+            Sapi Terdeteksi</span>
+        </div>
+        <div
+          style="display: flex; align-items: center; gap: 8px; background: rgba(59, 130, 246, 0.15); padding: 4px 12px; border-radius: 6px; border: 1px solid rgba(59, 130, 246, 0.3);">
+          <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #3b82f6;"></span>
+          <span style="font-size: 12px; font-weight: 600; color: rgb(147, 197, 253);">Berdiri (Standing): <strong
+              style="color: #ffffff;">55% (25 Ekor)</strong></span>
+        </div>
+        <div
+          style="display: flex; align-items: center; gap: 8px; background: rgba(234, 179, 8, 0.15); padding: 4px 12px; border-radius: 6px; border: 1px solid rgba(234, 179, 8, 0.3);">
+          <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #eab308;"></span>
+          <span style="font-size: 12px; font-weight: 600; color: rgb(253, 224, 71);">Berbaring (Lying): <strong
+              style="color: #ffffff;">45% (20 Ekor)</strong></span>
+        </div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 14px;">
+        <button onclick="captureSnapshot()"
+          style="display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.2); background: rgba(255, 255, 255, 0.08); color: rgb(243, 244, 246); font-size: 12px; font-weight: 600; cursor: pointer;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="camera"
+            class="lucide lucide-camera" style="width:14px;height:14px;">
+            <path
+              d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z">
+            </path>
+            <circle cx="12" cy="13" r="3"></circle>
+          </svg>
+          Snapshot Layar
+        </button>
+        <span style="font-size: 11px; color: rgb(100, 116, 139); font-family: monospace;">Tekan <strong
+            style="color:#cbd5e1;">ESC</strong> untuk keluar</span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- ================= MODAL SNAPSHOT ================= -->
+  <div class="snapshot-modal-overlay" id="snapshotModal" onclick="handleBackdropClick(event)">
+    <div class="snapshot-modal-container">
+      <div class="snapshot-modal-header">
+        <div>
+          <h3 id="modalTitle">Bukti Snapshot AI - 17:13 WIB</h3>
+          <p id="modalLocationSubtitle" style="font-size: 12px; color: var(--muted);">Kamera 01 - Kandang A (Sektor
+            Utama) • 17:13 WIB</p>
+        </div>
+        <button class="snapshot-modal-close-btn" onclick="closeSnapshotModal()">✕</button>
+      </div>
+      <div class="snapshot-modal-body">
+        <div class="snapshot-frame">
+          <img alt="Snapshot AI" id="modalSnapshotImage"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAUKXq3TvqtmhjjFvl9RMm7Bb0Rb35N3__exFq-kPxiK-O5xkAKVRKc_CPoW5W5q-iEMFnbh4-vx1gJL8AXPbaeZdzXD_KPzipdXanW20i4RzukWl2l2Eudy014Fzu09aAUVBFfSk6Tzu9XerBSlvnis-gidVrOee8ZjX4H-PNcb8dw_ihrFVtAUezFLBluE6LVemx4D8Hp5LhKxPVvjOECsDAbei8XTRIxoLnjfwyCcuC6o5KEZuoM">
+        </div>
+        <div class="snapshot-telemetry-grid">
+          <div class="snapshot-telemetry-item">
+            <span>Waktu:</span>
+            <strong id="modalEventTime">17:13 WIB</strong>
+          </div>
+          <div class="snapshot-telemetry-item">
+            <span>Perilaku Terdeteksi:</span>
+            <strong id="modalEventBehavior" style="color: var(--accent-blue);">Berdiri (Standing)</strong>
+          </div>
+        </div>
+      </div>
+      <div class="snapshot-modal-footer">
+        <button class="btn-secondary" onclick="closeSnapshotModal()">Tutup</button>
+        <button class="btn-primary" onclick="alert('Snapshot berhasil diunduh.')">Unduh Snapshot</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL PENGATURAN AKUN ================= -->
+  <div class="account-modal-overlay" id="accountSettingsModal"
+    style="position: fixed; inset: 0px; background: rgba(12, 14, 16, 0.65); backdrop-filter: blur(4px); z-index: 99999; display: none; align-items: center; justify-content: center; padding: 20px;">
+    <div class="account-modal-container"
+      style="background: #ffffff; border-radius: 16px; border: 1px solid var(--border); box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.25); max-width: 520px; width: 100%; overflow: hidden; display: flex; flex-direction: column; animation: fadeIn 0.2s ease-in-out;">
+      <div
+        style="padding: 20px 24px; border-bottom: 1px solid #f0f2f5; display: flex; justify-content: space-between; align-items: flex-start;">
+        <div>
+          <h3 style="font-size: 17px; font-weight: 700; color: var(--black); margin-bottom: 3px;">Pengaturan Akun</h3>
+          <p style="font-size: 12.5px; color: var(--muted);">Kelola data profil dan preferensi keamanan akun Anda</p>
+        </div>
+        <button onclick="closeAccountSettingsModal()"
+          style="background: #f4f5f7; border: none; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #64748b; font-size: 15px; font-weight: 600; transition: background 0.15s;">✕</button>
+      </div>
+      <div
+        style="padding: 22px 24px; display: flex; flex-direction: column; gap: 20px; max-height: calc(85vh - 140px); overflow-y: auto;">
+        <div>
+          <div
+            style="font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: var(--muted); margin-bottom: 12px;">
+            Informasi Profil</div>
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div>
+              <label
+                style="display: block; font-size: 12.5px; font-weight: 600; color: #374151; margin-bottom: 6px;">Nama
+                Lengkap</label>
+              <input
+                style="width: 100%; padding: 9px 12px; border-radius: 8px; border: 1px solid var(--border); font-size: 13.5px; color: var(--text-main); outline: none; background: #fff;"
+                type="text" value="Budi Santoso">
+            </div>
+            <div>
+              <label
+                style="display: flex; justify-content: space-between; align-items: center; font-size: 12.5px; font-weight: 600; color: #374151; margin-bottom: 6px;">
+                <span>Email Akun</span>
+                <span
+                  style="background: rgb(236, 253, 245); color: rgb(4, 120, 87); border: 1px solid rgb(167, 243, 208); border-radius: 4px; padding: 1px 7px; font-size: 10.5px; font-weight: 700;">Admin</span>
+              </label>
+              <input
+                style="width: 100%; padding: 9px 12px; border-radius: 8px; border: 1px solid var(--border); font-size: 13.5px; color: var(--text-main); outline: none; background: #fafbfc;"
+                type="email" value="budi@bovision.id">
+            </div>
+          </div>
+        </div>
+        <div style="border-top: 1px solid #f0f2f5; padding-top: 18px;">
+          <div
+            style="font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: var(--muted); margin-bottom: 12px;">
+            Ganti Kata Sandi</div>
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div>
+              <label
+                style="display: block; font-size: 12.5px; font-weight: 600; color: #374151; margin-bottom: 6px;">Password
+                Saat Ini</label>
+              <input placeholder="••••••••"
+                style="width: 100%; padding: 9px 12px; border-radius: 8px; border: 1px solid var(--border); font-size: 13.5px; color: var(--text-main); outline: none; font-family: sans-serif;"
+                type="password" value="••••••••">
+            </div>
+            <div>
+              <label
+                style="display: block; font-size: 12.5px; font-weight: 600; color: #374151; margin-bottom: 6px;">Password
+                Baru</label>
+              <div style="position: relative; display: flex; align-items: center;">
+                <input id="newPasswordField" placeholder="••••••••"
+                  style="width: 100%; padding: 9px 38px 9px 12px; border-radius: 8px; border: 1px solid var(--border); font-size: 13.5px; color: var(--text-main); outline: none; font-family: sans-serif;"
+                  type="password">
+                <button
+                  onclick="var f=document.getElementById('newPasswordField'); if(f){ f.type = f.type==='password'?'text':'password'; }"
+                  style="position: absolute; right: 10px; background: none; border: none; cursor: pointer; color: #6b7280; display: flex; align-items: center;"
+                  type="button">
+                  <svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                    stroke-width="2" viewBox="0 0 24 24" width="16">
+                    <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div>
+              <label
+                style="display: block; font-size: 12.5px; font-weight: 600; color: #374151; margin-bottom: 6px;">Konfirmasi
+                Password Baru</label>
+              <input placeholder="••••••••"
+                style="width: 100%; padding: 9px 12px; border-radius: 8px; border: 1px solid var(--border); font-size: 13.5px; color: var(--text-main); outline: none; font-family: sans-serif;"
+                type="password">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        style="padding: 16px 24px; border-top: 1px solid #f0f2f5; display: flex; justify-content: flex-end; align-items: center; gap: 10px; background: #fafbfc;">
+        <button class="btn-secondary" onclick="closeAccountSettingsModal()" type="button">Batal</button>
+        <button class="btn-primary" onclick="saveAccountSettings()" type="button">Simpan Perubahan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL BANTUAN & SUPPORT ================= -->
+  <div id="supportHelpModal"
+    style="position: fixed; inset: 0px; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); z-index: 99999; display: none; align-items: center; justify-content: center; padding: 20px;">
+    <div
+      style="background: #ffffff; border-radius: 16px; border: 1px solid #e5e5e5; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2); max-width: 580px; width: 100%; max-height: 85vh; overflow-y: auto; display: flex; flex-direction: column; font-family: 'Geist', sans-serif; animation: fadeIn 0.2s ease-in-out;">
+      <div
+        style="padding: 24px 28px 18px 28px; border-bottom: 1px solid #f0f2f5; display: flex; justify-content: space-between; align-items: flex-start;">
+        <div style="display: flex; align-items: center; gap: 14px;">
+          <div
+            style="width: 44px; height: 44px; border-radius: 12px; background: #f0fdf4; border: 1px solid #bbf7d0; display: flex; align-items: center; justify-content: center; color: #15803d;">
+            <svg fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+              stroke-width="2" viewBox="0 0 24 24" width="22">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+              <line x1="12" x2="12.01" y1="17" y2="17"></line>
+            </svg>
+          </div>
+          <div>
+            <h3 style="font-size: 18px; font-weight: 800; color: #111827; margin: 0 0 2px 0;">Pusat Bantuan &amp;
+              Dukungan</h3>
+            <p style="font-size: 13px; color: #6b7280; margin: 0;">Layanan Bantuan Teknis dan Pemecahan Masalah CCTV AI
+            </p>
+          </div>
+        </div>
+        <button onclick="closeSupportHelpModal()"
+          style="background: #f3f4f6; border: none; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #4b5563; font-size: 15px; font-weight: 600; transition: background 0.15s;">✕</button>
+      </div>
+      <div style="padding: 24px 28px; display: flex; flex-direction: column; gap: 20px;">
+        <div style="background: #fafbfc; border: 1px solid #e5e7eb; border-radius: 12px; padding: 18px 20px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <div style="font-size: 14px; font-weight: 700; color: #1f2937;">Admin Teknis Kandang (AMJ Team)</div>
+            <span
+              style="background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; border-radius: 6px; padding: 2px 8px; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; gap: 5px;"><span
+                style="width: 6px; height: 6px; border-radius: 50%; background: #10b981;"></span>Aktif Siaga</span>
+          </div>
+          <p style="font-size: 12.5px; color: #6b7280; line-height: 1.5; margin-bottom: 14px;">Hubungi tim teknisi
+            jaringan dan pemeliharaan server lokal untuk eskalasi kendala kamera atau server AI.</p>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div
+              style="display: flex; align-items: center; gap: 10px; background: #ffffff; border: 1px solid #e5e7eb; padding: 10px 14px; border-radius: 8px;">
+              <svg fill="none" height="16" stroke="#2d7a58" stroke-linecap="round" stroke-linejoin="round"
+                stroke-width="2" viewBox="0 0 24 24" width="16">
+                <path
+                  d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z">
+                </path>
+              </svg>
+              <div style="display: flex; flex-direction: column;"><span
+                  style="font-size: 10.5px; color: #6b7280; text-transform: uppercase; font-weight: 600;">WhatsApp
+                  Siaga</span><span style="font-size: 12.5px; font-weight: 700; color: #111827;">+62
+                  812-8899-7700</span></div>
+            </div>
+            <div
+              style="display: flex; align-items: center; gap: 10px; background: #ffffff; border: 1px solid #e5e7eb; padding: 10px 14px; border-radius: 8px;">
+              <svg fill="none" height="16" stroke="#2c5a85" stroke-linecap="round" stroke-linejoin="round"
+                stroke-width="2" viewBox="0 0 24 24" width="16">
+                <rect height="16" rx="2" width="20" x="2" y="4"></rect>
+                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+              </svg>
+              <div style="display: flex; flex-direction: column;"><span
+                  style="font-size: 10.5px; color: #6b7280; text-transform: uppercase; font-weight: 600;">Email
+                  Support</span><span
+                  style="font-size: 12.5px; font-weight: 700; color: #111827;">biovision@gmail.com</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div
+            style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: #777777; margin-bottom: 12px;">
+            PANDUAN &amp; PEMECAHAN MASALAH CEPAT</div>
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div style="border: 1px solid #e5e7eb; border-radius: 10px; overflow: hidden; background: #ffffff;">
+              <button
+                onclick="var d=document.getElementById('faqAns1'), ic=document.getElementById('faqIcon1'); if(d.style.display==='none'){ d.style.display='block'; ic.style.transform='rotate(180deg)'; } else { d.style.display='none'; ic.style.transform='rotate(0deg)'; }"
+                style="width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 13px 16px; background: transparent; border: none; text-align: left; cursor: pointer; font-size: 13.5px; font-weight: 600; color: #1f2937;">
+                <span>Kamera Live RTSP Terputus</span>
+                <svg fill="none" height="16" id="faqIcon1" stroke="currentColor" stroke-linecap="round"
+                  stroke-linejoin="round" stroke-width="2"
+                  style="transform: rotate(180deg); transition: transform 0.2s;" viewBox="0 0 24 24" width="16">
+                  <path d="m6 9 6 6 6-6"></path>
+                </svg>
+              </button>
+              <div id="faqAns1"
+                style="display: block; padding: 0 16px 14px 16px; font-size: 12.5px; line-height: 1.55; color: #4b5563; border-top: 1px solid #f3f4f6; margin-top: 2px; padding-top: 10px;">
+                Periksa koneksi switch PoE kandang, pastikan port RTSP 554 terbuka pada router gateway lokal, dan
+                restart stream via tombol switcher kamera Cam 01/Cam 02.
+              </div>
+            </div>
+
+            <div style="border: 1px solid #e5e7eb; border-radius: 10px; overflow: hidden; background: #ffffff;">
+              <button
+                onclick="var d=document.getElementById('faqAns2'), ic=document.getElementById('faqIcon2'); if(d.style.display==='none'){ d.style.display='block'; ic.style.transform='rotate(180deg)'; } else { d.style.display='none'; ic.style.transform='rotate(0deg)'; }"
+                style="width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 13px 16px; background: transparent; border: none; text-align: left; cursor: pointer; font-size: 13.5px; font-weight: 600; color: #1f2937;">
+                <span>Reset Password Staf</span>
+                <svg fill="none" height="16" id="faqIcon2" stroke="currentColor" stroke-linecap="round"
+                  stroke-linejoin="round" stroke-width="2" style="transform: rotate(0deg); transition: transform 0.2s;"
+                  viewBox="0 0 24 24" width="16">
+                  <path d="m6 9 6 6 6-6"></path>
+                </svg>
+              </button>
+              <div id="faqAns2"
+                style="display: none; padding: 0 16px 14px 16px; font-size: 12.5px; line-height: 1.55; color: #4b5563; border-top: 1px solid #f3f4f6; margin-top: 2px; padding-top: 10px;">
+                Permintaan reset sandi akun staf atau petugas kandang wajib diajukan melalui Superadmin dengan
+                verifikasi email terdaftar atau nomor WhatsApp resmi.
+              </div>
+            </div>
+
+            <div style="border: 1px solid #e5e7eb; border-radius: 10px; overflow: hidden; background: #ffffff;">
+              <button
+                onclick="var d=document.getElementById('faqAns3'), ic=document.getElementById('faqIcon3'); if(d.style.display==='none'){ d.style.display='block'; ic.style.transform='rotate(180deg)'; } else { d.style.display='none'; ic.style.transform='rotate(0deg)'; }"
+                style="width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 13px 16px; background: transparent; border: none; text-align: left; cursor: pointer; font-size: 13.5px; font-weight: 600; color: #1f2937;">
+                <span>Panduan Deteksi Postur YOLOv8</span>
+                <svg fill="none" height="16" id="faqIcon3" stroke="currentColor" stroke-linecap="round"
+                  stroke-linejoin="round" stroke-width="2" style="transform: rotate(0deg); transition: transform 0.2s;"
+                  viewBox="0 0 24 24" width="16">
+                  <path d="m6 9 6 6 6-6"></path>
+                </svg>
+              </button>
+              <div id="faqAns3"
+                style="display: none; padding: 0 16px 14px 16px; font-size: 12.5px; line-height: 1.55; color: #4b5563; border-top: 1px solid #f3f4f6; margin-top: 2px; padding-top: 10px;">
+                Model AI mendeteksi bounding box sapi secara real-time. Rasio Standing (Berdiri) &gt;60% saat jam makan
+                dan Lying (Berbaring) saat fase ruminasi/istirahat. Pastikan lensa kamera bersih dari debu kandang untuk
+                akurasi optimal.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        style="padding: 18px 28px; border-top: 1px solid #f0f2f5; display: flex; justify-content: flex-end; align-items: center; background: #fafbfc; border-radius: 0 0 16px 16px;">
+        <button onclick="closeSupportHelpModal()"
+          style="background: #080808; color: #ffffff; padding: 10px 24px; border-radius: 8px; font-weight: 600; font-size: 13px; border: none; cursor: pointer; transition: background 0.15s;"
+          type="button">Tutup</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL TAMBAH AKUN BARU ================= -->
+  <div id="addUserModal"
+    style="position: fixed; inset: 0px; background: rgba(12, 14, 16, 0.72); backdrop-filter: blur(6px); align-items: center; justify-content: center; padding: 20px; z-index: 99999; display: none;">
+    <div class="content-panel"
+      style="background: #ffffff; border-radius: 16px; border: 1px solid var(--border); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35); max-width: 520px; width: 100%; overflow: hidden; display: flex; flex-direction: column; padding: 0;">
+      <div
+        style="padding: 20px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: #fafbfc;">
+        <div>
+          <h3 style="font-size: 17px; font-weight: 800; color: var(--black); margin-bottom: 3px;">Tambah Akun Baru</h3>
+          <p style="font-size: 12.5px; color: var(--muted); margin: 0;">Buat akun staf baru untuk akses pemantauan
+            kandang BOVISION</p>
+        </div>
+        <button onclick="closeAddUserModal()"
+          style="background: #f4f5f7; border: none; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #64748b; font-size: 14px; font-weight: 700;">✕</button>
+      </div>
+      <form onsubmit="handleSaveNewUser(event)"
+        style="padding: 24px; display: flex; flex-direction: column; gap: 16px;">
+        <div>
+          <label style="display: block; font-size: 12.5px; font-weight: 600; color: #374151; margin-bottom: 6px;">Nama
+            Lengkap <span style="color: #c2434f;">*</span></label>
+          <input id="inputNewUserName" required="" type="text" placeholder="Contoh: Rian Anggara, S.Pt"
+            style="width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border); background: #ffffff; font-size: 13.5px; color: var(--text-main); outline: none;">
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div>
+            <label
+              style="display: block; font-size: 12.5px; font-weight: 600; color: #374151; margin-bottom: 6px;">Username
+              / ID Staf <span style="color: #c2434f;">*</span></label>
+            <input id="inputNewUserUsername" required="" type="text" placeholder="rian_op3"
+              style="width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border); background: #ffffff; font-size: 13.5px; color: var(--text-main); outline: none;">
+          </div>
+          <div>
+            <label style="display: block; font-size: 12.5px; font-weight: 600; color: #374151; margin-bottom: 6px;">Hak
+              Akses Role <span style="color: #c2434f;">*</span></label>
+            <select id="inputNewUserRole" required=""
+              style="width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border); background: #ffffff; font-size: 13.5px; color: #374151; outline: none; cursor: pointer;">
+              <option value="Operator">Operator</option>
+              <option value="Admin">Admin</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label style="display: block; font-size: 12.5px; font-weight: 600; color: #374151; margin-bottom: 6px;">Email
+            Staf <span style="color: #c2434f;">*</span></label>
+          <input id="inputNewUserEmail" required="" type="email" placeholder="rian@bovision.id"
+            style="width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border); background: #ffffff; font-size: 13.5px; color: var(--text-main); outline: none;">
+        </div>
+        <div>
+          <label
+            style="display: block; font-size: 12.5px; font-weight: 600; color: #374151; margin-bottom: 6px;">Password
+            Sementara <span style="color: #c2434f;">*</span></label>
+          <div style="display: flex; gap: 8px;">
+            <input id="tempPasswordInput" required="" type="text" value="Bovision@2025"
+              style="flex: 1; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border); background: #ffffff; font-size: 13px; font-family: monospace; color: var(--text-main); outline: none;">
+            <button type="button"
+              onclick="document.getElementById('tempPasswordInput').value = 'Bov#' + Math.random().toString(36).slice(-6) + '!'"
+              style="padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border); background: #f4f5f7; color: #374151; font-size: 12px; font-weight: 600; cursor: pointer; white-space: nowrap;">Generate
+              Acak</button>
+          </div>
+          <p style="font-size: 11px; color: var(--muted); margin-top: 5px;">Staf akan diminta memperbarui password saat
+            pertama kali login.</p>
+        </div>
+        <div
+          style="padding-top: 16px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; align-items: center; gap: 10px; margin-top: 4px;">
+          <button type="button" onclick="closeAddUserModal()" class="btn-secondary"
+            style="padding: 9px 18px; border-radius: 8px; border: 1px solid var(--border); background: #ffffff; color: #374151; font-size: 13px; font-weight: 600; cursor: pointer;">Batal</button>
+          <button type="submit" class="btn-primary"
+            style="padding: 9px 20px; border-radius: 8px; border: none; background: #0c0d0e; color: #ffffff; font-size: 13px; font-weight: 600; cursor: pointer;">Simpan
+            Akun</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= SCRIPTS ================= -->
+  <script>
+    lucide.createIcons();
+
+    function switchView(name) {
+      document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+
+      const titleMap = {
+        'dashboard': 'Dashboard',
+        'users': 'Manajemen Pengguna',
+        'stats': 'Statistics',
+        'history': 'History',
+        'alerts': 'Alerts'
+      };
+
+      const target = document.getElementById(`section-${name}`);
+      if (target) {
+        target.classList.add('active');
+        if (name === 'stats') renderInteractiveChart(currentChartFilter);
+      }
+
+      const pageTitleEl = document.getElementById('pageTitle');
+      if (pageTitleEl && titleMap[name]) {
+        pageTitleEl.innerText = titleMap[name];
+      }
+
+      const userActionArea = document.getElementById('topbarUserAction');
+      if (userActionArea) {
+        userActionArea.style.display = (name === 'users') ? 'block' : 'none';
+      }
+
+      const activeNavBtn = document.getElementById(`btnNav-${name}`);
+      if (activeNavBtn) {
+        activeNavBtn.classList.add('active');
+      } else if (window.event && window.event.currentTarget) {
+        window.event.currentTarget.classList.add('active');
+      }
+    }
+
+    function handleLogout() {
+      if (confirm("Anda akan keluar dari sistem BOVISION Cow Monitoring Dashboard. Lanjutkan ke halaman login?")) {
+        window.location.href = 'login.html';
+      }
+    }
+
+    function refreshDashboardData() {
+      alert("Data telemetri AI berhasil dimuat ulang secara sinkron.");
+    }
+
+    let activeCam = 'cam-01';
+
+    function switchCamera(camId) {
+      activeCam = camId;
+
+      document.querySelectorAll('.cam-nav-pill').forEach(b => b.classList.remove('active'));
+      const btn = document.getElementById(`btn-${camId}`);
+      if (btn) btn.classList.add('active');
+
+      document.querySelectorAll('.fs-cam-btn').forEach(b => b.classList.remove('active'));
+      const fsBtn = document.getElementById(`fs-btn-${camId}`);
+      if (fsBtn) fsBtn.classList.add('active');
+
+      const osdTitle = document.getElementById('camOsdTitle');
+      const fsTitle = document.getElementById('fsCamTitle');
+
+      if (camId === 'cam-01') {
+        if (osdTitle) osdTitle.innerText = "CAM-01 | KANDANG A - SEKTOR UTAMA";
+        if (fsTitle) fsTitle.innerText = "CAM-01 | Kandang A - Sektor Utama";
+      } else {
+        if (osdTitle) osdTitle.innerText = "CAM-02 | KANDANG A - SEKTOR PAKAN BARAT";
+        if (fsTitle) fsTitle.innerText = "CAM-02 | Kandang A - Sektor Pakan Barat";
+      }
+    }
+
+    function openFullscreenCctv() {
+      const fsOverlay = document.getElementById('fullscreenCctvOverlay');
+      if (fsOverlay) {
+        fsOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        switchCamera(activeCam);
+      }
+    }
+
+    function closeFullscreenCctv() {
+      const fsOverlay = document.getElementById('fullscreenCctvOverlay');
+      if (fsOverlay) {
+        fsOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    }
+
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape') {
+        const fsOverlay = document.getElementById('fullscreenCctvOverlay');
+        if (fsOverlay && fsOverlay.classList.contains('active')) {
+          closeFullscreenCctv();
+        }
+        const snapModal = document.getElementById('snapshotModal');
+        if (snapModal && snapModal.classList.contains('active')) {
+          closeSnapshotModal();
+        }
+        closeAddUserModal();
+        closeAccountSettingsModal();
+        closeSupportHelpModal();
+      }
+    });
+
+    function captureSnapshot() {
+      const camLabel = activeCam === 'cam-01' ? 'Kamera 01 - Kandang A (Sektor Utama)' : 'Kamera 02 - Kandang A (Sektor Pakan)';
+      openSnapshotModal('17:13 WIB', 'Berdiri (Standing)', '45 Objek', camLabel, '95.4%', 'Snapshot langsung dari viewport CCTV.');
+    }
+
+    function openSnapshotModal(time, behavior, count, location, conf, notes) {
+      const modal = document.getElementById('snapshotModal');
+      if (!modal) return;
+      document.getElementById('modalTitle').innerText = `Bukti Snapshot AI - ${time}`;
+      document.getElementById('modalLocationSubtitle').innerText = `${location} • ${time}`;
+      document.getElementById('modalEventTime').innerText = time;
+      document.getElementById('modalEventBehavior').innerText = behavior;
+      modal.classList.add('active');
+    }
+
+    function closeSnapshotModal() {
+      const modal = document.getElementById('snapshotModal');
+      if (modal) modal.classList.remove('active');
+    }
+
+    function handleBackdropClick(e) {
+      if (e.target.id === 'snapshotModal') closeSnapshotModal();
+    }
+
+    // Interactive Behavior Chart
+    const chartDatasets = {
+      today: {
+        subtitle: "Komparasi proporsi postur kawanan (Hari Ini - interval 4 jam)",
+        standingAvg: "55%", lyingAvg: "45%",
+        peakStanding: "08:00 - 12:00 WIB (68%)", peakLying: "00:00 - 04:00 WIB (64%)",
+        labels: ["00:00", "04:00", "08:00", "12:00", "16:00", "20:00", "24:00"],
+        standing: [36, 42, 68, 62, 59, 48, 38],
+        lying: [64, 58, 32, 38, 41, 52, 62]
+      },
+      week: {
+        subtitle: "Komparasi proporsi postur kawanan (Minggu Ini - 7 Hari)",
+        standingAvg: "53%", lyingAvg: "47%",
+        peakStanding: "Rabu & Kamis (58%)", peakLying: "Minggu (51%)",
+        labels: ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"],
+        standing: [52, 54, 58, 57, 53, 50, 49],
+        lying: [48, 46, 42, 43, 47, 50, 51]
+      },
+      month: {
+        subtitle: "Komparasi proporsi postur kawanan (Bulan Ini - 4 Siklus Mingguan)",
+        standingAvg: "54%", lyingAvg: "46%",
+        peakStanding: "Minggu 2 (56%)", peakLying: "Minggu 4 (48%)",
+        labels: ["Minggu 1", "Minggu 2", "Minggu 3", "Minggu 4"],
+        standing: [54, 56, 55, 52],
+        lying: [46, 44, 45, 48]
+      }
+    };
+
+    let currentChartFilter = 'today';
+
+    function updateBehaviorChart(filterKey) {
+      currentChartFilter = filterKey;
+      ['today', 'week', 'month'].forEach(k => {
+        const btn = document.getElementById(`btnFilter${k.charAt(0).toUpperCase() + k.slice(1)}`);
+        if (btn) btn.classList.toggle('active', k === filterKey);
+      });
+
+      const data = chartDatasets[filterKey];
+      if (!data) return;
+      document.getElementById('chartPeriodSubtitle').innerText = data.subtitle;
+      document.getElementById('legendStandingVal').innerText = data.standingAvg;
+      document.getElementById('legendLyingVal').innerText = data.lyingAvg;
+      document.getElementById('insightPeakStanding').innerText = data.peakStanding;
+      document.getElementById('insightPeakLying').innerText = data.peakLying;
+      renderInteractiveChart(filterKey);
+    }
+
+    function renderInteractiveChart(filterKey) {
+      const container = document.getElementById('behaviorChartContainer');
+      if (!container) return;
+      const data = chartDatasets[filterKey];
+      if (!data) return;
+
+      const labels = data.labels;
+      const standingData = data.standing;
+      const lyingData = data.lying;
+      const pointsCount = labels.length;
+
+      const svgW = 760; const svgH = 280;
+      const padL = 48; const padR = 24; const padT = 24; const padB = 40;
+      const plotW = svgW - padL - padR; const plotH = svgH - padT - padB;
+
+      const getY = (val) => padT + plotH - ((val / 100) * plotH);
+      const getX = (i) => padL + (i * (plotW / (pointsCount - 1)));
+
+      let pathStanding = "";
+      let pathLying = "";
+      let areaStanding = `M ${getX(0)},${padT + plotH}`;
+      let dotsStandingHtml = "";
+      let dotsLyingHtml = "";
+
+      const colorBlue = "#2c5a85";
+      const colorAmber = "#9e7328";
+
+      standingData.forEach((val, i) => {
+        const x = getX(i); const y = getY(val);
+        if (i === 0) { pathStanding += `M ${x},${y}`; areaStanding += ` L ${x},${y}`; }
+        else { pathStanding += ` L ${x},${y}`; areaStanding += ` L ${x},${y}`; }
+        dotsStandingHtml += `<circle cx="${x}" cy="${y}" r="4" fill="${colorBlue}" stroke="#ffffff" stroke-width="2"/><text x="${x}" y="${y - 8}" font-size="10.5" font-weight="600" fill="${colorBlue}" text-anchor="middle">${val}%</text>`;
+      });
+      areaStanding += ` L ${getX(pointsCount - 1)},${padT + plotH} Z`;
+
+      lyingData.forEach((val, i) => {
+        const x = getX(i); const y = getY(val);
+        if (i === 0) pathLying += `M ${x},${y}`; else pathLying += ` L ${x},${y}`;
+        dotsLyingHtml += `<circle cx="${x}" cy="${y}" r="4" fill="${colorAmber}" stroke="#ffffff" stroke-width="2"/><text x="${x}" y="${y + 16}" font-size="10.5" font-weight="600" fill="#785416" text-anchor="middle">${val}%</text>`;
+      });
+
+      let gridHtml = "";
+      [0, 25, 50, 75, 100].forEach(p => {
+        const y = getY(p);
+        gridHtml += `<line x1="${padL}" y1="${y}" x2="${svgW - padR}" y2="${y}" stroke="#e8ebef" stroke-dasharray="2 2"/><text x="${padL - 10}" y="${y + 3}" font-size="10" fill="#8c95a0" text-anchor="end" font-family="monospace">${p}%</text>`;
+      });
+
+      let xLabelsHtml = "";
+      labels.forEach((lbl, i) => {
+        const x = getX(i);
+        xLabelsHtml += `<text x="${x}" y="${padT + plotH + 20}" font-size="11" font-weight="600" fill="#57606a" text-anchor="middle">${lbl}</text>`;
+      });
+
+      container.innerHTML = `
+        <svg width="100%" height="100%" viewBox="0 0 ${svgW} ${svgH}" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="sg" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="${colorBlue}" stop-opacity="0.14"/>
+              <stop offset="100%" stop-color="${colorBlue}" stop-opacity="0.0"/>
+            </linearGradient>
+          </defs>
+          ${gridHtml}
+          <line x1="${padL}" y1="${padT + plotH}" x2="${svgW - padR}" y2="${padT + plotH}" stroke="#d0d7de" stroke-width="1.5"/>
+          ${xLabelsHtml}
+          <path d="${areaStanding}" fill="url(#sg)"/>
+          <path d="${pathStanding}" fill="none" stroke="${colorBlue}" stroke-width="2.6" stroke-linecap="round"/>
+          <path d="${pathLying}" fill="none" stroke="${colorAmber}" stroke-width="2.6" stroke-linecap="round" stroke-dasharray="5 3"/>
+          ${dotsStandingHtml}
+          ${dotsLyingHtml}
+        </svg>
+      `;
+    }
+
+    // Account Modal Functions
+    function openAccountSettingsModal() {
+      var m = document.getElementById('accountSettingsModal');
+      if (m) m.style.display = 'flex';
+      var d = document.getElementById('profileDropdown');
+      if (d) d.style.display = 'none';
+    }
+    function closeAccountSettingsModal() {
+      var m = document.getElementById('accountSettingsModal');
+      if (m) m.style.display = 'none';
+    }
+    function saveAccountSettings() {
+      alert('Perubahan akun berhasil disimpan.');
+      closeAccountSettingsModal();
+    }
+
+    // Support Modal Functions
+    function openSupportHelpModal() {
+      var m = document.getElementById('supportHelpModal');
+      if (m) m.style.display = 'flex';
+      var d = document.getElementById('profileDropdown');
+      if (d) d.style.display = 'none';
+    }
+    function closeSupportHelpModal() {
+      var m = document.getElementById('supportHelpModal');
+      if (m) m.style.display = 'none';
+    }
+
+    // Add User Modal Functions
+    function openAddUserModal() {
+      var m = document.getElementById('addUserModal');
+      if (m) m.style.display = 'flex';
+    }
+    function closeAddUserModal() {
+      var m = document.getElementById('addUserModal');
+      if (m) m.style.display = 'none';
+    }
+    function handleSaveNewUser(e) {
+      e.preventDefault();
+      var name = document.getElementById('inputNewUserName').value;
+      var role = document.getElementById('inputNewUserRole').value;
+      var username = document.getElementById('inputNewUserUsername').value;
+      var email = document.getElementById('inputNewUserEmail').value;
+
+      var tbody = document.getElementById('userTableBody');
+      var initials = name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'ST';
+      var roleColorBg = role.toLowerCase() === 'admin' ? '#eff6ff' : '#ecfdf5';
+      var roleColorBorder = role.toLowerCase() === 'admin' ? '#bfdbfe' : '#a7f3d0';
+      var roleColorText = role.toLowerCase() === 'admin' ? '#1d4ed8' : '#047857';
+
+      var tr = document.createElement('tr');
+      tr.style.borderBottom = '1px solid #f0f2f5';
+      tr.innerHTML = `
+        <td style="padding: 14px 16px;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="width: 38px; height: 38px; border-radius: 50%; background: #4c769e; color: #ffffff; font-weight: 700; font-size: 13px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">${initials}</div>
+            <div>
+              <div style="font-weight: 700; color: var(--black); font-size: 13.5px;" class="user-name">${name}</div>
+              <div style="color: var(--muted); font-size: 12px;" class="user-meta">@${username} • ${email}</div>
+            </div>
+          </div>
+        </td>
+        <td style="padding: 14px 16px;"><span class="user-role" style="display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 6px; font-size: 11.5px; font-weight: 600; background: ${roleColorBg}; border: 1px solid ${roleColorBorder}; color: ${roleColorText};">${role}</span></td>
+        <td style="padding: 14px 16px;"><span class="user-status" style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 6px; font-size: 11.5px; font-weight: 600; background: var(--accent-green-bg); border: 1px solid var(--accent-green-border); color: var(--accent-green-text);"><span style="width: 6px; height: 6px; border-radius: 50%; background: #2d7a58;"></span>Aktif</span></td>
+        <td style="padding: 14px 16px; color: #374151; font-weight: 500; font-size: 12.5px;">Baru saja dibuat</td>
+        <td style="padding: 14px 16px; text-align: right;">
+          <div style="display: inline-flex; align-items: center; gap: 6px;">
+            <button onclick="resetUserPassword('${name}')" style="display: inline-flex; align-items: center; gap: 5px; padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border); background: #ffffff; color: #374151; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.15s ease;" title="Reset Password"><svg fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="14" xmlns="http://www.w3.org/2000/svg"><path d="m21 2-2 2m-1.5 1.5L14 9l-1.5-1.5L11 9l-1.5-1.5L8 9 3 14v7h7l5-5 1.5-1.5L18 13l1.5-1.5L21 10l-1.5-1.5Z"></path></svg>Reset</button>
+            <button onclick="toggleUserStatus(this)" style="display: inline-flex; align-items: center; gap: 5px; padding: 6px 10px; border-radius: 6px; border: 1px solid rgba(194, 67, 79, 0.25); background: #ffffff; color: #c2434f; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.15s ease;" title="Nonaktifkan Pengguna"><svg fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="14" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10"></circle><path d="m4.9 4.9 14.2 14.2"></path></svg>Nonaktifkan</button>
+          </div>
+        </td>
+      `;
+      tbody.prepend(tr);
+      closeAddUserModal();
+      alert(`Akun untuk ${name} (${role}) berhasil ditambahkan ke sistem BOVISION!`);
+    }
+
+    // User Table Filtering
+    function filterUserTable() {
+      const search = (document.getElementById('userSearchInput').value || '').toLowerCase();
+      const roleFilter = (document.getElementById('userRoleFilter').value || 'all').toLowerCase();
+      const statusFilter = (document.getElementById('userStatusFilter').value || 'all').toLowerCase();
+      const rows = document.querySelectorAll('#userTableBody tr');
+
+      rows.forEach(row => {
+        const text = row.innerText.toLowerCase();
+        const role = row.querySelector('.user-role') ? row.querySelector('.user-role').innerText.toLowerCase() : '';
+        const status = row.querySelector('.user-status') ? row.querySelector('.user-status').innerText.toLowerCase() : '';
+
+        const matchSearch = text.includes(search);
+        const matchRole = roleFilter === 'all' || role.includes(roleFilter);
+        const matchStatus = statusFilter === 'all' || (statusFilter === 'active' && status.includes('aktif') && !status.includes('nonaktif')) || (statusFilter === 'inactive' && status.includes('nonaktif'));
+
+        row.style.display = (matchSearch && matchRole && matchStatus) ? '' : 'none';
+      });
+    }
+
+    function toggleUserStatus(btn) {
+      const row = btn.closest('tr');
+      const statusTag = row.querySelector('.user-status');
+      if (statusTag.innerText.includes('Aktif')) {
+        statusTag.style.background = '#f3f4f6';
+        statusTag.style.border = '1px solid #e5e7eb';
+        statusTag.style.color = '#6b7280';
+        statusTag.innerHTML = '<span style="width: 6px; height: 6px; border-radius: 50%; background: #9ca3af;"></span>Nonaktif';
+        btn.innerHTML = '<svg fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="14" xmlns="http://www.w3.org/2000/svg"><path d="M20 6 9 17l-5-5"></path></svg>Aktifkan';
+        btn.style.color = 'var(--accent-green-text)';
+        btn.style.border = '1px solid var(--accent-green-border)';
+      } else {
+        statusTag.style.background = 'var(--accent-green-bg)';
+        statusTag.style.border = '1px solid var(--accent-green-border)';
+        statusTag.style.color = 'var(--accent-green-text)';
+        statusTag.innerHTML = '<span style="width: 6px; height: 6px; border-radius: 50%; background: #2d7a58;"></span>Aktif';
+        btn.innerHTML = '<svg fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="14" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10"></circle><path d="m4.9 4.9 14.2 14.2"></path></svg>Nonaktifkan';
+        btn.style.color = '#c2434f';
+        btn.style.border = '1px solid rgba(194, 67, 79, 0.25)';
+      }
+    }
+
+    function resetUserPassword(userName) {
+      const tempPass = 'Bov#' + Math.random().toString(36).slice(-6) + '!';
+      alert(`Kata sandi staf "${userName}" telah direset.\nPassword sementara: ${tempPass}\nSilakan sampaikan kepada staf terkait.`);
+    }
+
+    // Close Dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+      const d = document.getElementById('profileDropdown');
+      if (d && !e.target.closest('#profileDropdown') && !e.target.closest('#profileDropdownTrigger')) {
+        d.style.display = 'none';
+      }
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+      renderInteractiveChart('today');
+    });
+  </script>
+</body>
+
+</html>

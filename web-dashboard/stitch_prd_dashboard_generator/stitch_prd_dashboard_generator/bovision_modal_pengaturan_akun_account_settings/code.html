@@ -1,0 +1,1780 @@
+<!DOCTYPE html>
+
+<html lang="id"><head></head><body style="overflow: hidden;"><svg aria-hidden="true" class="inline-defs-container" style="position:absolute;width:0;height:0;overflow:hidden"></svg>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>BOVISION - Cow Monitoring Dashboard</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800;900&amp;family=Michroma&amp;display=swap" rel="stylesheet"/>
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+  :root {
+    --black: #0c0d0e;
+    --white: #ffffff;
+    --bg: #f7f8f9;
+    --border: #e6e8eb;
+    --muted: #6e7681;
+    --card-bg: #ffffff;
+    --text-main: #14171a;
+
+    /* Refined, Elegant & Muted Palette */
+    /* Hijau: Soft Sage / Muted Emerald */
+    --accent-green-bg: #f0f6f3;
+    --accent-green-border: #cfe0d8;
+    --accent-green: #2d7a58;
+    --accent-green-text: #236348;
+    --accent-green-dark: #1c523b;
+
+    /* Biru: Refined Steel Blue / Slate Cobalt */
+    --accent-blue-bg: #f0f4f8;
+    --accent-blue-border: #d0dce8;
+    --accent-blue: #2c5a85;
+    --accent-blue-secondary: #4c769e;
+    --accent-blue-dark: #244b70;
+
+    /* Kuning / Amber: Warm Muted Ochre / Golden Amber */
+    --accent-amber-bg: #f9f5ed;
+    --accent-amber-border: #e8dec6;
+    --accent-amber: #9e7328;
+    --accent-amber-text: #8a621e;
+    --accent-amber-dark: #785416;
+
+    /* Aksen Merah Muted */
+    --accent-red-bg: #fcf1f2;
+    --accent-red-border: #f3d4d7;
+    --accent-red: #c2434f;
+    --accent-red-text: #a82e3a;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Geist', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  body {
+    background-color: var(--bg);
+    color: var(--text-main);
+    min-height: 100vh;
+    display: flex;
+  }
+
+  .app-container {
+    display: flex;
+    width: 100%;
+    min-height: 100vh;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    width: 250px;
+    min-width: 250px;
+    background-color: var(--black);
+    color: var(--white);
+    padding: 30px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    border-right: 1px solid #1a1e22;
+  }
+
+  @keyframes logoPulseOnly {
+    0%, 100% { transform: scale(1); opacity: 0.96; }
+    50% { transform: scale(1.03); opacity: 1; filter: drop-shadow(0 0 10px rgba(45, 122, 88, 0.4)); }
+  }
+
+  .brand-logo-text {
+    font-size: 20px;
+    font-weight: 900;
+    letter-spacing: -0.6px;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    user-select: none;
+    padding: 0 8px;
+    color: var(--white);
+  }
+
+  .brand-logo-text .brand-dot {
+    color: var(--accent-green);
+  }
+
+  .nav-label {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.9px;
+    color: #717882;
+    text-transform: uppercase;
+    padding: 0 10px;
+    margin-bottom: -14px;
+  }
+
+  .nav-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 10px 14px;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    color: #9299a4;
+    font-size: 13.5px;
+    font-weight: 500;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.15s ease;
+  }
+
+  .nav-btn:hover {
+    color: var(--white);
+    background-color: rgba(255, 255, 255, 0.06);
+  }
+
+  .nav-btn.active {
+    background-color: var(--white);
+    color: var(--black);
+    font-weight: 600;
+  }
+
+  .sidebar-footer {
+    margin-top: auto;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding-top: 16px;
+  }
+
+  .logout-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 10px 14px;
+    background: transparent;
+    border: 1px solid rgba(194, 67, 79, 0.25);
+    border-radius: 8px;
+    color: #e06d77;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+
+  .logout-btn:hover {
+    background-color: rgba(194, 67, 79, 0.1);
+    border-color: #c2434f;
+  }
+
+  /* Main Content */
+  .main-content {
+    flex: 1;
+    padding: 32px 40px;
+    background-color: var(--bg);
+    overflow-y: auto;
+    max-width: 1440px;
+  }
+
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 28px;
+  }
+
+  .topbar h2 {
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--black);
+    letter-spacing: -0.6px;
+  }
+
+  .tab-section {
+    display: none;
+    animation: fadeIn 0.2s ease-in-out forwards;
+  }
+
+  .tab-section.active {
+    display: block;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(3px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Welcome Banner */
+  .welcome-banner {
+    background-color: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px 34px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+  }
+
+  .welcome-text h1 {
+    font-family: Michroma, sans-serif;
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--black);
+    margin-bottom: 8px;
+    letter-spacing: -0.02em;
+    line-height: 1.3;
+  }
+
+  .welcome-text p {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.55;
+  }
+
+  .cow-mascot-img {
+    height: 160px;
+    width: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 6px 14px rgba(0,0,0,0.08));
+  }
+
+  /* 3 AI Stat Cards */
+  .stats-grid-ai {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .stat-card {
+    background-color: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 22px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .stat-card:hover {
+    box-shadow: 0 4px 14px rgba(0,0,0,0.04);
+    transform: translateY(-2px);
+  }
+
+  .stat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .stat-title {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+
+  .stat-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .stat-icon.green-tint { 
+    background: var(--accent-green-bg); 
+    color: var(--accent-green-text); 
+    border: 1px solid var(--accent-green-border);
+  }
+  .stat-icon.blue-tint { 
+    background: var(--accent-blue-bg); 
+    color: var(--accent-blue); 
+    border: 1px solid var(--accent-blue-border);
+  }
+  .stat-icon.amber-tint { 
+    background: var(--accent-amber-bg); 
+    color: var(--accent-amber-text); 
+    border: 1px solid var(--accent-amber-border);
+  }
+
+  .stat-value {
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--black);
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+  }
+
+  .stat-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11.5px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 6px;
+    width: fit-content;
+  }
+
+  .stat-badge.healthy {
+    background: var(--accent-green-bg);
+    color: var(--accent-green-text);
+    border: 1px solid var(--accent-green-border);
+  }
+
+  .stat-badge.blue {
+    background: var(--accent-blue-bg);
+    color: var(--accent-blue-dark);
+    border: 1px solid var(--accent-blue-border);
+  }
+
+  .stat-badge.amber {
+    background: var(--accent-amber-bg);
+    color: var(--accent-amber-dark);
+    border: 1px solid var(--accent-amber-border);
+  }
+
+  .stat-subtext {
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  /* Content Panels */
+  .content-panel {
+    background-color: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+  }
+
+  .panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 16px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .panel-header h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--black);
+    letter-spacing: -0.2px;
+  }
+
+  .panel-header .panel-sub {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  /* Camera Buttons */
+  .cam-nav-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: #ffffff;
+    color: #4b5563;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .cam-nav-pill:hover {
+    background: #f9fafb;
+    color: #111;
+  }
+
+  .cam-nav-pill.active {
+    background: var(--black);
+    color: #ffffff;
+    border-color: var(--black);
+    font-weight: 600;
+  }
+
+  .cam-live-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #9ca3af;
+  }
+
+  .cam-nav-pill.active .cam-live-dot {
+    background: var(--accent-green);
+  }
+
+  .cam-fullscreen-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 13px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: #ffffff;
+    color: #374151;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .cam-fullscreen-btn:hover {
+    background: #f3f4f6;
+    color: var(--black);
+    border-color: #cbd5e1;
+  }
+
+  /* Table */
+  .custom-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  .custom-table th {
+    text-align: left;
+    padding: 11px 14px;
+    background-color: #fafbfc;
+    color: #5c6370;
+    font-weight: 600;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .custom-table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid #f0f2f5;
+    color: #24292f;
+  }
+
+  .custom-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .table-tag {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .table-tag.success { 
+    background: var(--accent-green-bg); 
+    color: var(--accent-green-text); 
+    border: 1px solid var(--accent-green-border);
+  }
+  .table-tag.warning { 
+    background: var(--accent-amber-bg); 
+    color: var(--accent-amber-dark); 
+    border: 1px solid var(--accent-amber-border);
+  }
+
+  /* Alerts */
+  .alert-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .alert-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 16px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: #fafbfc;
+  }
+
+  .alert-card.critical {
+    border-left: 4px solid var(--accent-red);
+    background: var(--accent-red-bg);
+    border-color: var(--accent-red-border);
+  }
+
+  .alert-card.warning-type {
+    border-left: 4px solid var(--accent-amber);
+    background: var(--accent-amber-bg);
+    border-color: var(--accent-amber-border);
+  }
+
+  .alert-card.info-type {
+    border-left: 4px solid var(--accent-blue);
+    background: var(--accent-blue-bg);
+    border-color: var(--accent-blue-border);
+  }
+
+  .alert-content h4 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #14171a;
+    margin-bottom: 4px;
+  }
+
+  .alert-content p {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+
+  .alert-time {
+    font-size: 11px;
+    color: #8c959f;
+  }
+
+  /* Chart Filter Buttons */
+  .chart-filter-btn {
+    padding: 6px 13px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: #ffffff;
+    color: #57606a;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .chart-filter-btn.active {
+    background: var(--black);
+    color: #ffffff;
+    border-color: var(--black);
+  }
+
+  .legend-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: #374151;
+  }
+
+  .legend-color-box {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+  }
+
+  /* Modal Popup */
+  .snapshot-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(12, 14, 16, 0.65);
+    backdrop-filter: blur(4px);
+    z-index: 9999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+  }
+
+  .snapshot-modal-overlay.active {
+    display: flex;
+    opacity: 1;
+  }
+
+  .snapshot-modal-container {
+    background: #ffffff;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.25);
+    max-width: 640px;
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh;
+  }
+
+  .snapshot-modal-header {
+    padding: 18px 22px;
+    border-bottom: 1px solid #f0f2f5;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .snapshot-modal-header h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--black);
+  }
+
+  .snapshot-modal-close-btn {
+    background: #f4f5f7;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #64748b;
+  }
+
+  .snapshot-modal-body {
+    padding: 20px 22px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .snapshot-frame {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #111418;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #23272e;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .snapshot-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.9;
+  }
+
+  .snapshot-telemetry-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    background: #fafbfc;
+    padding: 14px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+  }
+
+  .snapshot-telemetry-item {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .snapshot-telemetry-item span {
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 500;
+  }
+
+  .snapshot-telemetry-item strong {
+    font-size: 13px;
+    color: var(--black);
+  }
+
+  .snapshot-modal-footer {
+    padding: 14px 22px;
+    border-top: 1px solid #f0f2f5;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+    background: #fafbfc;
+  }
+
+  .btn-secondary {
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: #ffffff;
+    color: #374151;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .btn-primary {
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: none;
+    background: var(--black);
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* Full Screen Live AI Modal / Overlay */
+  .fullscreen-cctv-overlay {
+    position: fixed;
+    inset: 0;
+    background: #080a0d;
+    z-index: 10000;
+    display: none;
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .fullscreen-cctv-overlay.active {
+    display: flex;
+  }
+
+  .fs-header {
+    background: rgba(12, 15, 19, 0.96);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 14px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 20;
+    flex-shrink: 0;
+  }
+
+  .fs-cam-selector {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.06);
+    padding: 4px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .fs-cam-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 6px;
+    background: transparent;
+    border: none;
+    color: #9ca3af;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .fs-cam-btn:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .fs-cam-btn.active {
+    background: #ffffff;
+    color: #0c0d0e;
+  }
+
+  .fs-cam-btn.active .cam-live-dot {
+    background: var(--accent-green);
+  }
+
+  .fs-exit-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 16px;
+    border-radius: 8px;
+    background: rgba(239, 68, 68, 0.15);
+    border: 1px solid rgba(239, 68, 68, 0.35);
+    color: #fca5a5;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .fs-exit-btn:hover {
+    background: rgba(239, 68, 68, 0.25);
+    color: #fff;
+    border-color: #ef4444;
+  }
+
+  .fs-viewport {
+    flex: 1;
+    position: relative;
+    width: 100%;
+    background: radial-gradient(circle at center, #151b22 0%, #080a0d 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .fs-bottom-bar {
+    background: rgba(12, 15, 19, 0.96);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 12px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    z-index: 20;
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 960px) {
+    .stats-grid-ai {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .app-container {
+      flex-direction: column;
+    }
+    .sidebar {
+      width: 100%;
+      min-width: 100%;
+      height: auto;
+      position: relative;
+      padding: 18px 20px;
+    }
+    .main-content {
+      padding: 20px 16px;
+    }
+  }
+</style>
+<div class="app-container">
+<!-- Sidebar -->
+<aside class="sidebar">
+<div style="text-align: center; display: flex; justify-content: center; align-items: center; padding: 0px 4px; margin-bottom: -10px;"><img alt="BOVISION Logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAcq650Gq-q7BHSgbUO2iiMHhtdE-iOPbdbn4V-mUyAl0JPNPsjDAoM1R2cW1eEVxf4KfAMmbcadbPRUyBJIBECULAfkmsGFVcXxjn_pEL1uh8kqT_1BgdrdsAofqmNBLgbz7CnmGCEVgFzSTmv3aKupWCpDG_zI9ual3vxlxGnxGMoqK9PHEO9xvagaK1x3gYuPmUoycfi9j5cvVEBlq-jz5mX3fWQsxO3EidSA0f2Wn044IKcHz3L" style="height: 64px; width: auto; max-width: 205px; object-fit: contain; display: inline-block; mix-blend-mode: screen; animation-duration: 1.8s; animation-timing-function: ease-in-out; animation-iteration-count: infinite; animation-direction: normal; animation-fill-mode: none; animation-play-state: running; animation-name: logoPulseOnly; animation-timeline: auto; animation-range: normal; transform-origin: center center;"/></div>
+<div class="nav-label">MENU UTAMA</div>
+<nav class="nav-menu">
+<button class="nav-btn active" onclick="switchView('dashboard')">
+<svg aria-hidden="true" class="lucide lucide-layout-dashboard" data-lucide="layout-dashboard" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" style="width:18px;height:18px;" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><rect height="9" rx="1" width="7" x="3" y="3"></rect><rect height="5" rx="1" width="7" x="14" y="3"></rect><rect height="9" rx="1" width="7" x="14" y="12"></rect><rect height="5" rx="1" width="7" x="3" y="16"></rect></svg>
+<span>Dashboard</span>
+</button>
+<button class="nav-btn" onclick="switchView('stats')">
+<svg aria-hidden="true" class="lucide lucide-bar-chart-2" data-lucide="bar-chart-2" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" style="width:18px;height:18px;" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M5 21v-6"></path><path d="M12 21V3"></path><path d="M19 21V9"></path></svg>
+<span>Statistics</span>
+</button>
+<button class="nav-btn" onclick="switchView('history')">
+<svg aria-hidden="true" class="lucide lucide-history" data-lucide="history" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" style="width:18px;height:18px;" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path><path d="M12 7v5l4 2"></path></svg>
+<span>History</span>
+</button>
+<button class="nav-btn" onclick="switchView('alerts')">
+<svg aria-hidden="true" class="lucide lucide-bell" data-lucide="bell" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" style="width:18px;height:18px;" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M10.268 21a2 2 0 0 0 3.464 0"></path><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"></path></svg>
+<span>Alerts</span>
+</button>
+</nav>
+<div class="sidebar-footer">
+</div>
+</aside>
+<!-- Main Content -->
+<main class="main-content">
+<header class="topbar" style="position: relative; z-index: 100; overflow: visible;">
+<h2 id="pageTitle">Dashboard</h2>
+<div class="status-badge" id="profileDropdownTrigger" onclick="var m=document.getElementById('profileDropdown'); if(m){ m.style.display = (m.style.display==='block' ? 'none' : 'block'); }" style="position: relative; z-index: 1000; overflow: visible; display: inline-flex; align-items: center; gap: 12px; cursor: pointer; user-select: none;">
+<style>
+        @keyframes barnCowBob {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          25% { transform: translateY(-3px) rotate(-1.5deg); }
+          50% { transform: translateY(-1px) rotate(0deg); }
+          75% { transform: translateY(-4px) rotate(2deg); }
+        }
+        @keyframes barnEarWiggleLeft {
+          0%, 100% { transform: rotate(0deg); }
+          30% { transform: rotate(-7deg); }
+          60% { transform: rotate(4deg); }
+        }
+        @keyframes barnEarWiggleRight {
+          0%, 100% { transform: rotate(0deg); }
+          30% { transform: rotate(7deg); }
+          60% { transform: rotate(-4deg); }
+        }
+        @keyframes barnEyeBlink {
+          0%, 94%, 98%, 100% { transform: scaleY(1); }
+          96% { transform: scaleY(0.1); }
+        }
+        .barn-cow-peeking {
+          transform-origin: bottom center;
+          animation: barnCowBob 3.6s ease-in-out infinite;
+          transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .barn-ear-l { transform-origin: 39px 38px; animation: barnEarWiggleLeft 3.6s ease-in-out infinite; }
+        .barn-ear-r { transform-origin: 61px 38px; animation: barnEarWiggleRight 3.6s ease-in-out infinite; }
+        .barn-eyes { transform-origin: 50px 45px; animation: barnEyeBlink 4.2s infinite; }
+        .barn-happy-eyes { opacity: 0; transition: opacity 0.2s ease; transform-origin: 50px 45px; }
+        .barn-speech-bubble {
+          position: absolute;
+          bottom: -32px;
+          right: 0;
+          background: #111827;
+          color: #ffffff;
+          font-size: 11px;
+          font-weight: 600;
+          padding: 4px 10px;
+          border-radius: 8px;
+          box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+          white-space: nowrap;
+          pointer-events: none;
+          opacity: 0;
+          transform: translateY(-4px) scale(0.92);
+          transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+          z-index: 50;
+          display: flex;
+          align-items: center;
+          gap: 5px;
+        }
+        .barn-speech-bubble::before {
+          content: '';
+          position: absolute;
+          top: -4px;
+          right: 28px;
+          width: 8px;
+          height: 8px;
+          background: #111827;
+          transform: rotate(45deg);
+        }
+        .status-badge:hover .barn-cow-peeking {
+          animation: none;
+          transform: translateY(-5px) scale(1.1);
+        }
+        .status-badge:hover .barn-eyes { opacity: 0; }
+        .status-badge:hover .barn-happy-eyes { opacity: 1; }
+        .status-badge:hover .barn-speech-bubble {
+          opacity: 1;
+          transform: translateY(0px) scale(1);
+        }
+      </style>
+<div style="position: relative; width: 44px; height: 42px; display: flex; align-items: flex-end; justify-content: center;">
+<svg height="42" style="overflow: visible; display: block;" viewbox="0 0 100 95" width="44">
+<rect fill="#71946b" height="9" rx="4.5" width="84" x="8" y="84"></rect>
+<g fill="#ebd6d8" stroke="#d4adb3" stroke-width="0.8">
+<rect height="3" rx="1" width="18" x="3" y="72"></rect>
+<rect height="3" rx="1" width="18" x="3" y="78"></rect>
+<path d="M5 69 L7 66 L9 69 V85 H5 Z"></path>
+<path d="M13 69 L15 66 L17 69 V85 H13 Z"></path>
+<rect height="3" rx="1" width="18" x="79" y="72"></rect>
+<rect height="3" rx="1" width="18" x="79" y="78"></rect>
+<path d="M83 69 L85 66 L87 69 V85 H83 Z"></path>
+<path d="M91 69 L93 66 L95 69 V85 H91 Z"></path>
+</g>
+<path d="M24 45 L50 20 L76 45 V84 H24 Z" fill="#8f2b31"></path>
+<path d="M18 47 L50 16 L82 47 L78 50 L50 23 L22 50 Z" fill="#edd6d8" stroke="#cfadb2" stroke-width="1"></path>
+<rect fill="#edd6d8" height="35" rx="1.5" width="42" x="29" y="49"></rect>
+<rect fill="#361215" height="32" width="36" x="32" y="52"></rect>
+<defs>
+<clippath id="barnDoorClip">
+<rect height="33" width="36" x="32" y="51"></rect>
+</clippath>
+</defs>
+<g clip-path="url(#barnDoorClip)">
+<g class="barn-cow-peeking">
+<rect fill="#fcf9f5" height="20" rx="6" width="28" x="36" y="65"></rect>
+<ellipse cx="40" cy="74" fill="#6d4c3d" rx="4.5" ry="4"></ellipse>
+<ellipse cx="50" cy="72" fill="#6d4c3d" rx="3.5" ry="3"></ellipse>
+<ellipse cx="61" cy="75" fill="#6d4c3d" rx="3" ry="3.5"></ellipse>
+<g class="barn-ear-l">
+<ellipse cx="38" cy="43" fill="#fcf9f5" rx="4" ry="2.5" stroke="#ebd6d8" stroke-width="1.5" transform="rotate(-18 38 43)"></ellipse>
+</g>
+<g class="barn-ear-r">
+<ellipse cx="62" cy="43" fill="#fcf9f5" rx="4" ry="2.5" stroke="#ebd6d8" stroke-width="1.5" transform="rotate(18 62 43)"></ellipse>
+</g>
+<circle cx="50" cy="47" fill="#fcf9f5" r="10"></circle>
+<g class="barn-eyes">
+<circle cx="46" cy="45" fill="#14171a" r="1.8"></circle>
+<circle cx="54" cy="45" fill="#14171a" r="1.8"></circle>
+</g>
+<g class="barn-happy-eyes">
+<path d="M44 46 Q46 43 48 46" fill="none" stroke="#14171a" stroke-linecap="round" stroke-width="1.4"></path>
+<path d="M52 46 Q54 43 56 46" fill="none" stroke="#14171a" stroke-linecap="round" stroke-width="1.4"></path>
+</g>
+<ellipse cx="50" cy="53" fill="#f0b6bf" rx="8.5" ry="5.5"></ellipse>
+<ellipse cx="47" cy="52" fill="#7d2935" rx="1" ry="1.2"></ellipse>
+<ellipse cx="53" cy="52" fill="#7d2935" rx="1" ry="1.2"></ellipse>
+</g>
+</g>
+</svg>
+</div>
+<div class="barn-speech-bubble"><span>🐮 Sistem Kandang Ready Guys</span><span style="color: rgb(107, 179, 148);">✨</span></div>
+<div id="profileDropdown" onclick="event.stopPropagation()" style="display: none; position: absolute; top: calc(100% + 8px); right: 0px; min-width: 240px; background: rgb(255, 255, 255); border: 1px solid var(--border, #e5e5e5); border-radius: 12px; box-shadow: rgba(0, 0, 0, 0.15) 0px 10px 25px -5px, rgba(0, 0, 0, 0.1) 0px 8px 10px -6px; z-index: 99999; padding: 12px; text-align: left; cursor: default;"><div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; border-bottom: 1px solid #f0f2f5;"><div><div style="font-size: 14px; font-weight: 700; color: rgb(20, 23, 26);">Budi Santoso</div><div style="font-size: 11.5px; color: rgb(110, 118, 129);">budi@bovision.id</div></div><span style="background: rgb(236, 253, 245); color: rgb(4, 120, 87); border: 1px solid rgb(167, 243, 208); padding: 2px 8px; border-radius: 6px; font-size: 11px; font-weight: 600;">Admin</span></div><div style="display: flex; flex-direction: column; gap: 2px; margin-top: 8px;"><button onclick="alert('Membuka Pengaturan Akun')" onmouseout="this.style.background='transparent'" onmouseover="this.style.background='#f3f4f6'" style="display: flex; align-items: center; gap: 10px; width: 100%; padding: 8px 10px; border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: transparent; border-radius: 6px; font-size: 13px; color: rgb(55, 65, 81); font-weight: 500; cursor: pointer; text-align: left; transition: background 0.15s;"><svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="16"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg><span>Pengaturan Akun</span></button><button onclick="alert('Membuka Bantuan Sistem')" onmouseout="this.style.background='transparent'" onmouseover="this.style.background='#f3f4f6'" style="display: flex; align-items: center; gap: 10px; width: 100%; padding: 8px 10px; border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: transparent; border-radius: 6px; font-size: 13px; color: rgb(55, 65, 81); font-weight: 500; cursor: pointer; text-align: left; transition: background 0.15s;"><svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="16"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg><span>Bantuan Sistem</span></button></div><div style="height: 1px; background: #e5e7eb; margin: 8px 0;"></div><button onclick="if(confirm('Apakah Anda yakin ingin keluar?')) handleLogout();" onmouseout="this.style.background='transparent'" onmouseover="this.style.background='#fef2f2'" style="display: flex; align-items: center; gap: 10px; width: 100%; padding: 8px 10px; border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: transparent; border-radius: 6px; font-size: 13px; color: rgb(239, 68, 68); font-weight: 600; cursor: pointer; text-align: left; transition: background 0.15s;"><svg fill="none" height="16" stroke="#ef4444" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="16"><path d="m16 17 5-5-5-5"></path><path d="M21 12H9"></path><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path></svg><span>Keluar</span></button></div><div id="profileDropdown" onclick="event.stopPropagation()" style="display: none; position: absolute; top: calc(100% + 8px); right: 0px; min-width: 240px; background: rgb(255, 255, 255); border: 1px solid var(--border, #e5e5e5); border-radius: 12px; box-shadow: rgba(0, 0, 0, 0.15) 0px 10px 25px -5px, rgba(0, 0, 0, 0.1) 0px 8px 10px -6px; z-index: 99999; padding: 12px; text-align: left; cursor: default;"><div style="display: flex; justify-content: space-between; align-items: center; padding: 4px 6px 10px 6px; border-bottom: 1px solid #f3f4f6;"><div><div style="font-weight: 700; font-size: 14px; color: rgb(17, 24, 39);">Budi Santoso</div><div style="font-size: 12px; color: rgb(107, 114, 128);">budi@bovision.id</div></div><span style="background: rgb(236, 253, 245); color: rgb(4, 120, 87); border: 1px solid rgb(167, 243, 208); border-radius: 6px; padding: 2px 8px; font-size: 11px; font-weight: 600; text-transform: uppercase;">Admin</span></div><div style="display: flex; flex-direction: column; gap: 2px; margin-top: 6px;"><div onmouseout="this.style.background='transparent'" onmouseover="this.style.background='#f9fafb'" style="display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 6px; font-size: 13px; color: #374151; cursor: pointer; transition: background 0.15s;"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" style="width: 15px; height: 15px; color: #6b7280;" viewbox="0 0 24 24"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg><span>Pengaturan Akun</span></div><div onmouseout="this.style.background='transparent'" onmouseover="this.style.background='#f9fafb'" style="display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 6px; font-size: 13px; color: #374151; cursor: pointer; transition: background 0.15s;"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" style="width: 15px; height: 15px; color: #6b7280;" viewbox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg><span>Bantuan Sistem</span></div></div><div style="height: 1px; background: #f3f4f6; margin: 8px 0;"></div><div onclick="if(confirm('Apakah Anda yakin ingin keluar?')) handleLogout();" onmouseout="this.style.background='transparent'" onmouseover="this.style.background='#fef2f2'" style="display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 6px; font-size: 13px; color: #ef4444; font-weight: 600; cursor: pointer; transition: background 0.15s;"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" style="width: 15px; height: 15px; color: #ef4444;" viewbox="0 0 24 24"><path d="m16 17 5-5-5-5"></path><path d="M21 12H9"></path><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path></svg><span>Keluar</span></div></div></div>
+</header>
+<!-- DASHBOARD TAB -->
+<section class="tab-section active" id="section-dashboard">
+<div class="welcome-banner">
+<div class="welcome-text">
+<h1>Welcome to BOVISION Monitor.</h1>
+<p>Analisis perilaku kawanan sapi (Standing vs Lying) berbasis Computer Vision YOLOv8 secara real-time.</p>
+</div>
+<div class="welcome-media" style="height: 180px; width: 220px; display: flex; align-items: center; justify-content: center;">
+<img alt="Cow Mascot" class="cow-mascot-img" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAUKXq3TvqtmhjjFvl9RMm7Bb0Rb35N3__exFq-kPxiK-O5xkAKVRKc_CPoW5W5q-iEMFnbh4-vx1gJL8AXPbaeZdzXD_KPzipdXanW20i4RzukWl2l2Eudy014Fzu09aAUVBFfSk6Tzu9XerBSlvnis-gidVrOee8ZjX4H-PNcb8dw_ihrFVtAUezFLBluE6LVemx4D8Hp5LhKxPVvjOECsDAbei8XTRIxoLnjfwyCcuC6o5KEZuoM"/>
+</div>
+</div>
+<!-- 3 Kartu Metrik AI -->
+<div class="stats-grid-ai">
+<div class="stat-card">
+<div class="stat-header">
+<span class="stat-title">Rata-rata Deteksi Harian</span>
+<div class="stat-icon green-tint">
+<svg aria-hidden="true" class="lucide lucide-users" data-lucide="users" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" style="width:18px;height:18px;" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><path d="M16 3.128a4 4 0 0 1 0 7.744"></path><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><circle cx="9" cy="7" r="4"></circle></svg>
+</div>
+</div>
+<div class="stat-value" id="valAvgDetections">45 <span style="font-size: 15px; font-weight: 500; color: rgb(110, 118, 129);">Objek Sapi</span></div>
+<div class="stat-badge healthy">
+<svg aria-hidden="true" class="lucide lucide-trending-up" data-lucide="trending-up" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" style="width:13px;height:13px;" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M16 7h6v6"></path><path d="m22 7-8.5 8.5-5-5L2 17"></path></svg>
+          +3.2% vs minggu lalu
+        </div>
+<span class="stat-subtext">Deteksi konsisten kamera YOLOv8</span>
+</div>
+<div class="stat-card">
+<div class="stat-header">
+<span class="stat-title">Dominansi Berdiri (Standing)</span>
+<div class="stat-icon blue-tint">
+<img alt="Sapi Berdiri" src="https://lh3.googleusercontent.com/aida/ALJJyrCOODCxsHMPDFSr05hxBrKw-lAxH8ARvc7nvuVR2WjCs6EnyXR8h1lt70Xfatvn83W06Iid_azZM5UZl-HBnNJpJFXL_NXvAutnwGmonKWLzcMAwmXVel0s_-7eLX2A37UyXP-sjvrl8TJpiZ5w13EPA75v20Tgx3Ge6A6v6zeZmUaqsMnp0hHwUkq7geiMecaM9EMWi5valaZkMh1a56OO0nTYv71zG9qQFCOnfXs" style="width: 20px; height: 20px; object-fit: contain; filter: saturate(0.75);"/>
+</div>
+</div>
+<div class="stat-value" id="valStandingDom" style="color: var(--accent-blue);">55%</div>
+<div class="stat-badge blue">Postur Aktif / Makan</div>
+<span class="stat-subtext">Rata-rata 13.2 jam / hari</span>
+</div>
+<div class="stat-card">
+<div class="stat-header">
+<span class="stat-title">Dominansi Berbaring (Lying)</span>
+<div class="stat-icon amber-tint">
+<svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24" width="20">
+<path d="M4 17h16c.8 0 1.5-.7 1.5-1.5 0-1.5-1-2.5-2.5-3l-1-2c-.5-1-1.5-1.5-2.5-1.5h-5c-1 0-2 .6-2.5 1.5l-.8 1.5H7c-1.5 0-2.8.9-3.3 2.3L3.2 15c-.2.6.2 1.3.8 1.7.3.2.7.3 1 .3z" fill="currentColor" fill-opacity="0.12"></path>
+<path d="M18 9V6.5a1.5 1.5 0 0 0-1.5-1.5h-.5l-.8-1.5A1 1 0 0 0 14.3 3h-.6a1 1 0 0 0-.9.5L12 5H10"></path>
+<circle cx="16.5" cy="7.5" fill="currentColor" r=".75"></circle>
+<path d="M3 19h18"></path>
+</svg>
+</div>
+</div>
+<div class="stat-value" id="valLyingDom" style="color: var(--accent-amber-text);">45%</div>
+<div class="stat-badge amber">Waktu Istirahat Sehat</div>
+<span class="stat-subtext">Rata-rata 10.8 jam / hari (Waktu Istirahat Sehat)</span>
+</div>
+</div>
+<!-- Live AI CCTV Monitoring Panel -->
+<div class="content-panel" style="margin-bottom: 24px;">
+<div class="panel-header" style="flex-wrap: wrap; gap: 12px;">
+<div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+<h3 style="display: flex; align-items: center; gap: 8px; margin: 0px;">
+<svg aria-hidden="true" class="lucide lucide-video" data-lucide="video" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" style="width:19px;height:19px;color:var(--accent-red);" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"></path><rect height="12" rx="2" width="14" x="2" y="6"></rect></svg>
+            Live AI Monitoring
+          </h3>
+</div>
+<div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+<button class="cam-nav-pill active" id="btn-cam-01" onclick="switchCamera('cam-01')">
+<span class="cam-live-dot"></span> Cam 01
+          </button>
+<button class="cam-nav-pill" id="btn-cam-02" onclick="switchCamera('cam-02')">
+<span class="cam-live-dot"></span> Cam 02
+          </button>
+<!-- Tombol Full Screen -->
+</div>
+</div>
+<!-- Viewport Frame -->
+<div id="cctvViewport" style="position: relative; width: 100%; aspect-ratio: 16 / 9; min-height: 380px; max-height: 500px; background: radial-gradient(circle, #1a2028 0%, #0c0f12 100%); border-radius: 10px; overflow: hidden; border: 1px solid #252d37; display: flex; flex-direction: column; justify-content: space-between;">
+<div style="position: absolute; inset: 0; background: repeating-linear-gradient(0deg, rgba(255,255,255,0.015), rgba(255,255,255,0.015) 1px, transparent 1px, transparent 3px); pointer-events: none; z-index: 1;"></div>
+<!-- OSD Top -->
+<div style="position: relative; z-index: 2; padding: 14px 18px; display: flex; justify-content: space-between; align-items: flex-start; background: linear-gradient(180deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%); color: #d6d9dc; font-family: monospace; font-size: 12px;">
+<div style="display: flex; align-items: center; gap: 10px;">
+<span style="color: rgb(224, 109, 119); font-weight: 700; display: inline-flex; align-items: center; gap: 5px;"><span style="width: 6px; height: 6px; background: #c2434f; border-radius: 50%;"></span> REC</span>
+<span id="camOsdTitle" style="color: rgb(240, 242, 245); font-weight: 600;">CAM-01 | KANDANG A - SEKTOR UTAMA</span>
+</div>
+<div style="text-align: right; display: flex; gap: 14px;">
+<span id="camOsdLatency" style="color: rgb(136, 192, 163); background: rgba(45, 122, 88, 0.2); padding: 2px 8px; border-radius: 4px; border: 1px solid rgba(45, 122, 88, 0.35);">Latency: 24ms</span>
+<span style="color: rgb(240, 242, 245);">2026-11-11 17:13:55 WIB</span>
+</div>
+</div>
+<!-- Visual / YOLO Boxes -->
+<div id="camVisualContainer" style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+<svg id="camSvgBackground" style="width: 100%; height: 100%; object-fit: cover; opacity: 0.26;" viewbox="0 0 800 450">
+<line stroke="#94a3b8" stroke-dasharray="6 4" stroke-width="3" x1="0" x2="800" y1="280" y2="280"></line>
+<line stroke="#64748b" stroke-width="4" x1="160" x2="100" y1="280" y2="450"></line>
+<line stroke="#64748b" stroke-width="4" x1="420" x2="400" y1="280" y2="450"></line>
+<line stroke="#64748b" stroke-width="4" x1="680" x2="700" y1="280" y2="450"></line>
+<ellipse cx="260" cy="330" fill="#334155" rx="95" ry="50"></ellipse>
+<ellipse cx="550" cy="320" fill="#334155" rx="110" ry="58"></ellipse>
+<ellipse cx="730" cy="350" fill="#334155" rx="75" ry="42"></ellipse>
+</svg>
+<div id="yoloBoundingBoxesLayer" style="position: absolute; inset: 0px; pointer-events: none;">
+<div style="position: absolute; left: 20%; top: 40%; width: 26%; height: 42%; border: 2px solid #2c5a85; background: rgba(44, 90, 133, 0.12); z-index: 2; border-radius: 2px;">
+<div style="position: absolute; top: -20px; left: -2px; background: rgb(44, 90, 133); color: rgb(255, 255, 255); font-size: 10px; font-weight: 700; padding: 2px 6px; font-family: monospace;">
+                cow 0.94 • STANDING
+              </div>
+<div style="position: absolute; bottom: 4px; right: 4px; font-family: monospace; font-size: 9px; color: rgb(208, 220, 232); background: rgba(0, 0, 0, 0.65); padding: 1px 4px;">ID: COW-104</div>
+</div>
+<div style="position: absolute; left: 54%; top: 38%; width: 28%; height: 45%; border: 2px solid #9e7328; background: rgba(158, 115, 40, 0.12); z-index: 2; border-radius: 2px;">
+<div style="position: absolute; top: -20px; left: -2px; background: rgb(158, 115, 40); color: rgb(255, 255, 255); font-size: 10px; font-weight: 700; padding: 2px 6px; font-family: monospace;">
+                cow 0.91 • LYING
+              </div>
+<div style="position: absolute; bottom: 4px; right: 4px; font-family: monospace; font-size: 9px; color: rgb(232, 222, 198); background: rgba(0, 0, 0, 0.65); padding: 1px 4px;">ID: COW-105</div>
+</div>
+</div>
+</div>
+<!-- Bottom OSD -->
+<div style="position: relative; z-index: 2; padding: 12px 18px; display: flex; justify-content: space-between; align-items: flex-end; background: linear-gradient(0deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0) 100%);">
+<div id="camTelemetryOsd" style="font-size: 11px; color: rgb(157, 167, 179); font-family: monospace;">
+<span style="color: rgb(114, 171, 142); font-weight: 600;">● INFERENCE:</span> 35.7 FPS • TensorRT FP16 • GPU: 41°C • Standing: 55% | Lying: 45%
+          </div>
+<span style="padding: 2px 7px; background: rgba(255, 255, 255, 0.12); color: rgb(255, 255, 255); font-size: 11px; border-radius: 4px; font-family: monospace;">H.264 RTSP CH-01</span>
+</div>
+</div>
+<div style="display: flex; justify-content: space-between; align-items: center; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border);">
+<button onclick="captureSnapshot()" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border); background: rgb(255, 255, 255); color: var(--text-main); font-size: 12px; font-weight: 500; cursor: pointer;">
+<svg aria-hidden="true" class="lucide lucide-camera" data-lucide="camera" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" style="width:14px;height:14px;" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z"></path><circle cx="12" cy="13" r="3"></circle></svg>
+          Capture Snapshot
+        </button>
+<button onclick="openFullscreenCctv()" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border); background: rgb(255, 255, 255); color: var(--text-main); font-size: 12px; font-weight: 500; cursor: pointer;">
+<svg aria-hidden="true" class="lucide lucide-expand" data-lucide="expand" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" style="width:14px;height:14px;" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="m15 15 6 6"></path><path d="m15 9 6-6"></path><path d="M21 16v5h-5"></path><path d="M21 8V3h-5"></path><path d="M3 16v5h5"></path><path d="m3 21 6-6"></path><path d="M3 8V3h5"></path><path d="M9 9 3 3"></path></svg>
+          Buka Mode Layar Penuh
+        </button>
+</div>
+</div>
+<!-- Overview Panel -->
+<div class="content-panel">
+<div class="panel-header">
+<div>
+<h3>Monitoring Overview</h3>
+<p class="panel-sub">Ringkasan kondisi kawanan dan stempel deteksi YOLOv8</p>
+</div>
+<button onclick="refreshDashboardData()" style="padding: 6px 12px; font-size: 12px; border-radius: 6px; border: 1px solid var(--border); background: rgb(255, 255, 255); cursor: pointer; font-weight: 500; color: rgb(55, 65, 81);">
+          Muat Data Uji Coba
+        </button>
+</div>
+<div style="margin-top: 10px;">
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+<h4 style="font-size: 14px; font-weight: 700; color: var(--black);">Aktivitas Terkini (Event Kawanan)</h4>
+<span style="font-size: 12px; color: var(--muted);">Sinkronisasi Otomatis Tiap 5 Menit</span>
+</div>
+<table class="custom-table">
+<thead>
+<tr>
+<th>Waktu</th>
+<th>Perilaku Dominan</th>
+<th>Total Deteksi</th>
+<th>Bukti Snapshot</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong style="color: #14171a;">14:30 WIB</strong></td>
+<td><div style="display: flex; align-items: center; gap: 6px;"><span style="width: 7px; height: 7px; border-radius: 50%; background: var(--accent-blue);"></span><span style="color: var(--accent-blue-dark); font-weight: 500;">Berdiri (Standing)</span></div></td>
+<td>45 Objek (95.4%)</td>
+<td><button onclick="openSnapshotModal('14:30 WIB', 'Berdiri (Standing)', '45 Objek Sapi (95.4%)', 'Kamera 01 - Kandang A (Area Sektor Pakan)', '95.4%', 'Kawanan aktif berdiri dan mengonsumsi pakan teratur.')" style="display: inline-flex; align-items: center; gap: 5px; padding: 4px 9px; font-size: 11px; font-weight: 600; border-radius: 5px; border: 1px solid var(--border); background: rgb(255, 255, 255); cursor: pointer;"><svg aria-hidden="true" class="lucide lucide-camera" data-lucide="camera" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" style="width:13px;height:13px;" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z"></path><circle cx="12" cy="13" r="3"></circle></svg>[Lihat Foto]</button></td>
+</tr>
+<tr>
+<td><strong style="color: #14171a;">14:15 WIB</strong></td>
+<td><div style="display: flex; align-items: center; gap: 6px;"><span style="width: 7px; height: 7px; border-radius: 50%; background: var(--accent-amber);"></span><span style="color: var(--accent-amber-dark); font-weight: 500;">Berbaring (Lying)</span></div></td>
+<td>38 Objek (92.1%)</td>
+<td><button onclick="openSnapshotModal('14:15 WIB', 'Berbaring (Lying)', '38 Objek Sapi (92.1%)', 'Kamera 02 - Kandang A (Sektor Ruminasi A)', '92.1%', 'Proses berbaring dan ruminasi normal.')" style="display: inline-flex; align-items: center; gap: 5px; padding: 4px 9px; font-size: 11px; font-weight: 600; border-radius: 5px; border: 1px solid var(--border); background: rgb(255, 255, 255); cursor: pointer;"><svg aria-hidden="true" class="lucide lucide-camera" data-lucide="camera" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" style="width:13px;height:13px;" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z"></path><circle cx="12" cy="13" r="3"></circle></svg>[Lihat Foto]</button></td>
+</tr>
+<tr>
+<td><strong style="color: #14171a;">13:50 WIB</strong></td>
+<td><div style="display: flex; align-items: center; gap: 6px;"><span style="width: 7px; height: 7px; border-radius: 50%; background: var(--accent-amber);"></span><span style="color: var(--accent-amber-dark); font-weight: 500;">Berbaring (Lying)</span></div></td>
+<td>41 Objek (89.7%)</td>
+<td><button onclick="openSnapshotModal('13:50 WIB', 'Berbaring (Lying)', '41 Objek Sapi (89.7%)', 'Kamera 03 - Blok Istirahat Barat', '89.7%', 'Kawanan sedang berbaring istirahat siang.')" style="display: inline-flex; align-items: center; gap: 5px; padding: 4px 9px; font-size: 11px; font-weight: 600; border-radius: 5px; border: 1px solid var(--border); background: rgb(255, 255, 255); cursor: pointer;"><svg aria-hidden="true" class="lucide lucide-camera" data-lucide="camera" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" style="width:13px;height:13px;" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z"></path><circle cx="12" cy="13" r="3"></circle></svg>[Lihat Foto]</button></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<!-- STATISTICS TAB -->
+<section class="tab-section" id="section-stats">
+<div class="stats-grid-ai" style="margin-bottom: 24px;">
+<div class="stat-card">
+<div class="stat-header">
+<span class="stat-title">Rata-rata Deteksi Harian</span>
+<div class="stat-icon green-tint"><svg aria-hidden="true" class="lucide lucide-users" data-lucide="users" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" style="width:18px;height:18px;" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><path d="M16 3.128a4 4 0 0 1 0 7.744"></path><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><circle cx="9" cy="7" r="4"></circle></svg></div>
+</div>
+<div class="stat-value">45 <span style="font-size: 15px; font-weight: 500; color: rgb(110, 118, 129);">Objek Sapi</span></div>
+<div class="stat-badge healthy">+3.2% vs minggu lalu</div>
+<span class="stat-subtext">Deteksi akurat AI konsisten per kamera</span>
+</div>
+<div class="stat-card">
+<div class="stat-header">
+<span class="stat-title">Dominansi Berdiri (Standing)</span>
+<div class="stat-icon blue-tint"><img alt="Sapi Berdiri" src="https://lh3.googleusercontent.com/aida/ALJJyrCOODCxsHMPDFSr05hxBrKw-lAxH8ARvc7nvuVR2WjCs6EnyXR8h1lt70Xfatvn83W06Iid_azZM5UZl-HBnNJpJFXL_NXvAutnwGmonKWLzcMAwmXVel0s_-7eLX2A37UyXP-sjvrl8TJpiZ5w13EPA75v20Tgx3Ge6A6v6zeZmUaqsMnp0hHwUkq7geiMecaM9EMWi5valaZkMh1a56OO0nTYv71zG9qQFCOnfXs" style="width: 20px; height: 20px; object-fit: contain; filter: saturate(0.75);"/></div>
+</div>
+<div class="stat-value" style="color: var(--accent-blue);">55%</div>
+<div class="stat-badge blue">Indikator Postur Berdiri Aktif</div>
+<span class="stat-subtext">Rata-rata 13.2 jam / hari</span>
+</div>
+<div class="stat-card">
+<div class="stat-header">
+<span class="stat-title">Dominansi Berbaring (Lying)</span>
+<div class="stat-icon amber-tint">
+<svg fill="none" height="20" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24" width="20">
+<path d="M4 17h16c.8 0 1.5-.7 1.5-1.5 0-1.5-1-2.5-2.5-3l-1-2c-.5-1-1.5-1.5-2.5-1.5h-5c-1 0-2 .6-2.5 1.5l-.8 1.5H7c-1.5 0-2.8.9-3.3 2.3L3.2 15c-.2.6.2 1.3.8 1.7.3.2.7.3 1 .3z" fill="currentColor" fill-opacity="0.12"></path>
+<path d="M18 9V6.5a1.5 1.5 0 0 0-1.5-1.5h-.5l-.8-1.5A1 1 0 0 0 14.3 3h-.6a1 1 0 0 0-.9.5L12 5H10"></path>
+<circle cx="16.5" cy="7.5" fill="currentColor" r=".75"></circle>
+<path d="M3 19h18"></path>
+</svg>
+</div>
+</div>
+<div class="stat-value" style="color: var(--accent-amber-text);">45%</div>
+<div class="stat-badge amber">Waktu Istirahat Sehat</div>
+<span class="stat-subtext">Rata-rata 10.8 jam / hari</span>
+</div>
+</div>
+<!-- Chart Panel -->
+<div class="content-panel">
+<div class="panel-header" style="flex-wrap: wrap; gap: 14px;">
+<div>
+<h3>Tren Perilaku Kawanan: Standing &amp; Lying</h3>
+<p class="panel-sub" id="chartPeriodSubtitle">Komparasi proporsi postur kawanan (Hari Ini - interval 4 jam)</p>
+</div>
+<div style="display: inline-flex; background: #f0f2f5; padding: 3px; border-radius: 8px; gap: 3px; border: 1px solid var(--border);">
+<button class="chart-filter-btn active" id="btnFilterToday" onclick="updateBehaviorChart('today')">Hari Ini (24 Jam)</button>
+<button class="chart-filter-btn" id="btnFilterWeek" onclick="updateBehaviorChart('week')">Minggu Ini (7 Hari)</button>
+<button class="chart-filter-btn" id="btnFilterMonth" onclick="updateBehaviorChart('month')">Bulan Ini (30 Hari)</button>
+</div>
+</div>
+<div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; padding: 12px 16px; background: #fafbfc; border-radius: 10px; border: 1px solid var(--border);">
+<div style="display: flex; align-items: center; gap: 20px;">
+<div class="legend-indicator">
+<span class="legend-color-box" style="background: var(--accent-blue);"></span>
+<span>Berdiri (Standing)</span>
+<strong id="legendStandingVal" style="color: var(--accent-blue); margin-left: 4px;">55%</strong>
+</div>
+<div class="legend-indicator">
+<span class="legend-color-box" style="background: var(--accent-amber);"></span>
+<span>Berbaring (Lying)</span>
+<strong id="legendLyingVal" style="color: var(--accent-amber-text); margin-left: 4px;">45%</strong>
+</div>
+</div>
+<div style="font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 8px;">
+<span style="display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--accent-green);"></span>
+<span>Status Kawanan: <strong style="color: #14171a;">Keseimbangan Istirahat Optimal (10.8 Jam)</strong></span>
+</div>
+</div>
+<div style="position: relative; width: 100%; overflow-x: auto; padding-bottom: 8px;">
+<div id="behaviorChartContainer" style="min-width: 620px; height: 320px; position: relative;">
+<svg height="100%" preserveaspectratio="none" viewbox="0 0 760 280" width="100%">
+<defs>
+<lineargradient id="sg" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#2c5a85" stop-opacity="0.14"></stop>
+<stop offset="100%" stop-color="#2c5a85" stop-opacity="0.0"></stop>
+</lineargradient>
+</defs>
+<line stroke="#e8ebef" stroke-dasharray="2 2" x1="48" x2="736" y1="240" y2="240"></line><text fill="#8c95a0" font-family="monospace" font-size="10" text-anchor="end" x="38" y="243">0%</text><line stroke="#e8ebef" stroke-dasharray="2 2" x1="48" x2="736" y1="186" y2="186"></line><text fill="#8c95a0" font-family="monospace" font-size="10" text-anchor="end" x="38" y="189">25%</text><line stroke="#e8ebef" stroke-dasharray="2 2" x1="48" x2="736" y1="132" y2="132"></line><text fill="#8c95a0" font-family="monospace" font-size="10" text-anchor="end" x="38" y="135">50%</text><line stroke="#e8ebef" stroke-dasharray="2 2" x1="48" x2="736" y1="78" y2="78"></line><text fill="#8c95a0" font-family="monospace" font-size="10" text-anchor="end" x="38" y="81">75%</text><line stroke="#e8ebef" stroke-dasharray="2 2" x1="48" x2="736" y1="24" y2="24"></line><text fill="#8c95a0" font-family="monospace" font-size="10" text-anchor="end" x="38" y="27">100%</text>
+<line stroke="#d0d7de" stroke-width="1.5" x1="48" x2="736" y1="240" y2="240"></line>
+<text fill="#57606a" font-size="11" font-weight="600" text-anchor="middle" x="48" y="260">00:00</text><text fill="#57606a" font-size="11" font-weight="600" text-anchor="middle" x="162.66666666666669" y="260">04:00</text><text fill="#57606a" font-size="11" font-weight="600" text-anchor="middle" x="277.33333333333337" y="260">08:00</text><text fill="#57606a" font-size="11" font-weight="600" text-anchor="middle" x="392" y="260">12:00</text><text fill="#57606a" font-size="11" font-weight="600" text-anchor="middle" x="506.6666666666667" y="260">16:00</text><text fill="#57606a" font-size="11" font-weight="600" text-anchor="middle" x="621.3333333333334" y="260">20:00</text><text fill="#57606a" font-size="11" font-weight="600" text-anchor="middle" x="736" y="260">24:00</text>
+<path d="M 48,240 L 48,162.24 L 162.66666666666669,149.28 L 277.33333333333337,93.11999999999998 L 392,106.08000000000001 L 506.6666666666667,112.56 L 621.3333333333334,136.32 L 736,157.92000000000002 L 736,240 Z" fill="url(#sg)"></path>
+<path d="M 48,162.24 L 162.66666666666669,149.28 L 277.33333333333337,93.11999999999998 L 392,106.08000000000001 L 506.6666666666667,112.56 L 621.3333333333334,136.32 L 736,157.92000000000002" fill="none" stroke="#2c5a85" stroke-linecap="round" stroke-width="2.6"></path>
+<path d="M 48,101.75999999999999 L 162.66666666666669,114.72000000000001 L 277.33333333333337,170.88 L 392,157.92000000000002 L 506.6666666666667,151.44 L 621.3333333333334,127.67999999999999 L 736,106.08000000000001" fill="none" stroke="#9e7328" stroke-dasharray="5 3" stroke-linecap="round" stroke-width="2.6"></path>
+<circle cx="48" cy="162.24" fill="#2c5a85" r="4" stroke="#ffffff" stroke-width="2"></circle><text fill="#2c5a85" font-size="10.5" font-weight="600" text-anchor="middle" x="48" y="154.24">36%</text><circle cx="162.66666666666669" cy="149.28" fill="#2c5a85" r="4" stroke="#ffffff" stroke-width="2"></circle><text fill="#2c5a85" font-size="10.5" font-weight="600" text-anchor="middle" x="162.66666666666669" y="141.28">42%</text><circle cx="277.33333333333337" cy="93.11999999999998" fill="#2c5a85" r="4" stroke="#ffffff" stroke-width="2"></circle><text fill="#2c5a85" font-size="10.5" font-weight="600" text-anchor="middle" x="277.33333333333337" y="85.11999999999998">68%</text><circle cx="392" cy="106.08000000000001" fill="#2c5a85" r="4" stroke="#ffffff" stroke-width="2"></circle><text fill="#2c5a85" font-size="10.5" font-weight="600" text-anchor="middle" x="392" y="98.08000000000001">62%</text><circle cx="506.6666666666667" cy="112.56" fill="#2c5a85" r="4" stroke="#ffffff" stroke-width="2"></circle><text fill="#2c5a85" font-size="10.5" font-weight="600" text-anchor="middle" x="506.6666666666667" y="104.56">59%</text><circle cx="621.3333333333334" cy="136.32" fill="#2c5a85" r="4" stroke="#ffffff" stroke-width="2"></circle><text fill="#2c5a85" font-size="10.5" font-weight="600" text-anchor="middle" x="621.3333333333334" y="128.32">48%</text><circle cx="736" cy="157.92000000000002" fill="#2c5a85" r="4" stroke="#ffffff" stroke-width="2"></circle><text fill="#2c5a85" font-size="10.5" font-weight="600" text-anchor="middle" x="736" y="149.92000000000002">38%</text>
+<circle cx="48" cy="101.75999999999999" fill="#9e7328" r="4" stroke="#ffffff" stroke-width="2"></circle><text fill="#785416" font-size="10.5" font-weight="600" text-anchor="middle" x="48" y="117.75999999999999">64%</text><circle cx="162.66666666666669" cy="114.72000000000001" fill="#9e7328" r="4" stroke="#ffffff" stroke-width="2"></circle><text fill="#785416" font-size="10.5" font-weight="600" text-anchor="middle" x="162.66666666666669" y="130.72000000000003">58%</text><circle cx="277.33333333333337" cy="170.88" fill="#9e7328" r="4" stroke="#ffffff" stroke-width="2"></circle><text fill="#785416" font-size="10.5" font-weight="600" text-anchor="middle" x="277.33333333333337" y="186.88">32%</text><circle cx="392" cy="157.92000000000002" fill="#9e7328" r="4" stroke="#ffffff" stroke-width="2"></circle><text fill="#785416" font-size="10.5" font-weight="600" text-anchor="middle" x="392" y="173.92000000000002">38%</text><circle cx="506.6666666666667" cy="151.44" fill="#9e7328" r="4" stroke="#ffffff" stroke-width="2"></circle><text fill="#785416" font-size="10.5" font-weight="600" text-anchor="middle" x="506.6666666666667" y="167.44">41%</text><circle cx="621.3333333333334" cy="127.67999999999999" fill="#9e7328" r="4" stroke="#ffffff" stroke-width="2"></circle><text fill="#785416" font-size="10.5" font-weight="600" text-anchor="middle" x="621.3333333333334" y="143.68">52%</text><circle cx="736" cy="106.08000000000001" fill="#9e7328" r="4" stroke="#ffffff" stroke-width="2"></circle><text fill="#785416" font-size="10.5" font-weight="600" text-anchor="middle" x="736" y="122.08000000000001">62%</text>
+</svg>
+</div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--border);">
+<div style="background: var(--accent-blue-bg); border: 1px solid var(--accent-blue-border); border-radius: 8px; padding: 12px 14px;">
+<span style="font-size: 11px; font-weight: 600; color: var(--accent-blue-dark); text-transform: uppercase;">Puncak Aktivitas Berdiri</span>
+<div id="insightPeakStanding" style="font-size: 15px; font-weight: 700; color: var(--accent-blue-dark); margin-top: 2px;">08:00 - 12:00 WIB (68%)</div>
+<span style="font-size: 11px; color: var(--accent-blue-secondary);">Jam makan konsentrat &amp; silase</span>
+</div>
+<div style="background: var(--accent-amber-bg); border: 1px solid var(--accent-amber-border); border-radius: 8px; padding: 12px 14px;">
+<span style="font-size: 11px; font-weight: 600; color: var(--accent-amber-dark); text-transform: uppercase;">Puncak Waktu Istirahat (Lying)</span>
+<div id="insightPeakLying" style="font-size: 15px; font-weight: 700; color: var(--accent-amber-dark); margin-top: 2px;">00:00 - 04:00 WIB (64%)</div>
+<span style="font-size: 11px; color: var(--accent-amber-text);">Fase ruminasi istirahat malam optimal</span>
+</div>
+<div style="background: var(--accent-green-bg); border: 1px solid var(--accent-green-border); border-radius: 8px; padding: 12px 14px;">
+<span style="font-size: 11px; font-weight: 600; color: var(--accent-green-dark); text-transform: uppercase;">Akurasi Klasifikasi AI</span>
+<div style="font-size: 15px; font-weight: 700; color: var(--accent-green-dark); margin-top: 2px;">96.4% IoU Detection</div>
+<span style="font-size: 11px; color: var(--accent-green-text);">Kalibrasi model YOLOv8 terverifikasi</span>
+</div>
+</div>
+</div>
+</section>
+<!-- HISTORY TAB -->
+<section class="tab-section" id="section-history">
+<div class="content-panel">
+<div class="panel-header">
+<div>
+<h3>Riwayat Monitoring AI &amp; Event Kawanan</h3>
+<p class="panel-sub">Log berkala inferensi klasifikasi postur Standing vs Lying per kandang</p>
+</div>
+</div>
+<table class="custom-table">
+<thead>
+<tr>
+<th>Waktu Pencatatan</th>
+<th>Sektor Kamera</th>
+<th>Klasifikasi Dominan</th>
+<th>Rasio (Standing : Lying)</th>
+<th>Keterangan AI</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Hari ini, 14:00 WIB</td>
+<td>Kamera 01 - Kandang A</td>
+<td>Standing (Berdiri)</td>
+<td>58% : 42%</td>
+<td><span class="table-tag success">Aktivitas Makan Normal</span></td>
+</tr>
+<tr>
+<td>Hari ini, 10:00 WIB</td>
+<td>Kamera 03 - Blok Medis</td>
+<td>Lying (Berbaring)</td>
+<td>35% : 65%</td>
+<td><span class="table-tag warning">COW-108 Masih Berbaring</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- ALERTS TAB -->
+<section class="tab-section" id="section-alerts">
+<div class="content-panel">
+<div class="panel-header">
+<div>
+<h3>Notifikasi &amp; Peringatan Terkini</h3>
+<p class="panel-sub">Peringatan anomali postur tubuh, durasi berbaring berlebih, dan status kandang</p>
+</div>
+</div>
+<div class="alert-list">
+<div class="alert-card critical">
+<svg aria-hidden="true" class="lucide lucide-alert-octagon" data-lucide="alert-octagon" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" style="color: var(--accent-red); width: 20px; height: 20px;" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M12 16h.01"></path><path d="M12 8v4"></path><path d="M15.312 2a2 2 0 0 1 1.414.586l4.688 4.688A2 2 0 0 1 22 8.688v6.624a2 2 0 0 1-.586 1.414l-4.688 4.688a2 2 0 0 1-1.414.586H8.688a2 2 0 0 1-1.414-.586l-4.688-4.688A2 2 0 0 1 2 15.312V8.688a2 2 0 0 1 .586-1.414l4.688-4.688A2 2 0 0 1 8.688 2z"></path></svg>
+<div class="alert-content">
+<h4>Peringatan Inaktivitas Ekstrem</h4>
+<p>Durasi berbaring (Lying) terdeteksi berturut-turut lebih dari 16 jam tanpa gerak berdiri.</p>
+<div class="alert-time">15 menit yang lalu • Deteksi AI YOLOv8</div>
+</div>
+</div>
+<div class="alert-card warning-type">
+<svg aria-hidden="true" class="lucide lucide-alert-triangle" data-lucide="alert-triangle" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" style="color: var(--accent-amber); width: 20px; height: 20px;" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"></path><path d="M12 9v4"></path><path d="M12 17h.01"></path></svg>
+<div class="alert-content">
+<h4>Kepadatan Area Pakan Tinggi</h4>
+<p>Kamera 02 mendeteksi penumpukan postur berdiri aktif lebih dari 8 ekor pada seksi palung barat.</p>
+<div class="alert-time">1 jam yang lalu • Kamera 02 Sektor Pakan</div>
+</div>
+</div>
+<div class="alert-card info-type">
+<svg aria-hidden="true" class="lucide lucide-info" data-lucide="info" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" style="color: var(--accent-blue); width: 20px; height: 20px;" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg>
+<div class="alert-content">
+<h4>Laporan Keseimbangan Istirahat Harian</h4>
+<p>Proporsi Standing 55% dan Lying 45% kawanan hari ini berada pada batas indeks kesejahteraan ternak.</p>
+<div class="alert-time">3 jam yang lalu • BOVISION Automated Report</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+</div>
+<!-- FULL SCREEN CCTV OVERLAY -->
+<div class="fullscreen-cctv-overlay" id="fullscreenCctvOverlay">
+<!-- Top Bar -->
+<header class="fs-header">
+<div style="display: flex; align-items: center; gap: 14px;">
+<div style="display: flex; align-items: center; gap: 8px;">
+<span style="display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: #ef4444; box-shadow: 0 0 10px #ef4444; animation: pulseRed 1.6s infinite;"></span>
+<span style="color: rgb(248, 113, 113); font-weight: 800; font-size: 13px; font-family: monospace; letter-spacing: 0.5px;">LIVE FEED</span>
+</div>
+<div style="height: 18px; width: 1px; background: rgba(255, 255, 255, 0.15);"></div>
+<h3 id="fsCamTitle" style="color: rgb(255, 255, 255); font-size: 15px; font-weight: 700; letter-spacing: -0.2px;">CAM-01 | Kandang A - Sektor Utama</h3>
+</div>
+<!-- Center Camera Switcher -->
+<div class="fs-cam-selector">
+<button class="fs-cam-btn active" id="fs-btn-cam-01" onclick="switchCamera('cam-01')">
+<span class="cam-live-dot"></span> Sektor Utama (Cam 01)
+      </button>
+<button class="fs-cam-btn" id="fs-btn-cam-02" onclick="switchCamera('cam-02')">
+<span class="cam-live-dot"></span> Sektor Pakan (Cam 02)
+      </button>
+</div>
+<!-- Right Controls -->
+<div style="display: flex; align-items: center; gap: 12px;">
+<div style="font-family: monospace; font-size: 12px; color: rgb(161, 161, 170); background: rgba(255, 255, 255, 0.05); padding: 5px 10px; border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.08);">
+<span style="color: rgb(52, 211, 153);">● 35.7 FPS</span> • 1080p FP16
+      </div>
+<button class="fs-exit-btn" onclick="closeFullscreenCctv()" title="Tutup Full Screen (Esc)">
+<svg aria-hidden="true" class="lucide lucide-minimize-2" data-lucide="minimize-2" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" style="width:15px;height:15px;" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="m14 10 7-7"></path><path d="M20 10h-6V4"></path><path d="m3 21 7-7"></path><path d="M4 14h6v6"></path></svg>
+<span>Exit Full Screen (ESC)</span>
+</button>
+</div>
+</header>
+<!-- Large Viewport Area -->
+<div class="fs-viewport">
+<!-- Scanlines overlay -->
+<div style="position: absolute; inset: 0; background: repeating-linear-gradient(0deg, rgba(255,255,255,0.02), rgba(255,255,255,0.02) 1px, transparent 1px, transparent 3px); pointer-events: none; z-index: 2;"></div>
+<!-- SVG Grid & Barn Structure -->
+<svg id="fsCamSvgBackground" preserveaspectratio="none" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.35;" viewbox="0 0 1200 675">
+<defs>
+<radialgradient cx="50%" cy="50%" id="fsGlow" r="50%">
+<stop offset="0%" stop-color="#1e293b" stop-opacity="0.8"></stop>
+<stop offset="100%" stop-color="#0b0f15" stop-opacity="0.95"></stop>
+</radialgradient>
+</defs>
+<rect fill="url(#fsGlow)" height="675" width="1200"></rect>
+<!-- Kandang Perspective lines -->
+<line stroke="#475569" stroke-dasharray="8 6" stroke-width="3" x1="0" x2="1200" y1="420" y2="420"></line>
+<line stroke="#475569" stroke-width="4" x1="220" x2="120" y1="420" y2="675"></line>
+<line stroke="#475569" stroke-width="4" x1="620" x2="580" y1="420" y2="675"></line>
+<line stroke="#475569" stroke-width="4" x1="980" x2="1020" y1="420" y2="675"></line>
+<!-- Sapi shapes -->
+<ellipse cx="380" cy="500" fill="#1e293b" rx="140" ry="75"></ellipse>
+<ellipse cx="800" cy="485" fill="#1e293b" rx="160" ry="85"></ellipse>
+<ellipse cx="1060" cy="530" fill="#1e293b" rx="110" ry="60"></ellipse>
+</svg>
+<!-- Fullscreen YOLO Bounding Boxes Layer -->
+<div id="fsYoloLayer" style="position: absolute; inset: 0; pointer-events: none; z-index: 3;">
+<!-- Cow 1: STANDING -->
+<div style="position: absolute; left: 24%; top: 38%; width: 25%; height: 44%; border: 2.5px solid #3b82f6; background: rgba(59, 130, 246, 0.12); border-radius: 4px; box-shadow: 0 0 16px rgba(59, 130, 246, 0.25);">
+<div style="position: absolute; top: -26px; left: -2px; background: #2563eb; color: #ffffff; font-size: 11px; font-weight: 700; padding: 3px 8px; font-family: monospace; border-radius: 4px 4px 0 0; letter-spacing: 0.5px; display: flex; align-items: center; gap: 5px;">
+<span>cow 0.94</span>
+<span style="background: rgba(255, 255, 255, 0.25); padding: 1px 4px; border-radius: 3px;">STANDING</span>
+</div>
+<div style="position: absolute; bottom: 8px; right: 8px; font-family: monospace; font-size: 11px; color: rgb(191, 219, 254); background: rgba(0, 0, 0, 0.75); padding: 3px 6px; border-radius: 4px; border: 1px solid rgba(59, 130, 246, 0.3);">
+          ID: COW-104 • Postur Berdiri
+        </div>
+</div>
+<!-- Cow 2: LYING -->
+<div style="position: absolute; left: 58%; top: 36%; width: 28%; height: 46%; border: 2.5px solid #eab308; background: rgba(234, 179, 8, 0.12); border-radius: 4px; box-shadow: 0 0 16px rgba(234, 179, 8, 0.25);">
+<div style="position: absolute; top: -26px; left: -2px; background: #ca8a04; color: #ffffff; font-size: 11px; font-weight: 700; padding: 3px 8px; font-family: monospace; border-radius: 4px 4px 0 0; letter-spacing: 0.5px; display: flex; align-items: center; gap: 5px;">
+<span>cow 0.91</span>
+<span style="background: rgba(255, 255, 255, 0.25); padding: 1px 4px; border-radius: 3px;">LYING</span>
+</div>
+<div style="position: absolute; bottom: 8px; right: 8px; font-family: monospace; font-size: 11px; color: rgb(254, 240, 138); background: rgba(0, 0, 0, 0.75); padding: 3px 6px; border-radius: 4px; border: 1px solid rgba(234, 179, 8, 0.3);">
+          ID: COW-105 • Berbaring Ruminasi
+        </div>
+</div>
+</div>
+<!-- Live Telemetry Badges Floating -->
+<div style="position: absolute; top: 20px; left: 24px; z-index: 5; display: flex; flex-direction: column; gap: 8px;">
+<div style="background: rgba(0, 0, 0, 0.65); backdrop-filter: blur(8px); padding: 6px 12px; border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.1); color: rgb(226, 232, 240); font-family: monospace; font-size: 12px; display: flex; align-items: center; gap: 8px;">
+<span style="width: 7px; height: 7px; border-radius: 50%; background: #22c55e;"></span>
+        Model YOLOv8x-Cattle: v2.4.1 (FP16 Optimized)
+      </div>
+<div style="background: rgba(0, 0, 0, 0.65); backdrop-filter: blur(8px); padding: 6px 12px; border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.1); color: rgb(203, 213, 225); font-family: monospace; font-size: 12px;">
+        Resolution: 1920 × 1080 (1080p Full HD)
+      </div>
+</div>
+<div style="position: absolute; top: 20px; right: 24px; z-index: 5; text-align: right;">
+<div style="background: rgba(0, 0, 0, 0.65); backdrop-filter: blur(8px); padding: 6px 12px; border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.1); color: rgb(226, 232, 240); font-family: monospace; font-size: 12px;">
+        Latency: <span style="color: rgb(52, 211, 153); font-weight: 700;">24 ms</span> • RTSP H.264
+      </div>
+</div>
+</div>
+<!-- Bottom Info & Detection Bar -->
+<footer class="fs-bottom-bar">
+<div style="display: flex; align-items: center; gap: 24px; flex-wrap: wrap;">
+<div style="display: flex; align-items: center; gap: 10px;">
+<span style="font-size: 12px; color: rgb(156, 163, 175); text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">Deteksi Kawanan:</span>
+<span style="font-size: 15px; font-weight: 700; color: rgb(255, 255, 255); font-family: monospace;">45 Ekor Sapi Terdeteksi</span>
+</div>
+<div style="display: flex; align-items: center; gap: 8px; background: rgba(59, 130, 246, 0.15); padding: 4px 12px; border-radius: 6px; border: 1px solid rgba(59, 130, 246, 0.3);">
+<span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #3b82f6;"></span>
+<span style="font-size: 12px; font-weight: 600; color: rgb(147, 197, 253);">Berdiri (Standing): <strong style="color: #ffffff;">55% (25 Ekor)</strong></span>
+</div>
+<div style="display: flex; align-items: center; gap: 8px; background: rgba(234, 179, 8, 0.15); padding: 4px 12px; border-radius: 6px; border: 1px solid rgba(234, 179, 8, 0.3);">
+<span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #eab308;"></span>
+<span style="font-size: 12px; font-weight: 600; color: rgb(253, 224, 71);">Berbaring (Lying): <strong style="color: #ffffff;">45% (20 Ekor)</strong></span>
+</div>
+</div>
+<div style="display: flex; align-items: center; gap: 14px;">
+<button onclick="captureSnapshot()" style="display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.2); background: rgba(255, 255, 255, 0.08); color: rgb(243, 244, 246); font-size: 12px; font-weight: 600; cursor: pointer; transition: 0.15s;">
+<svg aria-hidden="true" class="lucide lucide-camera" data-lucide="camera" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" style="width:14px;height:14px;" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z"></path><circle cx="12" cy="13" r="3"></circle></svg>
+        Snapshot Layar
+      </button>
+<span style="font-size: 11px; color: rgb(100, 116, 139); font-family: monospace;">Tekan <strong style="color:#cbd5e1;">ESC</strong> untuk keluar</span>
+</div>
+</footer>
+</div>
+<!-- Modal Snapshot -->
+<div class="snapshot-modal-overlay" id="snapshotModal" onclick="handleBackdropClick(event)">
+<div class="snapshot-modal-container">
+<div class="snapshot-modal-header">
+<div>
+<h3 id="modalTitle">Bukti Snapshot AI - 17:13 WIB</h3>
+<p id="modalLocationSubtitle" style="font-size: 12px; color: var(--muted);">Kamera 01 - Kandang A (Sektor Utama) • 17:13 WIB</p>
+</div>
+<button class="snapshot-modal-close-btn" onclick="closeSnapshotModal()">✕</button>
+</div>
+<div class="snapshot-modal-body">
+<div class="snapshot-frame">
+<img alt="Snapshot AI" id="modalSnapshotImage" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAUKXq3TvqtmhjjFvl9RMm7Bb0Rb35N3__exFq-kPxiK-O5xkAKVRKc_CPoW5W5q-iEMFnbh4-vx1gJL8AXPbaeZdzXD_KPzipdXanW20i4RzukWl2l2Eudy014Fzu09aAUVBFfSk6Tzu9XerBSlvnis-gidVrOee8ZjX4H-PNcb8dw_ihrFVtAUezFLBluE6LVemx4D8Hp5LhKxPVvjOECsDAbei8XTRIxoLnjfwyCcuC6o5KEZuoM"/>
+</div>
+<div class="snapshot-telemetry-grid">
+<div class="snapshot-telemetry-item">
+<span>Waktu:</span>
+<strong id="modalEventTime">17:13 WIB</strong>
+</div>
+<div class="snapshot-telemetry-item">
+<span>Perilaku Terdeteksi:</span>
+<strong id="modalEventBehavior" style="color: var(--accent-blue);">Berdiri (Standing)</strong>
+</div>
+</div>
+</div>
+<div class="snapshot-modal-footer">
+<button class="btn-secondary" onclick="closeSnapshotModal()">Tutup</button>
+<button class="btn-primary" onclick="alert('Snapshot berhasil diunduh.')">Unduh Snapshot</button>
+</div>
+</div>
+</div>
+<script>
+  lucide.createIcons();
+
+  function switchView(name) {
+    document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+
+    const titleMap = {
+      'dashboard': 'Dashboard',
+      'stats': 'Statistics',
+      'history': 'History',
+      'alerts': 'Alerts'
+    };
+
+    const target = document.getElementById(`section-${name}`);
+    if (target) {
+      target.classList.add('active');
+      if (name === 'stats') renderInteractiveChart(currentChartFilter);
+    }
+    if (document.getElementById('pageTitle') && titleMap[name]) {
+      document.getElementById('pageTitle').innerText = titleMap[name];
+    }
+    if (window.event && window.event.currentTarget) {
+      window.event.currentTarget.classList.add('active');
+    }
+  }
+
+  function handleLogout() {
+    alert("Anda telah keluar dari sistem BOVISION Cow Monitoring Dashboard.");
+  }
+
+  function refreshDashboardData() {
+    alert("Data telemetri AI berhasil dimuat ulang secara sinkron.");
+  }
+
+  let activeCam = 'cam-01';
+
+  function switchCamera(camId) {
+    activeCam = camId;
+    
+    // Sinkronisasi tombol di dashboard biasa
+    document.querySelectorAll('.cam-nav-pill').forEach(b => b.classList.remove('active'));
+    const btn = document.getElementById(`btn-${camId}`);
+    if (btn) btn.classList.add('active');
+
+    // Sinkronisasi tombol di mode Fullscreen
+    document.querySelectorAll('.fs-cam-btn').forEach(b => b.classList.remove('active'));
+    const fsBtn = document.getElementById(`fs-btn-${camId}`);
+    if (fsBtn) fsBtn.classList.add('active');
+
+    const osdTitle = document.getElementById('camOsdTitle');
+    const fsTitle = document.getElementById('fsCamTitle');
+
+    if (camId === 'cam-01') {
+      if (osdTitle) osdTitle.innerText = "CAM-01 | KANDANG A - SEKTOR UTAMA";
+      if (fsTitle) fsTitle.innerText = "CAM-01 | Kandang A - Sektor Utama";
+    } else {
+      if (osdTitle) osdTitle.innerText = "CAM-02 | KANDANG A - SEKTOR PAKAN BARAT";
+      if (fsTitle) fsTitle.innerText = "CAM-02 | Kandang A - Sektor Pakan Barat";
+    }
+  }
+
+  /* Full Screen Modal View Controls */
+  function openFullscreenCctv() {
+    const fsOverlay = document.getElementById('fullscreenCctvOverlay');
+    if (fsOverlay) {
+      fsOverlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      // Sync active camera
+      switchCamera(activeCam);
+    }
+  }
+
+  function closeFullscreenCctv() {
+    const fsOverlay = document.getElementById('fullscreenCctvOverlay');
+    if (fsOverlay) {
+      fsOverlay.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+  }
+
+  // Keyboard shortcut support (ESC to exit fullscreen)
+  document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+      const fsOverlay = document.getElementById('fullscreenCctvOverlay');
+      if (fsOverlay && fsOverlay.classList.contains('active')) {
+        closeFullscreenCctv();
+      }
+      const snapModal = document.getElementById('snapshotModal');
+      if (snapModal && snapModal.classList.contains('active')) {
+        closeSnapshotModal();
+      }
+    }
+  });
+
+  function captureSnapshot() {
+    const camLabel = activeCam === 'cam-01' ? 'Kamera 01 - Kandang A (Sektor Utama)' : 'Kamera 02 - Kandang A (Sektor Pakan)';
+    openSnapshotModal('17:13 WIB', 'Berdiri (Standing)', '45 Objek', camLabel, '95.4%', 'Snapshot langsung dari viewport CCTV.');
+  }
+
+  function openSnapshotModal(time, behavior, count, location, conf, notes) {
+    const modal = document.getElementById('snapshotModal');
+    if (!modal) return;
+    document.getElementById('modalTitle').innerText = `Bukti Snapshot AI - ${time}`;
+    document.getElementById('modalLocationSubtitle').innerText = `${location} • ${time}`;
+    document.getElementById('modalEventTime').innerText = time;
+    document.getElementById('modalEventBehavior').innerText = behavior;
+    modal.classList.add('active');
+  }
+
+  function closeSnapshotModal() {
+    const modal = document.getElementById('snapshotModal');
+    if (modal) modal.classList.remove('active');
+  }
+
+  function handleBackdropClick(e) {
+    if (e.target.id === 'snapshotModal') closeSnapshotModal();
+  }
+
+  /* Interactive Behavior Chart (Refined Colors) */
+  const chartDatasets = {
+    today: {
+      subtitle: "Komparasi proporsi postur kawanan (Hari Ini - interval 4 jam)",
+      standingAvg: "55%", lyingAvg: "45%",
+      peakStanding: "08:00 - 12:00 WIB (68%)", peakLying: "00:00 - 04:00 WIB (64%)",
+      labels: ["00:00", "04:00", "08:00", "12:00", "16:00", "20:00", "24:00"],
+      standing: [36, 42, 68, 62, 59, 48, 38],
+      lying:    [64, 58, 32, 38, 41, 52, 62]
+    },
+    week: {
+      subtitle: "Komparasi proporsi postur kawanan (Minggu Ini - 7 Hari)",
+      standingAvg: "53%", lyingAvg: "47%",
+      peakStanding: "Rabu & Kamis (58%)", peakLying: "Minggu (51%)",
+      labels: ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"],
+      standing: [52, 54, 58, 57, 53, 50, 49],
+      lying:    [48, 46, 42, 43, 47, 50, 51]
+    },
+    month: {
+      subtitle: "Komparasi proporsi postur kawanan (Bulan Ini - 4 Siklus Mingguan)",
+      standingAvg: "54%", lyingAvg: "46%",
+      peakStanding: "Minggu 2 (56%)", peakLying: "Minggu 4 (48%)",
+      labels: ["Minggu 1", "Minggu 2", "Minggu 3", "Minggu 4"],
+      standing: [54, 56, 55, 52],
+      lying:    [46, 44, 45, 48]
+    }
+  };
+
+  let currentChartFilter = 'today';
+
+  function updateBehaviorChart(filterKey) {
+    currentChartFilter = filterKey;
+    ['today', 'week', 'month'].forEach(k => {
+      const btn = document.getElementById(`btnFilter${k.charAt(0).toUpperCase() + k.slice(1)}`);
+      if (btn) btn.classList.toggle('active', k === filterKey);
+    });
+
+    const data = chartDatasets[filterKey];
+    if (!data) return;
+    document.getElementById('chartPeriodSubtitle').innerText = data.subtitle;
+    document.getElementById('legendStandingVal').innerText = data.standingAvg;
+    document.getElementById('legendLyingVal').innerText = data.lyingAvg;
+    document.getElementById('insightPeakStanding').innerText = data.peakStanding;
+    document.getElementById('insightPeakLying').innerText = data.peakLying;
+    renderInteractiveChart(filterKey);
+  }
+
+  function renderInteractiveChart(filterKey) {
+    const container = document.getElementById('behaviorChartContainer');
+    if (!container) return;
+    const data = chartDatasets[filterKey];
+    if (!data) return;
+
+    const labels = data.labels;
+    const standingData = data.standing;
+    const lyingData = data.lying;
+    const pointsCount = labels.length;
+
+    const svgW = 760; const svgH = 280;
+    const padL = 48; const padR = 24; const padT = 24; const padB = 40;
+    const plotW = svgW - padL - padR; const plotH = svgH - padT - padB;
+
+    const getY = (val) => padT + plotH - ((val / 100) * plotH);
+    const getX = (i) => padL + (i * (plotW / (pointsCount - 1)));
+
+    let pathStanding = "";
+    let pathLying = "";
+    let areaStanding = `M ${getX(0)},${padT + plotH}`;
+    let dotsStandingHtml = "";
+    let dotsLyingHtml = "";
+
+    const colorBlue = "#2c5a85";
+    const colorAmber = "#9e7328";
+
+    standingData.forEach((val, i) => {
+      const x = getX(i); const y = getY(val);
+      if (i === 0) { pathStanding += `M ${x},${y}`; areaStanding += ` L ${x},${y}`; }
+      else { pathStanding += ` L ${x},${y}`; areaStanding += ` L ${x},${y}`; }
+      dotsStandingHtml += `<circle cx="${x}" cy="${y}" r="4" fill="${colorBlue}" stroke="#ffffff" stroke-width="2"/><text x="${x}" y="${y - 8}" font-size="10.5" font-weight="600" fill="${colorBlue}" text-anchor="middle">${val}%</text>`;
+    });
+    areaStanding += ` L ${getX(pointsCount - 1)},${padT + plotH} Z`;
+
+    lyingData.forEach((val, i) => {
+      const x = getX(i); const y = getY(val);
+      if (i === 0) pathLying += `M ${x},${y}`; else pathLying += ` L ${x},${y}`;
+      dotsLyingHtml += `<circle cx="${x}" cy="${y}" r="4" fill="${colorAmber}" stroke="#ffffff" stroke-width="2"/><text x="${x}" y="${y + 16}" font-size="10.5" font-weight="600" fill="#785416" text-anchor="middle">${val}%</text>`;
+    });
+
+    let gridHtml = "";
+    [0, 25, 50, 75, 100].forEach(p => {
+      const y = getY(p);
+      gridHtml += `<line x1="${padL}" y1="${y}" x2="${svgW - padR}" y2="${y}" stroke="#e8ebef" stroke-dasharray="2 2"/><text x="${padL - 10}" y="${y + 3}" font-size="10" fill="#8c95a0" text-anchor="end" font-family="monospace">${p}%</text>`;
+    });
+
+    let xLabelsHtml = "";
+    labels.forEach((lbl, i) => {
+      const x = getX(i);
+      xLabelsHtml += `<text x="${x}" y="${padT + plotH + 20}" font-size="11" font-weight="600" fill="#57606a" text-anchor="middle">${lbl}</text>`;
+    });
+
+    container.innerHTML = `
+      <svg width="100%" height="100%" viewBox="0 0 ${svgW} ${svgH}" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="sg" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="${colorBlue}" stop-opacity="0.14"/>
+            <stop offset="100%" stop-color="${colorBlue}" stop-opacity="0.0"/>
+          </linearGradient>
+        </defs>
+        ${gridHtml}
+        <line x1="${padL}" y1="${padT + plotH}" x2="${svgW - padR}" y2="${padT + plotH}" stroke="#d0d7de" stroke-width="1.5"/>
+        ${xLabelsHtml}
+        <path d="${areaStanding}" fill="url(#sg)"/>
+        <path d="${pathStanding}" fill="none" stroke="${colorBlue}" stroke-width="2.6" stroke-linecap="round"/>
+        <path d="${pathLying}" fill="none" stroke="${colorAmber}" stroke-width="2.6" stroke-linecap="round" stroke-dasharray="5 3"/>
+        ${dotsStandingHtml}
+        ${dotsLyingHtml}
+      </svg>
+    `;
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    renderInteractiveChart('today');
+  });
+</script>
+<div class="snapshot-modal-overlay active" id="accountSettingsModal" style="display: flex; opacity: 1; z-index: 100000; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); position: fixed; inset: 0; align-items: center; justify-content: center; padding: 20px;"><div style="background: #ffffff; border-radius: 16px; border: 1px solid #e5e5e5; box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.25); max-width: 540px; width: 100%; overflow: hidden; display: flex; flex-direction: column; max-height: 90vh; animation: fadeIn 0.2s ease-in-out;"><div style="padding: 24px 28px 18px 28px; border-bottom: 1px solid #f0f2f5; display: flex; justify-content: space-between; align-items: center;"><div><h3 style="font-size: 20px; font-weight: 700; color: #080808; margin: 0; letter-spacing: -0.3px;">Pengaturan Akun</h3><p style="font-size: 13px; color: #6e7681; margin-top: 3px;">Kelola data profil dan preferensi keamanan akun Anda</p></div><button onclick="document.getElementById('accountSettingsModal').remove()" onmouseout="this.style.background='#f4f5f7';this.style.color='#64748b';" onmouseover="this.style.background='#e5e7eb';this.style.color='#111';" style="background: #f4f5f7; border: none; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #64748b; font-size: 16px; font-weight: 600; transition: background 0.15s, color 0.15s;">✕</button></div><div style="padding: 24px 28px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px;"><div><div style="font-size: 11px; font-weight: 700; color: #717882; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 14px;">Informasi Profil</div><div style="display: flex; flex-direction: column; gap: 14px;"><div><label style="display: block; font-size: 13px; font-weight: 600; color: #14171a; margin-bottom: 6px;">Nama Lengkap</label><input onblur="this.style.borderColor='#e5e5e5'" onfocus="this.style.borderColor='#080808'" style="width: 100%; border: 1px solid #e5e5e5; border-radius: 8px; padding: 10px 14px; font-size: 14px; color: #14171a; outline: none; transition: border-color 0.15s;" type="text" value="Budi Santoso"/></div><div><div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;"><label style="font-size: 13px; font-weight: 600; color: #14171a;">Email</label><span style="background: #ecfdf5; color: #236348; border: 1px solid #a7f3d0; font-weight: 600; font-size: 11px; border-radius: 20px; padding: 2px 10px;">Admin</span></div><input readonly="" style="width: 100%; border: 1px solid #e5e5e5; border-radius: 8px; padding: 10px 14px; font-size: 14px; color: #6b7280; background: #f9fafb; outline: none; cursor: not-allowed;" type="email" value="budi@bovision.id"/></div></div></div><div style="height: 1px; background: #e5e7eb;"></div><div><div style="font-size: 11px; font-weight: 700; color: #717882; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 14px;">Ganti Kata Sandi</div><div style="display: flex; flex-direction: column; gap: 14px;"><div><label style="display: block; font-size: 13px; font-weight: 600; color: #14171a; margin-bottom: 6px;">Password Saat Ini</label><input onblur="this.style.borderColor='#e5e5e5'" onfocus="this.style.borderColor='#080808'" placeholder="••••••••••••" style="width: 100%; border: 1px solid #e5e5e5; border-radius: 8px; padding: 10px 14px; font-size: 14px; color: #14171a; outline: none; transition: border-color 0.15s;" type="password"/></div><div><label style="display: block; font-size: 13px; font-weight: 600; color: #14171a; margin-bottom: 6px;">Password Baru</label><div style="position: relative; display: flex; align-items: center;"><input id="inputNewPassword" onblur="this.style.borderColor='#e5e5e5'" onfocus="this.style.borderColor='#080808'" placeholder="Masukkan kata sandi baru" style="width: 100%; border: 1px solid #e5e5e5; border-radius: 8px; padding: 10px 42px 10px 14px; font-size: 14px; color: #14171a; outline: none; transition: border-color 0.15s;" type="password"/><button onclick="var p=document.getElementById('inputNewPassword'); p.type = (p.type==='password'?'text':'password');" style="position: absolute; right: 12px; background: transparent; border: none; cursor: pointer; color: #6e7681; display: flex; align-items: center; justify-content: center; padding: 4px;" type="button"><svg fill="none" height="17" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="17"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg></button></div><div style="font-size: 11.5px; color: #6e7681; margin-top: 5px;">Minimal 8 karakter dengan kombinasi huruf dan angka</div></div><div><label style="display: block; font-size: 13px; font-weight: 600; color: #14171a; margin-bottom: 6px;">Konfirmasi Password Baru</label><input onblur="this.style.borderColor='#e5e5e5'" onfocus="this.style.borderColor='#080808'" placeholder="••••••••••••" style="width: 100%; border: 1px solid #e5e5e5; border-radius: 8px; padding: 10px 14px; font-size: 14px; color: #14171a; outline: none; transition: border-color 0.15s;" type="password"/></div></div></div></div><div style="padding: 16px 28px; border-top: 1px solid #f0f2f5; display: flex; justify-content: flex-end; align-items: center; gap: 12px; background: #fafbfc;"><button onclick="document.getElementById('accountSettingsModal').remove()" onmouseout="this.style.background='#ffffff'" onmouseover="this.style.background='#f9fafb'" style="padding: 10px 18px; border-radius: 8px; border: 1px solid #e5e5e5; background: #ffffff; color: #555555; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.15s;">Batal</button><button onclick="alert('Perubahan profil berhasil disimpan!'); document.getElementById('accountSettingsModal').remove();" onmouseout="this.style.background='#080808'" onmouseover="this.style.background='#23272e'" style="padding: 10px 20px; border-radius: 8px; border: none; background: #080808; color: #ffffff; font-size: 13px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: background 0.15s;"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>Simpan Perubahan</button></div></div></div></body></html>
