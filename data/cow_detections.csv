@@ -1,0 +1,565 @@
+timestamp,camera_id,tag_number,behavior,confidence,status,notes
+2026-11-18 18:30:10,CAM-01,COW-104,Standing,95.4%,Normal,Postur tegak aktif di sektor pakan
+2026-11-18 18:28:05,CAM-01,COW-105,Lying,92.1%,Normal,Ruminasi istirahat wajar
+2026-11-18 18:25:00,CAM-02,COW-108,Lying,96.8%,Warning,Inaktivitas > 4 jam berturut-turut
+2026-11-18 18:15:22,CAM-01,COW-101,Standing,94.0%,Normal,Aktivitas makan normal
+2026-11-18 18:02:11,CAM-02,COW-103,Standing,89.5%,Normal,Pergerakan kawanan normal
+2026-11-18 17:45:30,CAM-01,COW-104,Standing,93.7%,Normal,Sektor utama kandang A
+2026-11-18 17:30:15,CAM-01,COW-107,Lying,91.2%,Normal,Berbaring istirahat petang
+2026-11-18 17:10:00,CAM-02,COW-102,Standing,96.1%,Normal,Minum di sektor air minum
+2026-11-18 19:37:22,CAM-01,COW-104,Standing,97.5%,Normal,AI deteksi real-time
+2026-11-24 13:03:29,CAM-01,COW-01,stand,80.7%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:03:29,CAM-01,COW-02,stand,54.8%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:03:33,CAM-01,COW-03,stand,64.3%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:03:33,CAM-01,COW-01,stand,74.3%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:03:33,CAM-01,COW-02,stand,57.2%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:03:36,CAM-01,COW-03,foraging,50.4%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:03:36,CAM-01,COW-01,stand,82.4%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:03:36,CAM-01,COW-02,stand,42.0%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:03:39,CAM-01,COW-03,foraging,53.4%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:03:39,CAM-01,COW-01,stand,79.5%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:03:39,CAM-01,COW-02,stand,42.7%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:03:42,CAM-01,COW-03,foraging,54.8%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:03:42,CAM-01,COW-01,stand,80.1%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:03:42,CAM-01,COW-02,stand,71.2%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:03:45,CAM-01,COW-03,foraging,54.9%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:03:45,CAM-01,COW-01,stand,81.0%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:03:45,CAM-01,COW-02,stand,41.8%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:03:48,CAM-01,COW-03,foraging,47.6%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:03:48,CAM-01,COW-01,stand,80.4%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:03:48,CAM-01,COW-02,stand,42.7%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:03:51,CAM-01,COW-02,stand,57.2%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:03:51,CAM-01,COW-01,stand,75.1%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:03:54,CAM-01,COW-02,stand,67.1%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:03:54,CAM-01,COW-01,stand,79.2%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:03:54,CAM-01,COW-12,foraging,50.2%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:03:57,CAM-01,COW-02,stand,64.4%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:03:57,CAM-01,COW-01,stand,76.0%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:03:57,CAM-01,COW-12,foraging,51.4%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:04:00,CAM-01,COW-02,stand,62.6%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:04:00,CAM-01,COW-01,stand,79.8%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:04:00,CAM-01,COW-12,foraging,49.2%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:04:03,CAM-01,COW-02,stand,66.1%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:04:03,CAM-01,COW-01,stand,74.6%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:04:03,CAM-01,COW-12,foraging,54.0%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:04:06,CAM-01,COW-02,stand,76.2%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:04:06,CAM-01,COW-01,stand,81.4%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:04:06,CAM-01,COW-08,foraging,44.0%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:04:09,CAM-01,COW-02,stand,68.5%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:04:09,CAM-01,COW-01,stand,77.8%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:04:09,CAM-01,COW-08,foraging,57.5%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:04:12,CAM-01,COW-02,stand,73.4%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:04:12,CAM-01,COW-01,stand,78.6%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:04:12,CAM-01,COW-08,foraging,53.7%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:04:15,CAM-01,COW-02,stand,55.0%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:04:15,CAM-01,COW-01,stand,77.9%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:04:15,CAM-01,COW-08,foraging,49.7%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:04:18,CAM-01,COW-02,stand,62.1%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:04:18,CAM-01,COW-01,stand,83.6%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:04:18,CAM-01,COW-04,foraging,41.3%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:04:21,CAM-01,COW-02,stand,54.5%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:04:21,CAM-01,COW-01,stand,75.0%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:04:21,CAM-01,COW-04,foraging,46.0%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:04:24,CAM-01,COW-02,stand,60.3%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:04:24,CAM-01,COW-01,stand,84.4%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:04:27,CAM-01,COW-02,stand,55.8%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:04:27,CAM-01,COW-01,stand,77.6%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:04:27,CAM-01,COW-05,foraging,41.1%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:04:30,CAM-01,COW-07,foraging,44.7%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:04:30,CAM-01,COW-01,stand,78.2%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:04:30,CAM-01,COW-02,stand,56.9%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:04:33,CAM-01,COW-01,stand,81.6%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:04:33,CAM-01,COW-02,stand,58.8%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:04:33,CAM-01,COW-11,foraging,44.3%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:04:36,CAM-01,COW-01,stand,82.8%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:04:36,CAM-01,COW-02,stand,47.6%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:04:36,CAM-01,COW-11,foraging,42.5%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:04:39,CAM-01,COW-01,stand,80.1%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:04:39,CAM-01,COW-02,stand,55.7%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:04:39,CAM-01,COW-12,foraging,47.3%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:04:42,CAM-01,COW-01,stand,82.3%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:04:42,CAM-01,COW-02,stand,54.0%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:04:42,CAM-01,COW-12,foraging,45.1%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:04:45,CAM-01,COW-01,stand,77.2%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:04:45,CAM-01,COW-03,foraging,40.2%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:04:48,CAM-01,COW-01,foraging,49.8%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:04:48,CAM-01,COW-02,stand,52.4%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:04:48,CAM-01,COW-08,stand,76.8%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:04:51,CAM-01,COW-01,foraging,42.6%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:04:51,CAM-01,COW-02,stand,50.4%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:04:51,CAM-01,COW-08,stand,75.4%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:04:54,CAM-01,COW-01,foraging,42.1%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:04:54,CAM-01,COW-08,stand,83.2%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:04:57,CAM-01,COW-01,foraging,50.5%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:04:57,CAM-01,COW-08,stand,79.5%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:04:57,CAM-01,COW-02,stand,52.3%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:05:00,CAM-01,COW-01,foraging,43.7%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:05:00,CAM-01,COW-02,stand,67.1%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:05:00,CAM-01,COW-05,stand,81.8%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:05:03,CAM-01,COW-01,stand,80.3%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:05:03,CAM-01,COW-02,stand,55.4%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:05:03,CAM-01,COW-05,foraging,46.0%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:05:06,CAM-01,COW-02,stand,56.5%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:05:06,CAM-01,COW-01,stand,81.0%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:05:09,CAM-01,COW-02,stand,60.2%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:05:09,CAM-01,COW-01,stand,79.2%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:05:09,CAM-01,COW-04,foraging,40.6%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:05:13,CAM-01,COW-01,stand,79.5%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:05:13,CAM-01,COW-06,foraging,43.1%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:05:13,CAM-01,COW-02,stand,63.6%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:05:16,CAM-01,COW-01,stand,77.9%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:05:16,CAM-01,COW-02,stand,69.4%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:05:16,CAM-01,COW-07,foraging,42.6%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:05:19,CAM-01,COW-01,stand,80.8%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:05:19,CAM-01,COW-08,foraging,41.3%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:05:19,CAM-01,COW-02,stand,77.4%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:05:22,CAM-01,COW-01,stand,77.5%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:05:22,CAM-01,COW-08,foraging,44.9%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:05:22,CAM-01,COW-02,stand,58.6%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:05:25,CAM-01,COW-01,stand,70.3%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:05:28,CAM-01,COW-02,stand,71.5%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:05:28,CAM-01,COW-01,stand,72.6%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:05:31,CAM-01,COW-02,stand,54.9%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:05:31,CAM-01,COW-01,stand,74.4%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:05:31,CAM-01,COW-10,foraging,47.0%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:05:34,CAM-01,COW-02,stand,63.9%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:05:34,CAM-01,COW-01,stand,72.0%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:05:34,CAM-01,COW-04,foraging,43.4%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:05:37,CAM-01,COW-02,stand,60.0%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:05:37,CAM-01,COW-01,stand,77.5%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:05:37,CAM-01,COW-04,foraging,47.9%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:05:40,CAM-01,COW-02,stand,67.9%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:05:40,CAM-01,COW-01,stand,78.4%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:05:43,CAM-01,COW-01,stand,80.0%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:05:43,CAM-01,COW-06,foraging,44.6%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:05:46,CAM-01,COW-01,stand,78.7%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:05:46,CAM-01,COW-06,foraging,48.7%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:05:46,CAM-01,COW-02,stand,51.8%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:05:49,CAM-01,COW-01,foraging,45.1%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:05:49,CAM-01,COW-06,stand,81.0%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:05:52,CAM-01,COW-02,stand,59.5%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:05:52,CAM-01,COW-01,stand,79.4%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:05:55,CAM-01,COW-02,stand,64.8%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:05:55,CAM-01,COW-01,stand,81.8%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:05:58,CAM-01,COW-01,stand,76.8%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:05:58,CAM-01,COW-02,stand,57.5%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:06:01,CAM-01,COW-01,stand,78.5%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:06:01,CAM-01,COW-02,stand,47.0%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:06:04,CAM-01,COW-01,stand,71.4%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:06:04,CAM-01,COW-02,stand,56.5%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:06:07,CAM-01,COW-01,stand,69.2%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:06:07,CAM-01,COW-08,foraging,41.8%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:06:07,CAM-01,COW-02,stand,60.5%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:06:10,CAM-01,COW-01,stand,80.5%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:06:10,CAM-01,COW-02,stand,64.4%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:06:13,CAM-01,COW-01,stand,86.5%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:06:16,CAM-01,COW-01,stand,86.0%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:06:16,CAM-01,COW-02,stand,56.6%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:06:16,CAM-01,COW-03,stand,40.6%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:06:19,CAM-01,COW-01,stand,84.0%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:06:22,CAM-01,COW-01,stand,84.1%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:06:25,CAM-01,COW-01,stand,87.0%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:06:25,CAM-01,COW-02,stand,70.0%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:06:28,CAM-01,COW-01,stand,86.9%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:06:28,CAM-01,COW-02,stand,71.1%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:06:31,CAM-01,COW-01,stand,87.1%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:06:31,CAM-01,COW-02,stand,54.5%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:06:34,CAM-01,COW-01,stand,83.6%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:06:34,CAM-01,COW-02,stand,57.2%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:06:37,CAM-01,COW-01,stand,85.3%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:06:37,CAM-01,COW-02,stand,60.3%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:06:41,CAM-01,COW-01,stand,82.1%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:06:41,CAM-01,COW-02,stand,56.1%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:06:44,CAM-01,COW-01,stand,84.8%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:06:44,CAM-01,COW-02,stand,57.5%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:06:44,CAM-01,COW-04,stand,44.9%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:06:47,CAM-01,COW-01,stand,84.8%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:06:47,CAM-01,COW-02,stand,55.4%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:06:47,CAM-01,COW-04,stand,41.1%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:06:50,CAM-01,COW-01,stand,84.9%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:06:50,CAM-01,COW-02,stand,68.2%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:06:53,CAM-01,COW-01,stand,84.3%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:06:53,CAM-01,COW-02,stand,57.0%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:06:56,CAM-01,COW-01,stand,83.7%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:06:56,CAM-01,COW-02,stand,72.6%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:06:59,CAM-01,COW-01,stand,83.5%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:06:59,CAM-01,COW-02,stand,53.6%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:07:02,CAM-01,COW-01,stand,85.4%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:07:02,CAM-01,COW-02,stand,70.8%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:07:05,CAM-01,COW-01,stand,84.2%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:07:05,CAM-01,COW-02,stand,57.5%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:07:08,CAM-01,COW-01,stand,84.2%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:07:08,CAM-01,COW-02,stand,65.3%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:07:11,CAM-01,COW-01,stand,85.2%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:07:11,CAM-01,COW-02,stand,57.0%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:07:14,CAM-01,COW-01,stand,84.3%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:07:14,CAM-01,COW-02,stand,67.7%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:07:17,CAM-01,COW-01,stand,83.2%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:07:17,CAM-01,COW-02,stand,57.6%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:07:20,CAM-01,COW-01,stand,84.6%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:07:20,CAM-01,COW-02,stand,41.0%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:07:23,CAM-01,COW-01,stand,85.6%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:07:23,CAM-01,COW-02,stand,62.0%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:07:23,CAM-01,COW-03,stand,50.2%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:07:26,CAM-01,COW-01,stand,84.2%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:07:26,CAM-01,COW-02,stand,65.6%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:07:29,CAM-01,COW-01,stand,85.9%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:07:29,CAM-01,COW-02,stand,66.5%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:07:32,CAM-01,COW-01,stand,84.5%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:07:32,CAM-01,COW-02,stand,71.6%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:07:35,CAM-01,COW-01,stand,85.3%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:07:35,CAM-01,COW-02,stand,74.0%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:07:38,CAM-01,COW-01,stand,84.8%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:07:38,CAM-01,COW-02,stand,40.6%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:07:41,CAM-01,COW-01,stand,85.1%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:07:41,CAM-01,COW-02,stand,51.0%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:07:44,CAM-01,COW-01,stand,84.1%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:07:44,CAM-01,COW-02,stand,65.1%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:07:47,CAM-01,COW-01,stand,85.6%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:07:47,CAM-01,COW-02,stand,66.0%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:07:50,CAM-01,COW-01,stand,84.3%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:07:53,CAM-01,COW-01,stand,83.7%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:07:53,CAM-01,COW-02,stand,67.3%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:07:56,CAM-01,COW-01,stand,85.3%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:07:56,CAM-01,COW-02,stand,69.5%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:07:59,CAM-01,COW-01,stand,85.3%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:07:59,CAM-01,COW-02,stand,51.7%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:08:02,CAM-01,COW-01,stand,84.7%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:08:02,CAM-01,COW-02,stand,64.3%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:08:05,CAM-01,COW-01,stand,84.5%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:08:05,CAM-01,COW-02,stand,61.8%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:08:08,CAM-01,COW-01,stand,83.2%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:08:08,CAM-01,COW-02,stand,56.1%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:08:11,CAM-01,COW-01,stand,86.2%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:08:11,CAM-01,COW-02,stand,58.4%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:08:14,CAM-01,COW-01,stand,84.1%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:08:14,CAM-01,COW-02,stand,70.3%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:08:14,CAM-01,COW-03,stand,47.4%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:08:18,CAM-01,COW-01,stand,84.8%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:08:18,CAM-01,COW-02,stand,62.2%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:08:18,CAM-01,COW-03,stand,40.9%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:08:21,CAM-01,COW-01,stand,85.7%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:08:21,CAM-01,COW-02,stand,77.9%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:08:24,CAM-01,COW-01,stand,87.7%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:08:24,CAM-01,COW-02,stand,62.3%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:08:27,CAM-01,COW-01,stand,85.4%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:08:27,CAM-01,COW-02,stand,75.7%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:08:30,CAM-01,COW-01,stand,84.5%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:08:30,CAM-01,COW-02,stand,58.4%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:08:34,CAM-01,COW-01,stand,85.7%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:08:34,CAM-01,COW-02,stand,70.3%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:08:37,CAM-01,COW-01,stand,83.7%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:08:37,CAM-01,COW-02,stand,65.2%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:08:37,CAM-01,COW-08,foraging,41.4%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:08:40,CAM-01,COW-02,stand,64.4%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:08:40,CAM-01,COW-01,stand,84.7%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:08:43,CAM-01,COW-02,stand,60.4%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:08:43,CAM-01,COW-01,stand,85.2%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:08:46,CAM-01,COW-02,stand,51.3%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:08:46,CAM-01,COW-01,stand,82.6%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:08:49,CAM-01,COW-01,stand,84.4%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:08:52,CAM-01,COW-01,stand,82.0%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:08:52,CAM-01,COW-02,stand,59.9%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:08:55,CAM-01,COW-01,stand,88.4%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:08:55,CAM-01,COW-02,stand,51.5%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:08:58,CAM-01,COW-01,stand,86.0%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:08:58,CAM-01,COW-02,stand,45.2%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:09:01,CAM-01,COW-01,stand,80.2%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:09:01,CAM-01,COW-02,stand,49.0%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:09:04,CAM-01,COW-01,stand,84.1%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:09:04,CAM-01,COW-02,stand,67.8%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:09:07,CAM-01,COW-01,stand,81.6%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:09:07,CAM-01,COW-02,stand,53.8%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:09:10,CAM-01,COW-01,stand,85.5%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:09:10,CAM-01,COW-02,stand,48.1%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:09:13,CAM-01,COW-01,stand,78.6%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:09:13,CAM-01,COW-02,stand,60.7%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:09:16,CAM-01,COW-01,stand,82.0%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:09:16,CAM-01,COW-02,stand,51.9%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:09:19,CAM-01,COW-01,stand,76.9%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:09:19,CAM-01,COW-02,stand,56.9%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:09:22,CAM-01,COW-01,stand,84.3%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:09:22,CAM-01,COW-02,stand,45.8%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:09:25,CAM-01,COW-01,stand,81.5%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:09:25,CAM-01,COW-02,stand,65.3%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:09:28,CAM-01,COW-01,stand,84.2%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:09:28,CAM-01,COW-02,stand,53.6%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:09:31,CAM-01,COW-01,stand,80.5%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:09:35,CAM-01,COW-01,stand,82.9%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:09:35,CAM-01,COW-02,stand,59.1%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:09:38,CAM-01,COW-01,stand,80.8%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:09:38,CAM-01,COW-02,stand,63.5%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:09:41,CAM-01,COW-01,stand,85.5%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:09:41,CAM-01,COW-02,stand,43.2%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:09:44,CAM-01,COW-01,stand,81.0%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:09:44,CAM-01,COW-02,stand,68.8%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:09:47,CAM-01,COW-01,stand,82.8%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:09:47,CAM-01,COW-02,stand,63.2%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:09:50,CAM-01,COW-01,stand,77.8%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:09:50,CAM-01,COW-02,stand,67.7%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:09:53,CAM-01,COW-01,stand,77.6%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:09:53,CAM-01,COW-02,stand,74.1%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:09:56,CAM-01,COW-01,stand,85.1%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:09:56,CAM-01,COW-02,stand,65.1%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:09:59,CAM-01,COW-01,stand,85.3%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:09:59,CAM-01,COW-02,stand,68.0%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:10:02,CAM-01,COW-01,stand,83.6%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:10:02,CAM-01,COW-02,stand,60.0%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:10:05,CAM-01,COW-01,stand,87.2%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:10:05,CAM-01,COW-02,stand,77.7%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:10:08,CAM-01,COW-01,stand,83.8%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:10:08,CAM-01,COW-02,stand,72.7%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:10:11,CAM-01,COW-01,stand,83.8%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:10:11,CAM-01,COW-02,stand,48.6%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:10:15,CAM-01,COW-01,stand,82.6%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:10:15,CAM-01,COW-02,stand,75.4%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:10:18,CAM-01,COW-01,stand,81.3%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:10:18,CAM-01,COW-02,stand,71.1%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:10:21,CAM-01,COW-01,stand,80.3%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:10:21,CAM-01,COW-02,stand,70.1%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:10:24,CAM-01,COW-01,stand,84.3%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:10:24,CAM-01,COW-02,stand,67.9%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:10:27,CAM-01,COW-01,stand,79.9%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:10:27,CAM-01,COW-02,stand,43.7%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:10:31,CAM-01,COW-01,stand,78.7%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:10:31,CAM-01,COW-02,stand,43.7%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:10:34,CAM-01,COW-01,stand,84.2%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:10:34,CAM-01,COW-02,stand,71.1%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:10:37,CAM-01,COW-01,stand,87.6%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:10:37,CAM-01,COW-02,stand,68.9%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:10:40,CAM-01,COW-01,stand,81.9%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:10:40,CAM-01,COW-02,stand,63.9%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:10:43,CAM-01,COW-01,stand,85.5%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:10:43,CAM-01,COW-02,stand,68.5%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:10:46,CAM-01,COW-01,stand,84.5%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:10:46,CAM-01,COW-02,stand,49.6%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:10:50,CAM-01,COW-01,stand,82.8%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:10:50,CAM-01,COW-02,stand,68.8%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:10:53,CAM-01,COW-01,stand,79.9%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:10:53,CAM-01,COW-02,stand,62.2%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:10:56,CAM-01,COW-01,stand,84.5%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:10:56,CAM-01,COW-02,stand,47.6%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:10:59,CAM-01,COW-01,stand,82.8%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:10:59,CAM-01,COW-02,stand,41.2%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:11:02,CAM-01,COW-01,stand,83.3%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:11:02,CAM-01,COW-02,stand,47.1%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:11:06,CAM-01,COW-01,stand,83.0%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:11:06,CAM-01,COW-02,stand,56.2%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:11:09,CAM-01,COW-01,stand,79.6%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:11:09,CAM-01,COW-02,stand,57.4%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:11:12,CAM-01,COW-01,stand,87.6%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:11:12,CAM-01,COW-02,stand,42.5%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:11:15,CAM-01,COW-01,stand,80.7%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:11:18,CAM-01,COW-01,stand,84.3%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:11:18,CAM-01,COW-02,stand,54.6%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:11:21,CAM-01,COW-01,stand,80.1%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:11:21,CAM-01,COW-02,stand,40.7%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:11:24,CAM-01,COW-01,stand,79.0%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:11:27,CAM-01,COW-01,stand,76.3%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:11:30,CAM-01,COW-01,stand,81.8%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:11:34,CAM-01,COW-01,stand,82.7%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:11:34,CAM-01,COW-03,stand,63.0%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:11:37,CAM-01,COW-03,stand,75.7%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:11:37,CAM-01,COW-01,stand,81.6%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:11:37,CAM-01,COW-06,foraging,54.3%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:11:40,CAM-01,COW-03,stand,67.4%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:11:40,CAM-01,COW-01,stand,84.0%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:11:43,CAM-01,COW-03,stand,45.7%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:11:43,CAM-01,COW-01,stand,81.7%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:11:46,CAM-01,COW-03,stand,76.7%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:11:46,CAM-01,COW-01,stand,83.3%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:11:49,CAM-01,COW-03,stand,50.5%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:11:49,CAM-01,COW-01,stand,80.7%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:11:52,CAM-01,COW-03,stand,58.1%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:11:52,CAM-01,COW-01,stand,81.0%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:11:55,CAM-01,COW-01,stand,80.2%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:11:55,CAM-01,COW-04,foraging,64.7%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:11:58,CAM-01,COW-01,stand,75.3%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:11:58,CAM-01,COW-04,foraging,43.2%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:11:58,CAM-01,COW-03,stand,56.6%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:12:01,CAM-01,COW-01,stand,79.4%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:12:01,CAM-01,COW-03,stand,52.0%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:12:01,CAM-01,COW-04,foraging,48.9%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:12:07,CAM-01,COW-01,stand,80.5%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:12:07,CAM-01,COW-04,foraging,56.3%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:12:10,CAM-01,COW-01,stand,76.3%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:12:10,CAM-01,COW-04,foraging,58.3%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:12:10,CAM-01,COW-03,stand,53.2%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:12:13,CAM-01,COW-01,stand,77.3%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:12:13,CAM-01,COW-03,stand,60.5%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:12:13,CAM-01,COW-04,foraging,54.0%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:12:16,CAM-01,COW-03,stand,64.3%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:12:16,CAM-01,COW-01,stand,69.5%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:12:19,CAM-01,COW-01,stand,72.2%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:12:22,CAM-01,COW-01,stand,70.9%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:12:22,CAM-01,COW-03,stand,51.6%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:12:25,CAM-01,COW-01,stand,77.6%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:12:25,CAM-01,COW-03,stand,51.2%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:12:25,CAM-01,COW-08,foraging,44.0%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:12:28,CAM-01,COW-01,stand,70.1%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:12:28,CAM-01,COW-09,foraging,53.7%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:12:28,CAM-01,COW-03,stand,40.6%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:12:31,CAM-01,COW-01,stand,75.3%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:12:31,CAM-01,COW-09,foraging,46.4%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:12:31,CAM-01,COW-03,stand,46.8%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:12:34,CAM-01,COW-01,stand,79.9%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:12:34,CAM-01,COW-10,foraging,42.6%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:12:34,CAM-01,COW-03,stand,48.5%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:12:37,CAM-01,COW-01,stand,72.3%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:12:37,CAM-01,COW-03,stand,73.6%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:12:40,CAM-01,COW-03,stand,61.5%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:12:40,CAM-01,COW-01,stand,72.6%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:12:43,CAM-01,COW-03,stand,63.5%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:12:43,CAM-01,COW-01,stand,71.2%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:12:46,CAM-01,COW-03,stand,57.0%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:12:46,CAM-01,COW-01,stand,72.2%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:12:49,CAM-01,COW-03,stand,68.3%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:12:49,CAM-01,COW-01,stand,70.4%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:12:49,CAM-01,COW-02,foraging,46.1%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:12:52,CAM-01,COW-03,stand,70.3%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:12:52,CAM-01,COW-01,stand,69.8%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:12:52,CAM-01,COW-02,foraging,47.0%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:12:55,CAM-01,COW-01,stand,70.2%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:12:55,CAM-01,COW-03,stand,47.8%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:12:55,CAM-01,COW-02,foraging,47.9%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:12:58,CAM-01,COW-03,stand,61.8%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:12:58,CAM-01,COW-02,stand,73.7%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:13:03,CAM-01,COW-03,stand,52.3%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:13:03,CAM-01,COW-04,stand,50.3%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:13:03,CAM-01,COW-01,stand,70.0%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:13:06,CAM-01,COW-03,stand,65.8%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:13:06,CAM-01,COW-01,stand,67.6%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:13:09,CAM-01,COW-03,stand,59.8%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:13:09,CAM-01,COW-01,stand,70.0%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:13:12,CAM-01,COW-03,stand,63.2%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:13:12,CAM-01,COW-01,stand,71.8%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:13:15,CAM-01,COW-03,stand,65.1%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:13:15,CAM-01,COW-01,stand,67.7%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:13:15,CAM-01,COW-10,foraging,42.1%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:13:18,CAM-01,COW-03,stand,62.8%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:13:18,CAM-01,COW-01,stand,69.5%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:13:21,CAM-01,COW-03,stand,44.8%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:13:21,CAM-01,COW-01,stand,68.5%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:13:24,CAM-01,COW-01,stand,79.8%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:13:24,CAM-01,COW-05,foraging,56.9%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:13:24,CAM-01,COW-03,stand,42.5%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:13:27,CAM-01,COW-01,stand,78.0%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:13:27,CAM-01,COW-03,stand,64.7%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:13:27,CAM-01,COW-04,foraging,64.6%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:13:30,CAM-01,COW-01,foraging,60.6%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:13:30,CAM-01,COW-03,stand,56.0%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:13:30,CAM-01,COW-04,stand,76.9%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:13:33,CAM-01,COW-03,stand,55.5%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:13:33,CAM-01,COW-01,stand,79.8%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:13:36,CAM-01,COW-01,stand,78.0%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:13:36,CAM-01,COW-06,foraging,53.7%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:13:36,CAM-01,COW-03,stand,42.0%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:13:39,CAM-01,COW-01,stand,71.8%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:13:39,CAM-01,COW-03,stand,62.1%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:13:42,CAM-01,COW-01,stand,73.0%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:13:42,CAM-01,COW-03,stand,54.1%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:13:42,CAM-01,COW-02,foraging,50.3%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:13:45,CAM-01,COW-01,stand,72.6%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:13:45,CAM-01,COW-07,foraging,54.1%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:13:48,CAM-01,COW-01,stand,76.4%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:13:48,CAM-01,COW-03,stand,56.3%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:13:48,CAM-01,COW-05,foraging,57.4%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:13:51,CAM-01,COW-01,stand,81.1%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:13:51,CAM-01,COW-03,stand,54.2%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:13:54,CAM-01,COW-01,stand,81.4%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:13:54,CAM-01,COW-03,stand,57.4%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:13:57,CAM-01,COW-03,stand,53.8%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:14:01,CAM-01,COW-03,stand,56.4%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:14:01,CAM-01,COW-01,stand,73.9%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:14:04,CAM-01,COW-03,stand,61.0%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:14:04,CAM-01,COW-01,stand,83.2%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:14:07,CAM-01,COW-03,stand,61.9%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:14:07,CAM-01,COW-01,stand,82.8%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:14:07,CAM-01,COW-06,foraging,68.4%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:14:10,CAM-01,COW-03,stand,66.1%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:14:10,CAM-01,COW-01,stand,88.7%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:14:13,CAM-01,COW-03,stand,58.8%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:14:13,CAM-01,COW-01,stand,89.2%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:14:13,CAM-01,COW-05,stand,81.5%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:14:16,CAM-01,COW-03,stand,43.0%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:14:16,CAM-01,COW-01,stand,92.4%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:14:16,CAM-01,COW-05,stand,79.1%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:14:16,CAM-01,COW-08,foraging,51.4%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:14:19,CAM-01,COW-01,stand,93.5%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:14:19,CAM-01,COW-05,stand,79.0%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:14:19,CAM-01,COW-08,foraging,58.0%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:14:19,CAM-01,COW-03,stand,52.7%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:14:22,CAM-01,COW-01,stand,88.5%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:14:22,CAM-01,COW-05,stand,78.3%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:14:22,CAM-01,COW-08,foraging,49.2%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:14:22,CAM-01,COW-03,stand,55.4%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:14:25,CAM-01,COW-01,stand,91.3%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:14:25,CAM-01,COW-03,stand,73.6%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:14:25,CAM-01,COW-05,stand,80.1%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:14:25,CAM-01,COW-04,foraging,59.1%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:14:28,CAM-01,COW-01,stand,90.5%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:14:28,CAM-01,COW-03,stand,64.6%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:14:28,CAM-01,COW-05,stand,81.4%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:14:28,CAM-01,COW-04,foraging,49.7%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:14:31,CAM-01,COW-01,stand,91.3%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:14:31,CAM-01,COW-03,stand,50.9%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:14:31,CAM-01,COW-05,stand,76.4%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:14:34,CAM-01,COW-01,stand,90.6%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:14:34,CAM-01,COW-05,stand,72.2%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:14:34,CAM-01,COW-03,stand,61.7%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:14:37,CAM-01,COW-01,stand,92.4%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:14:37,CAM-01,COW-05,stand,74.5%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:14:37,CAM-01,COW-03,stand,49.9%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:14:40,CAM-01,COW-01,stand,92.0%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:14:40,CAM-01,COW-05,stand,76.9%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:14:40,CAM-01,COW-03,stand,55.9%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:14:40,CAM-01,COW-02,foraging,45.4%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:14:43,CAM-01,COW-01,stand,90.0%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:14:43,CAM-01,COW-05,stand,80.4%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:14:43,CAM-01,COW-02,foraging,57.4%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:14:46,CAM-01,COW-01,stand,91.2%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:14:46,CAM-01,COW-05,stand,79.3%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:14:46,CAM-01,COW-02,foraging,56.8%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:14:49,CAM-01,COW-01,stand,90.1%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:14:49,CAM-01,COW-05,stand,75.9%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:14:49,CAM-01,COW-06,foraging,46.6%,Normal,Aktivitas makan di area pakan
+2026-11-24 13:14:49,CAM-01,COW-03,stand,53.8%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:14:52,CAM-01,COW-01,stand,91.6%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:14:52,CAM-01,COW-05,stand,79.7%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:14:52,CAM-01,COW-03,stand,49.6%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:14:55,CAM-01,COW-01,stand,93.0%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:14:55,CAM-01,COW-05,stand,71.8%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:14:55,CAM-01,COW-03,stand,55.8%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:14:58,CAM-01,COW-01,stand,90.8%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:14:58,CAM-01,COW-05,stand,67.7%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:14:58,CAM-01,COW-04,stand,59.7%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:14:58,CAM-01,COW-03,stand,40.0%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:15:01,CAM-01,COW-01,stand,89.0%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:15:01,CAM-01,COW-05,stand,70.6%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:15:04,CAM-01,COW-01,stand,87.6%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:15:04,CAM-01,COW-05,stand,63.5%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:15:04,CAM-01,COW-07,stand,43.9%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:15:07,CAM-01,COW-01,stand,87.4%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:15:07,CAM-01,COW-05,stand,62.3%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:15:07,CAM-01,COW-08,stand,43.7%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:15:10,CAM-01,COW-01,stand,87.4%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:15:10,CAM-01,COW-05,stand,69.2%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:15:10,CAM-01,COW-08,stand,50.1%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:15:13,CAM-01,COW-01,stand,80.9%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:15:13,CAM-01,COW-05,stand,68.0%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:15:13,CAM-01,COW-08,stand,53.7%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:15:16,CAM-01,COW-01,stand,85.4%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:15:16,CAM-01,COW-05,stand,63.0%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:15:16,CAM-01,COW-08,stand,62.2%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:15:19,CAM-01,COW-01,stand,83.9%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:15:19,CAM-01,COW-05,stand,69.9%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:15:19,CAM-01,COW-08,stand,56.5%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:15:22,CAM-01,COW-01,stand,86.1%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:15:22,CAM-01,COW-05,stand,71.7%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:15:22,CAM-01,COW-08,stand,59.9%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:17:39,CAM-01,COW-01,stand,88.7%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:17:39,CAM-01,COW-02,stand,90.8%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:17:39,CAM-01,COW-06,stand,65.5%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:17:42,CAM-01,COW-01,stand,82.7%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:17:42,CAM-01,COW-02,stand,88.3%,Normal,Postur berdiri tegak aktif
+2026-11-24 13:17:42,CAM-01,COW-06,stand,57.0%,Normal,Postur berdiri tegak aktif

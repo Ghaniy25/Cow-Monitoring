@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "name": "Dr. Hendra Gunawan, M.Sc.",
+    "username": "hendra_super",
+    "email": "admin@bovision.com",
+    "password": "Bovision@2025",
+    "role": "Admin",
+    "status": "Aktif",
+    "last_login": "Hari ini, 21:26 WIB"
+  },
+  {
+    "id": 2,
+    "name": "dr. Ghaniy Zulianto S.Tr T",
+    "username": "Ghaniy_D1",
+    "email": "ghaniy@bovision.com",
+    "password": "Dokter1",
+    "role": "Operator",
+    "status": "Aktif",
+    "last_login": "Hari ini, 21:24 WIB"
+  },
+  {
+    "id": 3,
+    "name": "Zikra Zahida S. Tr T",
+    "username": "Zikra_Eng1",
+    "email": "Zikra@Bovision.com",
+    "password": "Admin1",
+    "role": "Admin",
+    "status": "Aktif",
+    "last_login": "Hari ini, 16:19 WIB"
+  }
+]
