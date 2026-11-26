@@ -784,9 +784,12 @@
         // Start auto slider
         resetCarouselTimer();
 
-        // Helper penentu URL Backend (adaptif jika dibuka lewat Live Server port 5500, Vite, atau FastAPI 8000)
+        // Helper penentu URL Backend (adaptif untuk VPS domain/IP/custom port maupun dev lokal Live Server/Vite)
         function getApiUrl(path) {
-            if (window.location.protocol === 'file:' || (window.location.port && window.location.port !== '8000')) {
+            const host = window.location.hostname;
+            const port = window.location.port;
+            const isLocalDevProxy = (host === 'localhost' || host === '127.0.0.1') && ['5500', '5501', '5173', '3000'].includes(port);
+            if (window.location.protocol === 'file:' || isLocalDevProxy) {
                 return `http://localhost:8000${path}`;
             }
             return path;

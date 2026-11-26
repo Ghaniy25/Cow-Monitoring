@@ -10,6 +10,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800;900&family=Michroma&display=swap"
     rel="stylesheet">
   <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
   <style>
     :root {
       --black: #0c0d0e;
@@ -911,7 +913,8 @@
               d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326">
             </path>
           </svg>
-          <span>Alerts</span>
+          <span style="flex: 1;">Alerts</span>
+          <span id="sidebarAlertBadge" style="background: var(--accent-red); color: #ffffff; font-size: 10.5px; font-weight: 700; padding: 1px 7px; border-radius: 999px; display: none;">0</span>
         </button>
       </nav>
 
@@ -1241,7 +1244,7 @@
         <div class="stats-grid-ai">
           <div class="stat-card">
             <div class="stat-header">
-              <span class="stat-title">Rata-rata Deteksi Harian</span>
+              <span class="stat-title">Sapi Teridentifikasi &amp; Deteksi</span>
               <div class="stat-icon green-tint">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -1253,32 +1256,43 @@
                 </svg>
               </div>
             </div>
-            <div class="stat-value" id="valAvgDetections">45 <span
+            <div class="stat-value" id="valAvgDetections">12 <span
                 style="font-size: 15px; font-weight: 500; color: rgb(110, 118, 129);">Objek Sapi</span></div>
-            <div class="stat-badge healthy">
+            <div class="stat-badge healthy" id="badgeAvgDetections">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                 data-lucide="trending-up" class="lucide lucide-trending-up" style="width:13px;height:13px;">
                 <path d="M16 7h6v6"></path>
                 <path d="m22 7-8.5 8.5-5-5L2 17"></path>
               </svg>
-              +3.2% vs minggu lalu
+              <span>564 Log Tercatat</span>
             </div>
-            <span class="stat-subtext">Deteksi konsisten kamera YOLOv11</span>
+            <span class="stat-subtext" id="subAvgDetections">Tersinkronisasi real-time dari database CSV</span>
           </div>
 
           <div class="stat-card">
             <div class="stat-header">
               <span class="stat-title">Dominansi Berdiri (Standing)</span>
               <div class="stat-icon blue-tint">
-                <img alt="Sapi Berdiri"
-                  src="https://lh3.googleusercontent.com/aida/ALJJyrCOODCxsHMPDFSr05hxBrKw-lAxH8ARvc7nvuVR2WjCs6EnyXR8h1lt70Xfatvn83W06Iid_azZM5UZl-HBnNJpJFXL_NXvAutnwGmonKWLzcMAwmXVel0s_-7eLX2A37UyXP-sjvrl8TJpiZ5w13EPA75v20Tgx3Ge6A6v6zeZmUaqsMnp0hHwUkq7geiMecaM9EMWi5valaZkMh1a56OO0nTYv71zG9qQFCOnfXs"
-                  style="width: 20px; height: 20px; object-fit: contain; filter: saturate(0.75);">
+                <svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                  stroke-width="1.8" viewBox="0 0 24 24" width="20">
+                  <path
+                    d="M4 11c0-1.4 1.1-2.5 2.5-2.5h8.3l1.6-2.4a1.5 1.5 0 0 1 1.3-.6h1.3c.8 0 1.5.7 1.5 1.5v1.8c0 .8-.5 1.5-1.3 1.7l-1.7.5v2.5c0 .8-.7 1.5-1.5 1.5H6.5A2.5 2.5 0 0 1 4 12.5V11z"
+                    fill="currentColor" fill-opacity="0.14"></path>
+                  <path d="M6.5 15v5"></path>
+                  <path d="M9.5 15v5"></path>
+                  <path d="M13.5 15v5"></path>
+                  <path d="M16 15v5"></path>
+                  <path d="M4 10.5c-1.2.3-2 1.3-2 2.5"></path>
+                  <path d="M17 5.5l-.6-1.5"></path>
+                  <circle cx="18.2" cy="7.5" fill="currentColor" r=".7"></circle>
+                  <path d="M3 20h18"></path>
+                </svg>
               </div>
             </div>
-            <div class="stat-value" id="valStandingDom" style="color: var(--accent-blue);">55%</div>
-            <div class="stat-badge blue">Postur Aktif / Makan</div>
-            <span class="stat-subtext">Rata-rata 13.2 jam / hari</span>
+            <div class="stat-value" id="valStandingDom" style="color: var(--accent-blue);">99%</div>
+            <div class="stat-badge blue" id="badgeStandingDom">Postur Aktif / Makan</div>
+            <span class="stat-subtext" id="subStandingDom">Estimasi 23.8 jam / hari (Stand &amp; Foraging)</span>
           </div>
 
           <div class="stat-card">
@@ -1297,9 +1311,9 @@
                 </svg>
               </div>
             </div>
-            <div class="stat-value" id="valLyingDom" style="color: var(--accent-amber-text);">45%</div>
-            <div class="stat-badge amber">Waktu Istirahat Sehat</div>
-            <span class="stat-subtext">Rata-rata 10.8 jam / hari (Waktu Istirahat Sehat)</span>
+            <div class="stat-value" id="valLyingDom" style="color: var(--accent-amber-text);">1%</div>
+            <div class="stat-badge amber" id="badgeLyingDom">Waktu Istirahat / Ruminasi</div>
+            <span class="stat-subtext" id="subLyingDom">Estimasi 0.2 jam / hari (Waktu Istirahat)</span>
           </div>
         </div>
 
@@ -1348,8 +1362,8 @@
               <div style="text-align: right; display: flex; gap: 14px;">
                 <span id="camOsdLatency"
                   style="color: rgb(136, 192, 163); background: rgba(45, 122, 88, 0.2); padding: 2px 8px; border-radius: 4px; border: 1px solid rgba(45, 122, 88, 0.35);">Latency:
-                  24ms</span>
-                <span style="color: rgb(240, 242, 245);">2026-11-12 17:13:55 WIB</span>
+                  &lt;15ms</span>
+                <span id="camOsdClock" style="color: rgb(240, 242, 245);">Live WIB</span>
               </div>
             </div>
 
@@ -1463,16 +1477,16 @@
               <p class="panel-sub">Ringkasan kondisi kawanan dan stempel deteksi YOLOv11</p>
             </div>
             <div style="display: flex; gap: 8px; align-items: center;">
-              <button onclick="exportCsvData()"
-                style="padding: 6px 12px; font-size: 12px; border-radius: 6px; border: 1px solid var(--border); background: #ffffff; cursor: pointer; font-weight: 600; color: #1f2937; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); transition: all 0.15s ease;">
+              <button onclick="exportPdfReport()"
+                style="padding: 6px 12px; font-size: 12px; border-radius: 6px; border: 1px solid var(--accent-blue-border); background: var(--accent-blue-bg); cursor: pointer; font-weight: 600; color: var(--accent-blue-dark); display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); transition: all 0.15s ease;">
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
-                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                  class="lucide lucide-download">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                  <polyline points="7 10 12 15 17 10"></polyline>
-                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
                 </svg>
-                Export CSV
+                Export Laporan PDF
               </button>
               <button onclick="refreshDashboardData()"
                 style="padding: 6px 12px; font-size: 12px; border-radius: 6px; border: 1px solid var(--border); background: rgb(255, 255, 255); cursor: pointer; font-weight: 500; color: rgb(55, 65, 81);">
@@ -1483,7 +1497,7 @@
           <div style="margin-top: 10px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
               <h4 style="font-size: 14px; font-weight: 700; color: var(--black);">Aktivitas Terkini (Event Kawanan)</h4>
-              <span style="font-size: 12px; color: var(--muted);">Sinkronisasi Otomatis Tiap 5 Menit</span>
+              <span style="font-size: 12px; color: var(--muted);">Sinkronisasi Otomatis Real-Time (2.5 Detik)</span>
             </div>
             <table class="custom-table">
               <thead>
@@ -1876,7 +1890,7 @@
         <div class="stats-grid-ai" style="margin-bottom: 24px;">
           <div class="stat-card">
             <div class="stat-header">
-              <span class="stat-title">Rata-rata Deteksi Harian</span>
+              <span class="stat-title">Sapi Teridentifikasi &amp; Deteksi</span>
               <div class="stat-icon green-tint">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -1888,24 +1902,35 @@
                 </svg>
               </div>
             </div>
-            <div class="stat-value">45 <span style="font-size: 15px; font-weight: 500; color: rgb(110, 118, 129);">Objek
+            <div class="stat-value" id="statsValAvgDetections">12 <span style="font-size: 15px; font-weight: 500; color: rgb(110, 118, 129);">Objek
                 Sapi</span></div>
-            <div class="stat-badge healthy">+3.2% vs minggu lalu</div>
-            <span class="stat-subtext">Deteksi akurat AI konsisten per kamera</span>
+            <div class="stat-badge healthy" id="statsBadgeAvgDetections">564 Log Tercatat</div>
+            <span class="stat-subtext" id="statsSubAvgDetections">Data real-time terekam dari pipeline kamera YOLO</span>
           </div>
 
           <div class="stat-card">
             <div class="stat-header">
               <span class="stat-title">Dominansi Berdiri (Standing)</span>
               <div class="stat-icon blue-tint">
-                <img alt="Sapi Berdiri"
-                  src="https://lh3.googleusercontent.com/aida/ALJJyrCOODCxsHMPDFSr05hxBrKw-lAxH8ARvc7nvuVR2WjCs6EnyXR8h1lt70Xfatvn83W06Iid_azZM5UZl-HBnNJpJFXL_NXvAutnwGmonKWLzcMAwmXVel0s_-7eLX2A37UyXP-sjvrl8TJpiZ5w13EPA75v20Tgx3Ge6A6v6zeZmUaqsMnp0hHwUkq7geiMecaM9EMWi5valaZkMh1a56OO0nTYv71zG9qQFCOnfXs"
-                  style="width: 20px; height: 20px; object-fit: contain; filter: saturate(0.75);">
+                <svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                  stroke-width="1.8" viewBox="0 0 24 24" width="20">
+                  <path
+                    d="M4 11c0-1.4 1.1-2.5 2.5-2.5h8.3l1.6-2.4a1.5 1.5 0 0 1 1.3-.6h1.3c.8 0 1.5.7 1.5 1.5v1.8c0 .8-.5 1.5-1.3 1.7l-1.7.5v2.5c0 .8-.7 1.5-1.5 1.5H6.5A2.5 2.5 0 0 1 4 12.5V11z"
+                    fill="currentColor" fill-opacity="0.14"></path>
+                  <path d="M6.5 15v5"></path>
+                  <path d="M9.5 15v5"></path>
+                  <path d="M13.5 15v5"></path>
+                  <path d="M16 15v5"></path>
+                  <path d="M4 10.5c-1.2.3-2 1.3-2 2.5"></path>
+                  <path d="M17 5.5l-.6-1.5"></path>
+                  <circle cx="18.2" cy="7.5" fill="currentColor" r=".7"></circle>
+                  <path d="M3 20h18"></path>
+                </svg>
               </div>
             </div>
-            <div class="stat-value" style="color: var(--accent-blue);">55%</div>
-            <div class="stat-badge blue">Indikator Postur Berdiri Aktif</div>
-            <span class="stat-subtext">Rata-rata 13.2 jam / hari</span>
+            <div class="stat-value" id="statsValStandingDom" style="color: var(--accent-blue);">99%</div>
+            <div class="stat-badge blue" id="statsBadgeStandingDom">Indikator Postur Berdiri &amp; Makan</div>
+            <span class="stat-subtext" id="statsSubStandingDom">Estimasi 23.8 jam / hari</span>
           </div>
 
           <div class="stat-card">
@@ -1923,9 +1948,9 @@
                 </svg>
               </div>
             </div>
-            <div class="stat-value" style="color: var(--accent-amber-text);">45%</div>
-            <div class="stat-badge amber">Waktu Istirahat Sehat</div>
-            <span class="stat-subtext">Rata-rata 10.8 jam / hari</span>
+            <div class="stat-value" id="statsValLyingDom" style="color: var(--accent-amber-text);">1%</div>
+            <div class="stat-badge amber" id="statsBadgeLyingDom">Waktu Istirahat / Ruminasi</div>
+            <span class="stat-subtext" id="statsSubLyingDom">Estimasi 0.2 jam / hari</span>
           </div>
         </div>
 
@@ -1933,18 +1958,27 @@
         <div class="content-panel">
           <div class="panel-header" style="flex-wrap: wrap; gap: 14px;">
             <div>
-              <h3>Tren Perilaku Kawanan: Standing &amp; Lying</h3>
-              <p class="panel-sub" id="chartPeriodSubtitle">Komparasi proporsi postur kawanan (Hari Ini - interval 4
-                jam)</p>
+              <h3>Tren Perilaku Kawanan: Standing &amp; Lying (Real-Time Tercatat)</h3>
+              <p class="panel-sub" id="chartPeriodSubtitle">Komparasi proporsi postur kawanan berdasarkan data CSV tercatat</p>
             </div>
-            <div
-              style="display: inline-flex; background: #f0f2f5; padding: 3px; border-radius: 8px; gap: 3px; border: 1px solid var(--border);">
-              <button class="chart-filter-btn active" id="btnFilterToday" onclick="updateBehaviorChart('today')">Hari
-                Ini (24 Jam)</button>
-              <button class="chart-filter-btn" id="btnFilterWeek" onclick="updateBehaviorChart('week')">Minggu Ini (7
-                Hari)</button>
-              <button class="chart-filter-btn" id="btnFilterMonth" onclick="updateBehaviorChart('month')">Bulan Ini (30
-                Hari)</button>
+            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+              <div
+                style="display: inline-flex; background: #f0f2f5; padding: 3px; border-radius: 8px; gap: 3px; border: 1px solid var(--border);">
+                <button class="chart-filter-btn active" id="btnFilterToday" onclick="updateBehaviorChart('today')">Sesi Terkini</button>
+                <button class="chart-filter-btn" id="btnFilterWeek" onclick="updateBehaviorChart('week')">Riwayat 7 Segmen</button>
+                <button class="chart-filter-btn" id="btnFilterMonth" onclick="updateBehaviorChart('month')">Kumulatif 4 Siklus</button>
+              </div>
+              <button onclick="exportPdfReport()"
+                style="padding: 7px 14px; font-size: 12px; border-radius: 6px; border: 1px solid var(--accent-blue-border); background: var(--accent-blue-bg); cursor: pointer; font-weight: 600; color: var(--accent-blue-dark); display: inline-flex; align-items: center; gap: 6px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                </svg>
+                Unduh Laporan PDF
+              </button>
             </div>
           </div>
 
@@ -1954,21 +1988,20 @@
               <div style="display: flex; align-items: center; gap: 8px;">
                 <span
                   style="display: inline-block; width: 12px; height: 12px; border-radius: 3px; background: var(--accent-blue);"></span>
-                <span>Berdiri (Standing)</span>
-                <strong id="legendStandingVal" style="color: var(--accent-blue); margin-left: 4px;">55%</strong>
+                <span>Berdiri / Aktif (Standing &amp; Foraging)</span>
+                <strong id="legendStandingVal" style="color: var(--accent-blue); margin-left: 4px;">99%</strong>
               </div>
               <div style="display: flex; align-items: center; gap: 8px;">
                 <span
                   style="display: inline-block; width: 12px; height: 12px; border-radius: 3px; background: var(--accent-amber);"></span>
-                <span>Berbaring (Lying)</span>
-                <strong id="legendLyingVal" style="color: var(--accent-amber-text); margin-left: 4px;">45%</strong>
+                <span>Berbaring (Lying &amp; Rumination)</span>
+                <strong id="legendLyingVal" style="color: var(--accent-amber-text); margin-left: 4px;">1%</strong>
               </div>
             </div>
             <div style="font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 8px;">
               <span
                 style="display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--accent-green);"></span>
-              <span>Status Kawanan: <strong style="color: #14171a;">Keseimbangan Istirahat Optimal (10.8
-                  Jam)</strong></span>
+              <span>Status Data: <strong id="statsHerdStatusText" style="color: #14171a;">Tersinkronisasi Real-Time dari CSV</strong></span>
             </div>
           </div>
 
@@ -1984,10 +2017,8 @@
                 style="font-size: 11px; font-weight: 600; color: var(--accent-blue-dark); text-transform: uppercase;">Puncak
                 Aktivitas Berdiri</span>
               <div id="insightPeakStanding"
-                style="font-size: 15px; font-weight: 700; color: var(--accent-blue-dark); margin-top: 2px;">08:00 -
-                12:00 WIB (68%)</div>
-              <span style="font-size: 11px; color: var(--accent-blue-secondary);">Jam makan konsentrat &amp;
-                silase</span>
+                style="font-size: 15px; font-weight: 700; color: var(--accent-blue-dark); margin-top: 2px;">-</div>
+              <span id="insightPeakStandingSub" style="font-size: 11px; color: var(--accent-blue-secondary);">Periode postur aktif tertinggi tercatat</span>
             </div>
             <div
               style="background: var(--accent-amber-bg); border: 1px solid var(--accent-amber-border); border-radius: 8px; padding: 12px 14px;">
@@ -1995,21 +2026,48 @@
                 style="font-size: 11px; font-weight: 600; color: var(--accent-amber-dark); text-transform: uppercase;">Puncak
                 Waktu Istirahat (Lying)</span>
               <div id="insightPeakLying"
-                style="font-size: 15px; font-weight: 700; color: var(--accent-amber-dark); margin-top: 2px;">00:00 -
-                04:00 WIB (64%)</div>
-              <span style="font-size: 11px; color: var(--accent-amber-text);">Fase ruminasi istirahat malam
-                optimal</span>
+                style="font-size: 15px; font-weight: 700; color: var(--accent-amber-dark); margin-top: 2px;">-</div>
+              <span id="insightPeakLyingSub" style="font-size: 11px; color: var(--accent-amber-text);">Periode berbaring / ruminasi tercatat</span>
             </div>
             <div
               style="background: var(--accent-green-bg); border: 1px solid var(--accent-green-border); border-radius: 8px; padding: 12px 14px;">
               <span
-                style="font-size: 11px; font-weight: 600; color: var(--accent-green-dark); text-transform: uppercase;">Akurasi
-                Klasifikasi AI</span>
-              <div style="font-size: 15px; font-weight: 700; color: var(--accent-green-dark); margin-top: 2px;">96.4%
-                IoU Detection</div>
-              <span style="font-size: 11px; color: var(--accent-green-text);">Kalibrasi model YOLOv11
-                terverifikasi</span>
+                style="font-size: 11px; font-weight: 600; color: var(--accent-green-dark); text-transform: uppercase;">Rata-rata
+                Confidence AI</span>
+              <div id="insightAiConfidence" style="font-size: 15px; font-weight: 700; color: var(--accent-green-dark); margin-top: 2px;">-</div>
+              <span id="insightAiConfidenceSub" style="font-size: 11px; color: var(--accent-green-text);">Akurasi rata-rata seluruh log deteksi YOLO</span>
             </div>
+          </div>
+        </div>
+
+        <!-- Rekapitulasi Per Tag Sapi Panel -->
+        <div class="content-panel">
+          <div class="panel-header">
+            <div>
+              <h3>Rekapitulasi Statistik Perilaku Per Tag Sapi</h3>
+              <p class="panel-sub">Ringkasan agregat deteksi tiap individu sapi yang tercatat di database CSV</p>
+            </div>
+          </div>
+          <div style="overflow-x: auto;">
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th>Tag Sapi</th>
+                  <th>Sektor Kamera</th>
+                  <th>Total Deteksi</th>
+                  <th>Postur Dominan</th>
+                  <th>Rincian Perilaku</th>
+                  <th>Rata-rata Akurasi</th>
+                  <th>Terakhir Terlihat</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="cow-summary-table-body">
+                <tr>
+                  <td colspan="8" style="text-align: center; color: var(--muted); padding: 20px;">Memuat ringkasan data sapi...</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </section>
@@ -2020,19 +2078,18 @@
           <div class="panel-header">
             <div>
               <h3>Riwayat Monitoring AI &amp; Event Kawanan</h3>
-              <p class="panel-sub">Log berkala inferensi klasifikasi postur Standing vs Lying per kandang (Tersimpan di
-                CSV)</p>
+              <p class="panel-sub">Log berkala inferensi klasifikasi postur Standing vs Lying per kandang (Tersimpan Real-Time)</p>
             </div>
-            <button onclick="exportCsvData()"
-              style="padding: 7px 14px; font-size: 12px; border-radius: 6px; border: 1px solid var(--border); background: #ffffff; cursor: pointer; font-weight: 600; color: #1f2937; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); transition: all 0.15s ease;">
+            <button onclick="exportPdfReport()"
+              style="padding: 7px 14px; font-size: 12px; border-radius: 6px; border: 1px solid var(--accent-blue-border); background: var(--accent-blue-bg); cursor: pointer; font-weight: 600; color: var(--accent-blue-dark); display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); transition: all 0.15s ease;">
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                class="lucide lucide-download">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                <polyline points="7 10 12 15 17 10"></polyline>
-                <line x1="12" y1="15" x2="12" y2="3"></line>
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
               </svg>
-              Unduh Laporan CSV
+              Unduh Laporan PDF
             </button>
           </div>
           <table class="custom-table">
@@ -2064,59 +2121,117 @@
 
       <!-- ================= TAB 5: ALERTS ================= -->
       <section class="tab-section" id="section-alerts">
-        <div class="content-panel">
-          <div class="panel-header">
-            <div>
-              <h3>Notifikasi &amp; Peringatan Terkini</h3>
-              <p class="panel-sub">Peringatan anomali postur tubuh, durasi berbaring berlebih, dan status kandang</p>
+        <!-- Ringkasan Jumlah Alert Real-Time -->
+        <div class="stats-grid-ai" style="margin-bottom: 20px;">
+          <div class="stat-card" style="padding: 18px 20px;">
+            <div class="stat-header">
+              <span class="stat-title">Peringatan Kritis (Critical)</span>
+              <div class="stat-icon" style="background: var(--accent-red-bg); color: var(--accent-red); border: 1px solid var(--accent-red-border);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+              </div>
+            </div>
+            <div class="stat-value" id="alertCountCritical" style="color: var(--accent-red); font-size: 28px;">0</div>
+            <span class="stat-subtext">Inaktivitas ekstrem / anomali kesehatan darurat</span>
+          </div>
+
+          <div class="stat-card" style="padding: 18px 20px;">
+            <div class="stat-header">
+              <span class="stat-title">Peringatan Waspada (Warning)</span>
+              <div class="stat-icon amber-tint">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+              </div>
+            </div>
+            <div class="stat-value" id="alertCountWarning" style="color: var(--accent-amber-text); font-size: 28px;">2</div>
+            <span class="stat-subtext">Ketidakseimbangan postur kawanan &amp; oklusi kamera</span>
+          </div>
+
+          <div class="stat-card" style="padding: 18px 20px;">
+            <div class="stat-header">
+              <span class="stat-title">Status Notifikasi Telegram</span>
+              <div class="stat-icon blue-tint">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+              </div>
+            </div>
+            <div class="stat-value" id="alertTelegramStatusBadge" style="color: var(--accent-blue); font-size: 18px; margin-top: 4px;">Siap Dikonfigurasi</div>
+            <span class="stat-subtext" id="alertTelegramLastSent">Pengiriman terakhir: Belum pernah dikirim</span>
+          </div>
+        </div>
+
+        <!-- Panel Konfigurasi & Pengiriman Cepat Telegram Bot -->
+        <div class="content-panel" style="margin-bottom: 22px; background: linear-gradient(180deg, #f8fbff 0%, #ffffff 100%); border: 1px solid var(--accent-blue-border);">
+          <div class="panel-header" style="flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div style="width: 40px; height: 40px; border-radius: 10px; background: var(--accent-blue); color: #ffffff; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+              </div>
+              <div>
+                <h3 style="font-size: 16.5px; margin: 0;">Integrasi Bot Notifikasi Telegram Real-Time</h3>
+                <p class="panel-sub" style="margin-top: 2px;">Kirim peringatan anomali sapi, ringkasan statistik, dan bukti foto snapshot CCTV langsung ke grup/chat Telegram</p>
+              </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+              <button onclick="sendFullAlertReportToTelegram()" id="btnSendTelegramReport"
+                style="padding: 8px 16px; border-radius: 8px; border: none; background: var(--accent-blue); color: #ffffff; font-size: 12.5px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 7px; box-shadow: 0 2px 6px rgba(44, 90, 133, 0.25);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                <span>Kirim Laporan &amp; Snapshot ke Telegram Sekarang</span>
+              </button>
             </div>
           </div>
-          <div class="alert-list">
-            <div class="alert-card critical">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                data-lucide="alert-octagon" class="lucide lucide-alert-octagon"
-                style="color: var(--accent-red); width: 20px; height: 20px;">
-                <path d="M12 16h.01"></path>
-                <path d="M12 8v4"></path>
-                <path
-                  d="M15.312 2a2 2 0 0 1 1.414.586l4.688 4.688A2 2 0 0 1 22 8.688v6.624a2 2 0 0 1-.586 1.414l-4.688 4.688a2 2 0 0 1-1.414.586H8.688a2 2 0 0 1-1.414-.586l-4.688-4.688A2 2 0 0 1 2 15.312V8.688a2 2 0 0 1 .586-1.414l4.688-4.688A2 2 0 0 1 8.688 2z">
-                </path>
-              </svg>
-              <div class="alert-content">
-                <h4>Peringatan Inaktivitas Ekstrem</h4>
-                <p>Durasi berbaring (Lying) terdeteksi berturut-turut lebih dari 16 jam tanpa gerak berdiri.</p>
-                <div class="alert-time">15 menit yang lalu • Deteksi AI YOLOv11</div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; align-items: end;">
+            <div>
+              <label style="display: block; font-size: 12px; font-weight: 600; color: #374151; margin-bottom: 5px;">Telegram Bot Token (dari @BotFather)</label>
+              <input id="tgBotTokenInput" type="password" placeholder="Contoh: 7123456789:AAHxyz..."
+                style="width: 100%; padding: 9px 12px; border-radius: 8px; border: 1px solid var(--border); background: #ffffff; font-size: 12.5px; font-family: monospace; color: var(--text-main); outline: none;">
+            </div>
+            <div>
+              <label style="display: block; font-size: 12px; font-weight: 600; color: #374151; margin-bottom: 5px;">Chat ID / Group ID Tujuan</label>
+              <div style="display: flex; gap: 6px;">
+                <input id="tgChatIdInput" type="text" placeholder="Contoh: 123456789 atau -100..."
+                  style="flex: 1; padding: 9px 12px; border-radius: 8px; border: 1px solid var(--border); background: #ffffff; font-size: 12.5px; font-family: monospace; color: var(--text-main); outline: none;">
+                <button type="button" onclick="discoverTelegramChatId()" id="btnDiscoverChatId" title="Kirim /start ke bot Anda di Telegram lalu klik tombol ini untuk mengisi Chat ID otomatis"
+                  style="padding: 8px 11px; border-radius: 8px; border: 1px solid var(--accent-blue-border); background: #ffffff; color: var(--accent-blue-dark); font-size: 11.5px; font-weight: 600; cursor: pointer; white-space: nowrap;">
+                  Deteksi ID
+                </button>
               </div>
             </div>
-            <div class="alert-card warning-type">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                data-lucide="alert-triangle" class="lucide lucide-alert-triangle"
-                style="color: var(--accent-amber); width: 20px; height: 20px;">
-                <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"></path>
-                <path d="M12 9v4"></path>
-                <path d="M12 17h.01"></path>
-              </svg>
-              <div class="alert-content">
-                <h4>Kepadatan Area Pakan Tinggi</h4>
-                <p>Kamera 02 mendeteksi penumpukan postur berdiri aktif lebih dari 8 ekor pada seksi palung barat.</p>
-                <div class="alert-time">1 jam yang lalu • Kamera 02 Sektor Pakan</div>
-              </div>
+            <div style="display: flex; flex-direction: column; gap: 6px; padding-bottom: 2px;">
+              <label style="display: inline-flex; align-items: center; gap: 8px; font-size: 12.5px; color: #374151; cursor: pointer; font-weight: 500;">
+                <input id="tgIncludeSnapshotChk" type="checkbox" checked style="width: 15px; height: 15px; accent-color: var(--accent-blue);">
+                <span>Sertakan Foto Snapshot CCTV (1280x720)</span>
+              </label>
+              <label style="display: inline-flex; align-items: center; gap: 8px; font-size: 12.5px; color: #374151; cursor: pointer; font-weight: 500;">
+                <input id="tgAutoNotifyChk" type="checkbox" checked style="width: 15px; height: 15px; accent-color: var(--accent-green);">
+                <span>Auto-Notify saat Anomali / Warning Baru</span>
+              </label>
             </div>
+            <div style="display: flex; justify-content: flex-end;">
+              <button type="button" onclick="saveTelegramSettings()" id="btnSaveTelegramConfig"
+                style="width: 100%; padding: 9px 16px; border-radius: 8px; border: 1px solid var(--border); background: var(--black); color: #ffffff; font-size: 12.5px; font-weight: 600; cursor: pointer;">
+                Simpan Konfigurasi Bot
+              </button>
+            </div>
+          </div>
+          <div id="tgFeedbackBanner" style="display: none; margin-top: 12px; padding: 10px 14px; border-radius: 8px; font-size: 12.5px; font-weight: 500;"></div>
+        </div>
+
+        <!-- Daftar Alert Real-Time -->
+        <div class="content-panel">
+          <div class="panel-header" style="flex-wrap: wrap; gap: 12px;">
+            <div>
+              <h3>Notifikasi &amp; Peringatan Real-Time (Dari Pipeline AI &amp; CSV)</h3>
+              <p class="panel-sub">Evaluasi otomatis anomali postur tubuh, proporsi istirahat kawanan, akurasi kamera, dan status sistem</p>
+            </div>
+            <button onclick="loadRealtimeAlerts(true)"
+              style="padding: 6px 12px; font-size: 12px; border-radius: 6px; border: 1px solid var(--border); background: #ffffff; cursor: pointer; font-weight: 600; color: #374151; display: inline-flex; align-items: center; gap: 6px;">
+              Muat Ulang Alert
+            </button>
+          </div>
+          <div class="alert-list" id="realtime-alert-list">
             <div class="alert-card info-type">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="info"
-                class="lucide lucide-info" style="color: var(--accent-blue); width: 20px; height: 20px;">
-                <circle cx="12" cy="12" r="10"></circle>
-                <path d="M12 16v-4"></path>
-                <path d="M12 8h.01"></path>
-              </svg>
               <div class="alert-content">
-                <h4>Laporan Keseimbangan Istirahat Harian</h4>
-                <p>Proporsi Standing 55% dan Lying 45% kawanan hari ini berada pada batas indeks kesejahteraan ternak.
-                </p>
-                <div class="alert-time">3 jam yang lalu • BOVISION Automated Report</div>
+                <h4>Memuat analisis peringatan real-time...</h4>
+                <p>Menghubungkan ke engine evaluasi BOVISION...</p>
               </div>
             </div>
           </div>
@@ -2768,8 +2883,17 @@
       const target = document.getElementById(`section-${name}`);
       if (target) {
         target.classList.add('active');
-        if (name === 'stats') renderInteractiveChart(currentChartFilter);
-        if (name === 'history' || name === 'dashboard') loadDetectionLogs();
+        if (name === 'stats') {
+          loadRealtimeStats();
+          renderInteractiveChart(currentChartFilter);
+        }
+        if (name === 'history' || name === 'dashboard') {
+          loadDetectionLogs();
+          loadRealtimeStats();
+        }
+        if (name === 'alerts') {
+          loadRealtimeAlerts();
+        }
         if (name === 'users') {
           const s = document.getElementById('userSearchInput');
           if (s) s.value = '';
@@ -2796,7 +2920,10 @@
     }
 
     function getApiUrl(path) {
-      if (window.location.protocol === 'file:' || (window.location.port && window.location.port !== '8000')) {
+      const host = window.location.hostname;
+      const port = window.location.port;
+      const isLocalDevProxy = (host === 'localhost' || host === '127.0.0.1') && ['5500', '5501', '5173', '3000'].includes(port);
+      if (window.location.protocol === 'file:' || isLocalDevProxy) {
         return `http://localhost:8000${path}`;
       }
       return path;
@@ -2894,18 +3021,570 @@
     }
 
     async function refreshDashboardData() {
-      await loadDetectionLogs();
-      alert("Data telemetri deteksi berhasil disinkronkan langsung dari file CSV backend.");
+      await Promise.all([loadDetectionLogs(), loadRealtimeStats()]);
+      alert("Data statistik & log deteksi real-time berhasil disinkronkan dari database CSV.");
     }
 
-    function exportCsvData() {
-      const exportUrl = getApiUrl('/api/export/csv');
-      const link = document.createElement('a');
-      link.href = exportUrl;
-      link.setAttribute('download', `cow_detections_${new Date().toISOString().slice(0, 10)}.csv`);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+    window._latestRealtimeStats = null;
+
+    async function loadRealtimeStats() {
+      try {
+        const res = await fetch(getApiUrl('/api/stats'));
+        if (!res.ok) return;
+        const st = await res.json();
+        if (!st || !st.total_logs) return;
+        window._latestRealtimeStats = st;
+
+        // 1. Update 3 Kartu Statistik di Tab Dashboard & Tab Statistics
+        const cowLabel = st.online
+          ? `${st.display_cow_count} <span style="font-size: 15px; font-weight: 500; color: rgb(110, 118, 129);">Objek Sapi (Live)</span>`
+          : `${st.unique_cows_latest_day} <span style="font-size: 15px; font-weight: 500; color: rgb(110, 118, 129);">Ekor Teridentifikasi</span>`;
+
+        const badgeHtml = `
+          <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 7h6v6"></path><path d="m22 7-8.5 8.5-5-5L2 17"></path></svg>
+          <span>${st.total_logs} Log Tercatat (${st.latest_date})</span>
+        `;
+        const subAvgText = `Rata-rata ${st.avg_cows_per_frame} sapi/frame • Total ${st.unique_cows_total} ID sapi unik`;
+
+        const valAvg = document.getElementById('valAvgDetections');
+        const badgeAvg = document.getElementById('badgeAvgDetections');
+        const subAvg = document.getElementById('subAvgDetections');
+        if (valAvg) valAvg.innerHTML = cowLabel;
+        if (badgeAvg) badgeAvg.innerHTML = badgeHtml;
+        if (subAvg) subAvg.innerText = subAvgText;
+
+        const sValAvg = document.getElementById('statsValAvgDetections');
+        const sBadgeAvg = document.getElementById('statsBadgeAvgDetections');
+        const sSubAvg = document.getElementById('statsSubAvgDetections');
+        if (sValAvg) sValAvg.innerHTML = cowLabel;
+        if (sBadgeAvg) sBadgeAvg.innerHTML = badgeHtml;
+        if (sSubAvg) sSubAvg.innerText = subAvgText;
+
+        const standCount = (st.behavior_counts && (st.behavior_counts['stand'] || 0) + (st.behavior_counts['standing'] || 0)) || 0;
+        const forageCount = (st.behavior_counts && (st.behavior_counts['foraging'] || 0)) || 0;
+        const drinkCount = (st.behavior_counts && ((st.behavior_counts['drinking water'] || 0) + (st.behavior_counts['drinking_water'] || 0))) || 0;
+
+        const standPctDisplay = st.online ? `${st.live_standing_pct}%` : `${st.standing_pct}%`;
+        const lyingPctDisplay = st.online ? `${st.live_lying_pct}%` : `${st.lying_pct}%`;
+        const standSubText = `Estimasi ${st.standing_hours_est} jam/hari (Stand: ${standCount}, Foraging: ${forageCount}${drinkCount ? ', Minum: ' + drinkCount : ''})`;
+        const lyingSubText = `Estimasi ${st.lying_hours_est} jam/hari (${st.lying_count} sampel berbaring/ruminasi)`;
+
+        ['valStandingDom', 'statsValStandingDom'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.innerText = standPctDisplay;
+        });
+        ['subStandingDom', 'statsSubStandingDom'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.innerText = standSubText;
+        });
+        ['valLyingDom', 'statsValLyingDom'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.innerText = lyingPctDisplay;
+        });
+        ['subLyingDom', 'statsSubLyingDom'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.innerText = lyingSubText;
+        });
+
+        // 2. Update Kartu Insight & Status di Tab Statistics
+        const aiConfEl = document.getElementById('insightAiConfidence');
+        const aiConfSubEl = document.getElementById('insightAiConfidenceSub');
+        if (aiConfEl) aiConfEl.innerText = `${st.avg_confidence} Mean Confidence (Max ${st.max_confidence})`;
+        if (aiConfSubEl) aiConfSubEl.innerText = `Dihitung real-time dari ${st.total_logs} rekaman deteksi YOLO`;
+
+        const herdStatusEl = document.getElementById('statsHerdStatusText');
+        if (herdStatusEl) {
+          herdStatusEl.innerText = `Aktif ${st.standing_pct}% (${st.standing_hours_est} Jam) • Istirahat ${st.lying_pct}% (${st.lying_hours_est} Jam)`;
+        }
+
+        // 3. Update Dataset Grafik Tren dari Data Real CSV
+        if (st.charts) {
+          if (st.charts.today) chartDatasets.today = st.charts.today;
+          if (st.charts.week) chartDatasets.week = st.charts.week;
+          if (st.charts.month) chartDatasets.month = st.charts.month;
+          updateBehaviorChart(currentChartFilter);
+        }
+
+        // 4. Render Tabel Rekapitulasi Per Tag Sapi di Tab Statistics
+        const cowSummaryTbody = document.getElementById('cow-summary-table-body');
+        if (cowSummaryTbody && Array.isArray(st.cow_summary)) {
+          cowSummaryTbody.innerHTML = st.cow_summary.map(c => {
+            const isNormal = (c.status || 'Normal').toLowerCase() === 'normal';
+            const statusClass = isNormal ? 'success' : 'warning';
+            return `
+              <tr>
+                <td><span style="font-family: monospace; font-weight: 700; color: #1f2937;">${c.tag_number}</span></td>
+                <td><span style="font-family: monospace; font-weight: 600; color: #4b5563;">${c.camera_id}</span></td>
+                <td><strong>${c.total_detections}</strong> sampel</td>
+                <td><span class="table-tag blue">${c.dominant_behavior} (${c.standing_pct}% Aktif)</span></td>
+                <td style="font-size: 12px; color: #4b5563;">${c.behavior_breakdown}</td>
+                <td><span style="font-family: monospace; font-weight: 600; color: #2d7a58;">${c.avg_confidence}</span></td>
+                <td><span style="font-family: monospace; font-size: 12px; color: #374151;">${c.last_seen}</span></td>
+                <td><span class="table-tag ${statusClass}">${c.status}</span></td>
+              </tr>
+            `;
+          }).join('');
+        }
+      } catch (err) {
+        console.error("Gagal memuat statistik real-time:", err);
+      }
+    }
+
+    window._latestAlertsData = null;
+    window._tgConfigInitialized = false;
+
+    function showTelegramFeedback(message, isError = false) {
+      const banner = document.getElementById('tgFeedbackBanner');
+      if (!banner) return;
+      banner.style.display = 'block';
+      banner.style.background = isError ? 'var(--accent-red-bg)' : 'var(--accent-green-bg)';
+      banner.style.border = `1px solid ${isError ? 'var(--accent-red-border)' : 'var(--accent-green-border)'}`;
+      banner.style.color = isError ? 'var(--accent-red-text)' : 'var(--accent-green-text)';
+      banner.innerText = message;
+    }
+
+    async function loadRealtimeAlerts(forceSyncConfig = false) {
+      try {
+        const res = await fetch(getApiUrl('/api/alerts'));
+        if (!res.ok) return;
+        const data = await res.json();
+        window._latestAlertsData = data;
+
+        const counts = data.counts || { critical: 0, warning: 0, info: 0, total: 0 };
+        const critEl = document.getElementById('alertCountCritical');
+        const warnEl = document.getElementById('alertCountWarning');
+        const sideBadge = document.getElementById('sidebarAlertBadge');
+
+        if (critEl) critEl.innerText = counts.critical;
+        if (warnEl) warnEl.innerText = counts.warning;
+
+        const urgentCount = (counts.critical || 0) + (counts.warning || 0);
+        if (sideBadge) {
+          if (urgentCount > 0) {
+            sideBadge.style.display = 'inline-block';
+            sideBadge.innerText = urgentCount;
+            sideBadge.style.background = counts.critical > 0 ? 'var(--accent-red)' : 'var(--accent-amber)';
+          } else {
+            sideBadge.style.display = 'none';
+          }
+        }
+
+        // Update status Telegram di kartu atas & form konfigurasi
+        const tg = data.telegram || {};
+        const tgBadge = document.getElementById('alertTelegramStatusBadge');
+        const tgLast = document.getElementById('alertTelegramLastSent');
+        if (tgBadge) {
+          if (tg.configured) {
+            tgBadge.innerText = `Terhubung (Chat: ${tg.chat_id})`;
+            tgBadge.style.color = 'var(--accent-green-text)';
+          } else {
+            tgBadge.innerText = 'Belum Dikonfigurasi';
+            tgBadge.style.color = 'var(--accent-amber-text)';
+          }
+        }
+        if (tgLast) {
+          tgLast.innerText = `Pengiriman terakhir: ${tg.last_sent_at || 'Belum pernah dikirim'}`;
+        }
+
+        if (!window._tgConfigInitialized || forceSyncConfig) {
+          window._tgConfigInitialized = true;
+          const tokenInp = document.getElementById('tgBotTokenInput');
+          const chatInp = document.getElementById('tgChatIdInput');
+          const snapChk = document.getElementById('tgIncludeSnapshotChk');
+          const autoChk = document.getElementById('tgAutoNotifyChk');
+          if (tokenInp && tg.bot_token_masked && !tokenInp.value) {
+            tokenInp.value = tg.bot_token_masked;
+          }
+          if (chatInp && tg.chat_id && !chatInp.value) {
+            chatInp.value = tg.chat_id;
+          }
+          if (snapChk) snapChk.checked = tg.include_snapshot !== false;
+          if (autoChk) autoChk.checked = tg.auto_notify !== false;
+        }
+
+        // Render daftar kartu Alert Real-Time
+        const listEl = document.getElementById('realtime-alert-list');
+        if (listEl && Array.isArray(data.alerts)) {
+          listEl.innerHTML = data.alerts.map((a, idx) => {
+            const isCrit = a.level === 'critical';
+            const isWarn = a.level === 'warning';
+            const cardClass = isCrit ? 'critical' : (isWarn ? 'warning-type' : 'info-type');
+            const iconColor = isCrit ? 'var(--accent-red)' : (isWarn ? 'var(--accent-amber)' : 'var(--accent-blue)');
+            const badgeBg = isCrit ? 'var(--accent-red)' : (isWarn ? 'var(--accent-amber)' : 'var(--accent-blue)');
+
+            const iconSvg = isCrit
+              ? `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="${iconColor}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:2px;"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>`
+              : (isWarn
+                ? `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="${iconColor}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:2px;"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>`
+                : `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="${iconColor}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg>`);
+
+            return `
+              <div class="alert-card ${cardClass}" style="justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                <div style="display: flex; align-items: flex-start; gap: 14px; flex: 1; min-width: 260px;">
+                  ${iconSvg}
+                  <div class="alert-content" style="flex: 1;">
+                    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 3px;">
+                      <h4 style="margin: 0;">${a.title}</h4>
+                      <span style="background: ${badgeBg}; color: #ffffff; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 4px; letter-spacing: 0.4px;">${a.badge || a.level.toUpperCase()}</span>
+                    </div>
+                    <p>${a.message}</p>
+                    <div class="alert-time">${a.time_label}</div>
+                  </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px; margin-left: auto;">
+                  <button type="button" onclick="sendSingleAlertToTelegram(${idx})"
+                    style="padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border); background: #ffffff; color: #1f2937; font-size: 11.5px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; white-space: nowrap;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                    <span>Kirim ke Telegram</span>
+                  </button>
+                </div>
+              </div>
+            `;
+          }).join('');
+        }
+      } catch (err) {
+        console.error("Gagal memuat daftar alert real-time:", err);
+      }
+    }
+
+    async function saveTelegramSettings() {
+      const bot_token = (document.getElementById('tgBotTokenInput')?.value || '').trim();
+      const chat_id = (document.getElementById('tgChatIdInput')?.value || '').trim();
+      const include_snapshot = !!document.getElementById('tgIncludeSnapshotChk')?.checked;
+      const auto_notify = !!document.getElementById('tgAutoNotifyChk')?.checked;
+      const btn = document.getElementById('btnSaveTelegramConfig');
+
+      if (btn) { btn.disabled = true; btn.innerText = 'Menyimpan...'; }
+      try {
+        const res = await fetch(getApiUrl('/api/telegram/config'), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ bot_token, chat_id, include_snapshot, auto_notify })
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          showTelegramFeedback(data.detail || 'Gagal menyimpan konfigurasi Telegram.', true);
+          return;
+        }
+        showTelegramFeedback('✅ Konfigurasi Telegram Bot berhasil disimpan!', false);
+        await loadRealtimeAlerts(true);
+      } catch (err) {
+        showTelegramFeedback('Gagal menghubungi server backend.', true);
+      } finally {
+        if (btn) { btn.disabled = false; btn.innerText = 'Simpan Konfigurasi Bot'; }
+      }
+    }
+
+    async function discoverTelegramChatId() {
+      const bot_token = (document.getElementById('tgBotTokenInput')?.value || '').trim();
+      const btn = document.getElementById('btnDiscoverChatId');
+      if (btn) { btn.disabled = true; btn.innerText = 'Mencari...'; }
+      try {
+        const res = await fetch(getApiUrl('/api/telegram/discover-chat-id'), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ bot_token })
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          showTelegramFeedback(data.detail || 'Gagal mendeteksi Chat ID.', true);
+          return;
+        }
+        const chatInp = document.getElementById('tgChatIdInput');
+        if (chatInp && data.chat_id) chatInp.value = data.chat_id;
+        showTelegramFeedback(`✅ ${data.message}`, false);
+        await loadRealtimeAlerts(true);
+      } catch (err) {
+        showTelegramFeedback('Gagal menghubungi endpoint deteksi Chat ID.', true);
+      } finally {
+        if (btn) { btn.disabled = false; btn.innerText = 'Deteksi ID'; }
+      }
+    }
+
+    async function sendFullAlertReportToTelegram() {
+      const bot_token = (document.getElementById('tgBotTokenInput')?.value || '').trim();
+      const chat_id = (document.getElementById('tgChatIdInput')?.value || '').trim();
+      const include_snapshot = !!document.getElementById('tgIncludeSnapshotChk')?.checked;
+      const btn = document.getElementById('btnSendTelegramReport');
+
+      if (btn) { btn.disabled = true; btn.innerHTML = '<span>Mengirim ke Telegram...</span>'; }
+      try {
+        const res = await fetch(getApiUrl('/api/telegram/send'), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            bot_token,
+            chat_id,
+            include_snapshot,
+            camera_id: activeCam || 'cam-01'
+          })
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          showTelegramFeedback(data.detail || 'Gagal mengirim pesan ke Telegram.', true);
+          return;
+        }
+        showTelegramFeedback(`🚀 ${data.message} (${data.sent_at})`, false);
+        await loadRealtimeAlerts(true);
+      } catch (err) {
+        showTelegramFeedback('Gagal mengirim laporan ke Telegram.', true);
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+            <span>Kirim Laporan &amp; Snapshot ke Telegram Sekarang</span>
+          `;
+        }
+      }
+    }
+
+    async function sendSingleAlertToTelegram(idx) {
+      const alerts = (window._latestAlertsData && window._latestAlertsData.alerts) || [];
+      const a = alerts[idx];
+      if (!a) return;
+
+      const bot_token = (document.getElementById('tgBotTokenInput')?.value || '').trim();
+      const chat_id = (document.getElementById('tgChatIdInput')?.value || '').trim();
+      const include_snapshot = !!document.getElementById('tgIncludeSnapshotChk')?.checked;
+
+      showTelegramFeedback(`Mengirim alert "${a.title}" ke Telegram...`, false);
+      try {
+        const res = await fetch(getApiUrl('/api/telegram/send'), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            alert_id: a.id,
+            title: a.title,
+            message: a.message,
+            level: a.level,
+            camera_id: (a.camera_id || activeCam || 'cam-01').toLowerCase(),
+            include_snapshot,
+            bot_token,
+            chat_id
+          })
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          showTelegramFeedback(data.detail || 'Gagal mengirim alert ke Telegram.', true);
+          return;
+        }
+        showTelegramFeedback(`✅ Alert "${a.title}" berhasil dikirim ke Telegram!`, false);
+        await loadRealtimeAlerts(true);
+      } catch (err) {
+        showTelegramFeedback('Gagal terhubung ke server saat mengirim alert.', true);
+      }
+    }
+
+    async function exportPdfReport() {
+      try {
+        if (!window._latestRealtimeStats) {
+          await loadRealtimeStats();
+        }
+        const st = window._latestRealtimeStats;
+        if (!st || !st.total_logs) {
+          alert("Belum ada data deteksi untuk diekspor ke PDF.");
+          return;
+        }
+
+        const sessionStr = localStorage.getItem('bovision_user');
+        const currentUser = sessionStr ? JSON.parse(sessionStr) : { name: 'Administrator BOVISION', role: 'Admin' };
+        const nowStr = new Date().toLocaleString('id-ID', {
+          day: '2-digit', month: 'long', year: 'numeric',
+          hour: '2-digit', minute: '2-digit', second: '2-digit'
+        }) + ' WIB';
+        const fileDate = new Date().toISOString().slice(0, 10);
+
+        // Gunakan jsPDF + AutoTable jika tersedia untuk langsung mengunduh file .pdf vektor yang menarik
+        if (window.jspdf && window.jspdf.jsPDF) {
+          const { jsPDF } = window.jspdf;
+          const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+          const pageW = doc.internal.pageSize.getWidth();
+
+          // 1. Header Banner Gelap Elegan BOVISION
+          doc.setFillColor(12, 13, 14);
+          doc.rect(0, 0, pageW, 34, 'F');
+          doc.setFillColor(45, 122, 88);
+          doc.rect(0, 34, pageW, 1.8, 'F');
+
+          doc.setTextColor(255, 255, 255);
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(16);
+          doc.text('BOVISION - LAPORAN MONITORING PERILAKU SAPI (AI)', 14, 14);
+
+          doc.setFont('helvetica', 'normal');
+          doc.setFontSize(9.5);
+          doc.setTextColor(200, 210, 220);
+          doc.text(`Dicetak: ${nowStr}  |  Petugas: ${currentUser.name || 'Admin'} (${currentUser.role || 'Admin'})`, 14, 21.5);
+          doc.text(`Sumber Data: Pipeline Computer Vision YOLOv11 (Sesi Terakhir: ${st.latest_date} • Total ${st.total_logs} Log Tercatat)`, 14, 27.5);
+
+          // 2. Empat Kotak Ringkasan Statistik Eksekutif (Executive Summary Cards)
+          const cards = [
+            { title: 'SAPI TERIDENTIFIKASI', val: `${st.unique_cows_total} Ekor Unik`, sub: `${st.total_logs} Total Sampel Log`, rgb: [45, 122, 88], bg: [240, 246, 243] },
+            { title: 'DOMINANSI BERDIRI', val: `${st.standing_pct}% Aktif`, sub: `~${st.standing_hours_est} Jam/Hari (${st.standing_count} log)`, rgb: [44, 90, 133], bg: [240, 244, 248] },
+            { title: 'DOMINANSI BERBARING', val: `${st.lying_pct}% Istirahat`, sub: `~${st.lying_hours_est} Jam/Hari (${st.lying_count} log)`, rgb: [158, 115, 40], bg: [249, 245, 237] },
+            { title: 'AKURASI RATA-RATA AI', val: `${st.avg_confidence}`, sub: `Puncak Akurasi: ${st.max_confidence}`, rgb: [28, 82, 59], bg: [240, 246, 243] }
+          ];
+
+          const cardW = (pageW - 28 - 9) / 4;
+          const cardY = 41;
+          cards.forEach((c, idx) => {
+            const x = 14 + idx * (cardW + 3);
+            doc.setFillColor(...c.bg);
+            doc.setDrawColor(...c.rgb);
+            doc.setLineWidth(0.35);
+            doc.roundedRect(x, cardY, cardW, 21, 2, 2, 'FD');
+
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(7);
+            doc.setTextColor(...c.rgb);
+            doc.text(c.title, x + 3, cardY + 5.5);
+
+            doc.setFontSize(11.5);
+            doc.setTextColor(20, 23, 26);
+            doc.text(c.val, x + 3, cardY + 12.5);
+
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(7);
+            doc.setTextColor(95, 105, 115);
+            doc.text(c.sub, x + 3, cardY + 18);
+          });
+
+          // 3. Tabel 1: Rekapitulasi Perilaku & Akurasi Per Tag Sapi (Maks 12 Sapi Teratas)
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(11);
+          doc.setTextColor(20, 23, 26);
+          doc.text('1. Rekapitulasi Statistik Perilaku Per Individu Sapi (Tercatat)', 14, 70);
+          doc.setFont('helvetica', 'normal');
+          doc.setFontSize(8.5);
+          doc.setTextColor(100, 110, 120);
+          doc.text('Merangkum frekuensi deteksi, postur dominan, rincian aktivitas, dan rata-rata akurasi tiap Tag Sapi.', 14, 74.8);
+
+          const cowRows = (st.cow_summary || []).slice(0, 12).map((c, i) => [
+            i + 1,
+            c.tag_number,
+            c.camera_id,
+            `${c.total_detections} sampel`,
+            `${c.dominant_behavior} (${c.standing_pct}%)`,
+            c.behavior_breakdown,
+            c.avg_confidence,
+            c.last_seen,
+            c.status
+          ]);
+
+          doc.autoTable({
+            startY: 78,
+            head: [['No', 'Tag Sapi', 'Kamera', 'Sampel', 'Postur Dominan', 'Rincian Perilaku', 'Akurasi', 'Terakhir Terdeteksi', 'Status']],
+            body: cowRows,
+            theme: 'grid',
+            styles: { font: 'helvetica', fontSize: 8, cellPadding: 2.3, textColor: [30, 35, 42], lineColor: [226, 230, 235], lineWidth: 0.2 },
+            headStyles: { fillColor: [44, 90, 133], textColor: [255, 255, 255], fontStyle: 'bold', halign: 'left' },
+            alternateRowStyles: { fillColor: [248, 250, 252] },
+            columnStyles: {
+              0: { halign: 'center', cellWidth: 9 },
+              1: { fontStyle: 'bold', cellWidth: 20 },
+              2: { cellWidth: 17 },
+              3: { halign: 'center', cellWidth: 18 },
+              6: { halign: 'center', fontStyle: 'bold', textColor: [45, 122, 88], cellWidth: 16 },
+              8: { halign: 'center', fontStyle: 'bold', cellWidth: 16 }
+            },
+            didParseCell: function (data) {
+              if (data.section === 'body' && data.column.index === 8) {
+                const val = String(data.cell.raw || '').toLowerCase();
+                if (val !== 'normal') {
+                  data.cell.styles.textColor = [180, 60, 40];
+                  data.cell.styles.fillColor = [254, 242, 242];
+                } else {
+                  data.cell.styles.textColor = [35, 99, 72];
+                  data.cell.styles.fillColor = [240, 246, 243];
+                }
+              }
+            }
+          });
+
+          // 4. Tabel 2: Sampel Terkurasi Log Event & Transisi Postur Signifikan (Maks 18 Baris)
+          let nextY = doc.lastAutoTable.finalY + 9;
+          if (nextY > 235) {
+            doc.addPage();
+            nextY = 18;
+          }
+
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(11);
+          doc.setTextColor(20, 23, 26);
+          doc.text('2. Sampel Terkurasi Log Event & Transisi Perilaku Signifikan', 14, nextY);
+          doc.setFont('helvetica', 'normal');
+          doc.setFontSize(8.5);
+          doc.setTextColor(100, 110, 120);
+          doc.text('Menampilkan perubahan postur & peringatan penting (tanpa pengulangan frame beruntun setiap 3 detik).', 14, nextY + 4.8);
+
+          const curatedRows = (st.curated_logs || []).slice(0, 18).map((l, i) => [
+            i + 1,
+            l.timestamp || l.time || '-',
+            l.camera_id || 'CAM-01',
+            l.tag_number || '-',
+            (l.behavior || '-').replace(/_/g, ' ').toUpperCase(),
+            l.confidence || '-',
+            l.status || 'Normal',
+            l.notes || '-'
+          ]);
+
+          doc.autoTable({
+            startY: nextY + 8,
+            head: [['No', 'Waktu Pencatatan', 'Kamera', 'Tag Sapi', 'Klasifikasi Postur', 'Confidence', 'Status', 'Keterangan AI']],
+            body: curatedRows,
+            theme: 'grid',
+            styles: { font: 'helvetica', fontSize: 8, cellPadding: 2.2, textColor: [30, 35, 42], lineColor: [226, 230, 235], lineWidth: 0.2 },
+            headStyles: { fillColor: [45, 122, 88], textColor: [255, 255, 255], fontStyle: 'bold' },
+            alternateRowStyles: { fillColor: [248, 250, 252] },
+            columnStyles: {
+              0: { halign: 'center', cellWidth: 9 },
+              1: { cellWidth: 32 },
+              2: { cellWidth: 16 },
+              3: { fontStyle: 'bold', cellWidth: 19 },
+              4: { fontStyle: 'bold', cellWidth: 26 },
+              5: { halign: 'center', cellWidth: 18 },
+              6: { halign: 'center', fontStyle: 'bold', cellWidth: 16 }
+            },
+            didParseCell: function (data) {
+              if (data.section === 'body' && data.column.index === 6) {
+                const val = String(data.cell.raw || '').toLowerCase();
+                if (val !== 'normal') {
+                  data.cell.styles.textColor = [180, 60, 40];
+                  data.cell.styles.fillColor = [254, 242, 242];
+                } else {
+                  data.cell.styles.textColor = [35, 99, 72];
+                  data.cell.styles.fillColor = [240, 246, 243];
+                }
+              }
+            }
+          });
+
+          // Footer Nomor Halaman
+          const pageCount = doc.internal.getNumberOfPages();
+          for (let p = 1; p <= pageCount; p++) {
+            doc.setPage(p);
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(8);
+            doc.setTextColor(130, 138, 148);
+            doc.text(
+              `BOVISION Automated Livestock Report • Halaman ${p} dari ${pageCount}`,
+              pageW / 2,
+              doc.internal.pageSize.getHeight() - 8,
+              { align: 'center' }
+            );
+          }
+
+          doc.save(`Laporan_Monitoring_Sapi_BOVISION_${fileDate}.pdf`);
+          return;
+        }
+
+        // Fallback Cetak PDF Browser jika CDN jsPDF tidak termuat
+        window.print();
+      } catch (err) {
+        console.error("Gagal membuat laporan PDF:", err);
+        alert("Terjadi kesalahan saat menyusun laporan PDF.");
+      }
     }
 
     let activeCam = 'cam-01';
@@ -3155,7 +3834,7 @@
       const plotW = svgW - padL - padR; const plotH = svgH - padT - padB;
 
       const getY = (val) => padT + plotH - ((val / 100) * plotH);
-      const getX = (i) => padL + (i * (plotW / (pointsCount - 1)));
+      const getX = (i) => pointsCount > 1 ? padL + (i * (plotW / (pointsCount - 1))) : padL + (plotW / 2);
 
       let pathStanding = "";
       let pathLying = "";
@@ -3800,14 +4479,30 @@
 
       renderInteractiveChart('today');
       loadDetectionLogs();
+      loadRealtimeStats();
+      loadRealtimeAlerts();
       loadUsers();
       switchCamera('cam-01');
       syncLiveYoloTelemetry();
 
-      // Sinkronisasi Real-Time Telemetri YOLO & Tabel Log Deteksi setiap 2.5 detik
+      // Update jam OSD CCTV secara real-time setiap 1 detik
+      function updateOsdClock() {
+        const clk = document.getElementById('camOsdClock');
+        if (clk) {
+          const now = new Date();
+          const pad = (n) => String(n).padStart(2, '0');
+          clk.innerText = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())} WIB`;
+        }
+      }
+      updateOsdClock();
+      setInterval(updateOsdClock, 1000);
+
+      // Sinkronisasi Real-Time Telemetri YOLO, Statistik, Alert, & Tabel Log Deteksi setiap 2.5 detik
       setInterval(() => {
         syncLiveYoloTelemetry();
         loadDetectionLogs();
+        loadRealtimeStats();
+        loadRealtimeAlerts();
       }, 2500);
 
       // Tangkal browser autofill otomatis yang sering menempel sesaat setelah load

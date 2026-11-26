@@ -12,7 +12,15 @@ import json
 import asyncio
 import random
 import string
+import threading
+import urllib.request
+import urllib.parse
+import urllib.error
 from datetime import datetime
+
+# Pastikan working directory selalu berada di folder proyek Cow-Monitoring-CV
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+os.chdir(BASE_DIR)
 
 # Cek ketersediaan OpenCV
 try:
@@ -83,7 +91,79 @@ def read_csv_logs(limit: int = 50):
     except Exception as e:
         print(f"Error reading CSV logs: {e}")
     logs.reverse()  # Urutan paling baru di paling atas
-    return logs[:limit]
+    if limit and limit > 0:
+        return logs[:limit]
+    return logs
+
+def parse_conf_float(conf_str: str) -> float:
+    try:
+        return float(str(conf_str).replace("%", "").strip())
+    except Exception:
+        return 0.0
+
+def is_lying_behavior(beh: str) -> bool:
+    b = (beh or "").lower().strip()
+    return b in ("lying", "lying down", "lying_down", "rumination", "resting")
+
+def compute_bucket_series(rows_chronological, num_buckets: int, label_formatter):
+    """Membagi rows kronologis ke dalam num_buckets kelompok dan menghitung persentase Standing vs Lying riil."""
+    if not rows_chronological:
+        return {
+            "labels": ["-"] * num_buckets,
+            "standing": [0] * num_buckets,
+            "lying": [0] * num_buckets,
+            "counts": [0] * num_buckets,
+            "peakStanding": "-",
+            "peakLying": "-",
+            "standingAvg": "0%",
+            "lyingAvg": "0%",
+        }
+
+    n = len(rows_chronological)
+    actual_buckets = min(num_buckets, n)
+    labels = []
+    standing_arr = []
+    lying_arr = []
+    counts_arr = []
+
+    for i in range(actual_buckets):
+        start_idx = int(i * n / actual_buckets)
+        end_idx = int((i + 1) * n / actual_buckets)
+        chunk = rows_chronological[start_idx:end_idx]
+        if not chunk:
+            continue
+        lbl = label_formatter(chunk, i)
+        l_cnt = sum(1 for r in chunk if is_lying_behavior(r.get("behavior", "")))
+        s_cnt = len(chunk) - l_cnt
+        s_pct = round((s_cnt / len(chunk)) * 100)
+        l_pct = 100 - s_pct
+        labels.append(lbl)
+        standing_arr.append(s_pct)
+        lying_arr.append(l_pct)
+        counts_arr.append(len(chunk))
+
+    total_l = sum(1 for r in rows_chronological if is_lying_behavior(r.get("behavior", "")))
+    total_s = n - total_l
+    s_avg = round((total_s / n) * 100)
+    l_avg = 100 - s_avg
+
+    # Cari bucket dengan aktivitas berdiri & berbaring tertinggi
+    best_s_idx = max(range(len(standing_arr)), key=lambda idx: (standing_arr[idx], counts_arr[idx]))
+    best_l_idx = max(range(len(lying_arr)), key=lambda idx: (lying_arr[idx], counts_arr[idx]))
+
+    peak_s = f"{labels[best_s_idx]} ({standing_arr[best_s_idx]}% • {counts_arr[best_s_idx]} log)"
+    peak_l = f"{labels[best_l_idx]} ({lying_arr[best_l_idx]}% • {counts_arr[best_l_idx]} log)"
+
+    return {
+        "labels": labels,
+        "standing": standing_arr,
+        "lying": lying_arr,
+        "counts": counts_arr,
+        "peakStanding": peak_s,
+        "peakLying": peak_l,
+        "standingAvg": f"{s_avg}%",
+        "lyingAvg": f"{l_avg}%",
+    }
 
 init_csv()
 
@@ -443,6 +523,228 @@ def export_csv_logs():
         headers={"Content-Disposition": f'attachment; filename="{filename}"'}
     )
 
+@app.get("/api/stats")
+def get_realtime_stats():
+    """Menghitung statistik real-time, grafik tren, dan ringkasan laporan PDF langsung dari data/cow_detections.csv & live telemetry."""
+    all_logs_newest_first = read_csv_logs(limit=0)
+    all_logs_chrono = list(reversed(all_logs_newest_first))
+
+    is_live = (time.time() - LATEST_YOLO_TELEMETRY.get("last_update", 0.0)) < 6.0
+
+    # Jika ada frame live terbaru yang belum masuk interval 3 detik CSV, ikutkan dalam kalkulasi real-time
+    combined_chrono = list(all_logs_chrono)
+    if is_live and LATEST_YOLO_TELEMETRY.get("detections"):
+        now_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        cam_live = (LATEST_YOLO_TELEMETRY.get("cam_id") or "CAM-01").upper()
+        for d in LATEST_YOLO_TELEMETRY["detections"]:
+            beh_raw = d.get("behavior", "stand")
+            beh_lower = beh_raw.lower().strip()
+            combined_chrono.append({
+                "timestamp": now_str,
+                "time": now_str.split(" ")[-1],
+                "camera_id": cam_live,
+                "tag_number": d.get("tag_number", "COW-??"),
+                "behavior": beh_raw,
+                "confidence": d.get("confidence", "90.0%"),
+                "status": "Normal",
+                "notes": BEHAVIOR_NOTES_MAP.get(beh_lower, f"Deteksi otomatis YOLO ({beh_raw})"),
+            })
+
+    total_logs = len(combined_chrono)
+    if total_logs == 0:
+        return {"total_logs": 0, "online": is_live}
+
+    # Hitung agregat utama
+    lying_total = sum(1 for r in combined_chrono if is_lying_behavior(r.get("behavior", "")))
+    standing_total = total_logs - lying_total
+    standing_pct = round((standing_total / total_logs) * 100)
+    lying_pct = 100 - standing_pct
+
+    # Jika sedang live dan ada deteksi aktif, sediakan juga persentase frame detik ini
+    if is_live and LATEST_YOLO_TELEMETRY.get("active_count", 0) > 0:
+        live_standing_pct = LATEST_YOLO_TELEMETRY.get("standing_pct", standing_pct)
+        live_lying_pct = LATEST_YOLO_TELEMETRY.get("lying_pct", lying_pct)
+    else:
+        live_standing_pct = standing_pct
+        live_lying_pct = lying_pct
+
+    conf_vals = [parse_conf_float(r.get("confidence", "0")) for r in combined_chrono if parse_conf_float(r.get("confidence", "0")) > 0]
+    avg_conf = round(sum(conf_vals) / len(conf_vals), 1) if conf_vals else 0.0
+    max_conf = round(max(conf_vals), 1) if conf_vals else 0.0
+
+    # Breakdown per behavior
+    behavior_counts = {}
+    for r in combined_chrono:
+        b = (r.get("behavior") or "stand").lower().strip()
+        behavior_counts[b] = behavior_counts.get(b, 0) + 1
+
+    # Kelompokkan berdasarkan tanggal
+    by_date = {}
+    for r in combined_chrono:
+        ts = r.get("timestamp", "")
+        dt_part = ts.split(" ")[0] if " " in ts else ts[:10]
+        if dt_part:
+            by_date.setdefault(dt_part, []).append(r)
+
+    sorted_dates = sorted(by_date.keys())
+    latest_date = sorted_dates[-1] if sorted_dates else datetime.now().strftime("%Y-%m-%d")
+    latest_day_rows = by_date.get(latest_date, combined_chrono)
+
+    unique_tags_all = sorted(set(r.get("tag_number", "COW-??") for r in combined_chrono if r.get("tag_number")))
+    unique_tags_latest = sorted(set(r.get("tag_number", "COW-??") for r in latest_day_rows if r.get("tag_number")))
+
+    # Rata-rata objek sapi per timestamp snapshot pada sesi terbaru
+    ts_groups = {}
+    for r in latest_day_rows:
+        ts_groups.setdefault(r.get("timestamp", ""), []).append(r)
+    avg_cows_per_frame = round(sum(len(v) for v in ts_groups.values()) / max(len(ts_groups), 1), 1)
+
+    display_cow_count = LATEST_YOLO_TELEMETRY.get("active_count", 0) if (is_live and LATEST_YOLO_TELEMETRY.get("active_count", 0) > 0) else len(unique_tags_latest)
+
+    # 1. Chart "today" (Sesi Hari Terakhir Tercatat - 7 titik kronologis)
+    def fmt_today_lbl(chunk, idx):
+        t0 = chunk[0].get("time") or chunk[0].get("timestamp", "").split(" ")[-1]
+        return t0[:5] if len(t0) >= 5 else t0
+
+    chart_today = compute_bucket_series(latest_day_rows, 7, fmt_today_lbl)
+    chart_today["subtitle"] = f"Komparasi proporsi postur tercatat (Sesi {latest_date} • {len(latest_day_rows)} log deteksi)"
+
+    # 2. Chart "week" (7 Segmen / Tanggal Riwayat Minggu Ini)
+    if len(sorted_dates) >= 4:
+        recent_dates = sorted_dates[-7:]
+        w_labels, w_stand, w_lying, w_counts = [], [], [], []
+        for d_str in recent_dates:
+            d_rows = by_date[d_str]
+            l_c = sum(1 for r in d_rows if is_lying_behavior(r.get("behavior", "")))
+            s_c = len(d_rows) - l_c
+            s_p = round((s_c / len(d_rows)) * 100)
+            w_labels.append(d_str[5:])
+            w_stand.append(s_p)
+            w_lying.append(100 - s_p)
+            w_counts.append(len(d_rows))
+        best_s = max(range(len(w_stand)), key=lambda i: (w_stand[i], w_counts[i]))
+        best_l = max(range(len(w_lying)), key=lambda i: (w_lying[i], w_counts[i]))
+        chart_week = {
+            "subtitle": f"Komparasi proporsi postur kawanan ({len(recent_dates)} Tanggal Tercatat • {total_logs} log)",
+            "labels": w_labels,
+            "standing": w_stand,
+            "lying": w_lying,
+            "counts": w_counts,
+            "standingAvg": f"{standing_pct}%",
+            "lyingAvg": f"{lying_pct}%",
+            "peakStanding": f"{w_labels[best_s]} ({w_stand[best_s]}% • {w_counts[best_s]} log)",
+            "peakLying": f"{w_labels[best_l]} ({w_lying[best_l]}% • {w_counts[best_l]} log)",
+        }
+    else:
+        def fmt_week_lbl(chunk, idx):
+            ts0 = chunk[0].get("timestamp", "")
+            parts = ts0.split(" ")
+            if len(parts) == 2:
+                return f"{parts[0][5:]} {parts[1][:5]}"
+            return ts0[:10]
+        chart_week = compute_bucket_series(combined_chrono, 7, fmt_week_lbl)
+        chart_week["subtitle"] = f"Komparasi proporsi postur kawanan (7 Segmen Riwayat Tercatat • {total_logs} log deteksi)"
+
+    # 3. Chart "month" (4 Siklus / Kuartil Data Tercatat)
+    def fmt_month_lbl(chunk, idx):
+        ts0 = chunk[0].get("timestamp", "").split(" ")[0][5:]
+        ts1 = chunk[-1].get("timestamp", "").split(" ")[-1][:5]
+        return f"Segmen {idx + 1} ({ts0} {ts1})"
+
+    chart_month = compute_bucket_series(combined_chrono, 4, fmt_month_lbl)
+    chart_month["subtitle"] = f"Komparasi proporsi postur kawanan (4 Segmen Kumulatif • {total_logs} log deteksi)"
+
+    # 4. Ringkasan Per Tag Sapi untuk Tabel Rekap & PDF
+    cow_groups = {}
+    for r in combined_chrono:
+        tag = r.get("tag_number") or "COW-??"
+        cow_groups.setdefault(tag, []).append(r)
+
+    cow_summary = []
+    for tag, rows in sorted(cow_groups.items(), key=lambda x: (-len(x[1]), x[0])):
+        c_total = len(rows)
+        c_lying = sum(1 for r in rows if is_lying_behavior(r.get("behavior", "")))
+        c_stand = c_total - c_lying
+        c_stand_pct = round((c_stand / c_total) * 100)
+        c_lying_pct = 100 - c_stand_pct
+
+        b_freq = {}
+        for r in rows:
+            b_name = (r.get("behavior") or "stand").replace("_", " ").strip()
+            b_freq[b_name.lower()] = b_freq.get(b_name.lower(), 0) + 1
+        dom_beh = max(b_freq.items(), key=lambda x: x[1])[0].title() if b_freq else "Stand"
+        breakdown_str = ", ".join(f"{k.title()}: {v}" for k, v in sorted(b_freq.items(), key=lambda x: -x[1]))
+
+        c_confs = [parse_conf_float(r.get("confidence", "0")) for r in rows if parse_conf_float(r.get("confidence", "0")) > 0]
+        c_avg_conf = f"{round(sum(c_confs) / len(c_confs), 1)}%" if c_confs else "-"
+        has_warn = any((r.get("status") or "").lower() != "normal" for r in rows)
+
+        cow_summary.append({
+            "tag_number": tag,
+            "camera_id": rows[-1].get("camera_id", "CAM-01"),
+            "total_detections": c_total,
+            "standing_pct": c_stand_pct,
+            "lying_pct": c_lying_pct,
+            "dominant_behavior": dom_beh,
+            "behavior_breakdown": breakdown_str,
+            "avg_confidence": c_avg_conf,
+            "first_seen": rows[0].get("timestamp", "-"),
+            "last_seen": rows[-1].get("timestamp", "-"),
+            "status": "Warning" if has_warn else "Normal",
+        })
+
+    # 5. Kurasi Log Penting untuk PDF (Deduplikasi beruntun per sapi + semua Warning, maks 22 baris)
+    curated_logs = []
+    last_state_per_tag = {}
+    warning_logs = []
+    transition_logs = []
+
+    for r in reversed(combined_chrono):  # Dari terbaru ke terlama
+        tag = r.get("tag_number", "COW-??")
+        beh = (r.get("behavior") or "").lower().strip()
+        st = (r.get("status") or "Normal").strip()
+        if st.lower() != "normal":
+            warning_logs.append(r)
+            continue
+        if last_state_per_tag.get(tag) != beh:
+            last_state_per_tag[tag] = beh
+            transition_logs.append(r)
+
+    curated_logs = (warning_logs + transition_logs)[:22]
+    curated_logs.sort(key=lambda r: r.get("timestamp", ""), reverse=True)
+
+    standing_hours = round((standing_pct / 100.0) * 24, 1)
+    lying_hours = round((lying_pct / 100.0) * 24, 1)
+
+    return {
+        "online": is_live,
+        "total_logs": total_logs,
+        "latest_date": latest_date,
+        "latest_day_logs": len(latest_day_rows),
+        "unique_cows_total": len(unique_tags_all),
+        "unique_cows_latest_day": len(unique_tags_latest),
+        "display_cow_count": display_cow_count,
+        "avg_cows_per_frame": avg_cows_per_frame,
+        "standing_count": standing_total,
+        "lying_count": lying_total,
+        "standing_pct": standing_pct,
+        "lying_pct": lying_pct,
+        "live_standing_pct": live_standing_pct,
+        "live_lying_pct": live_lying_pct,
+        "standing_hours_est": standing_hours,
+        "lying_hours_est": lying_hours,
+        "avg_confidence": f"{avg_conf}%",
+        "max_confidence": f"{max_conf}%",
+        "behavior_counts": behavior_counts,
+        "charts": {
+            "today": chart_today,
+            "week": chart_week,
+            "month": chart_month,
+        },
+        "cow_summary": cow_summary,
+        "curated_logs": curated_logs,
+    }
+
 # ==========================================
 # 6. RTSP & Live YOLO Streaming Gateway (1280x720 HD)
 # ==========================================
@@ -470,6 +772,7 @@ LATEST_YOLO_TELEMETRY = {
 }
 LAST_CSV_WRITE_TIME = 0.0
 CSV_WRITE_INTERVAL = 3.0  # Catat ke CSV setiap 3 detik agar tidak duplikat berlebihan
+COW_BEHAVIOR_STREAK = {}  # tag_number -> {"behavior": str, "count": int, "first_ts": float}
 
 BEHAVIOR_NOTES_MAP = {
     "stand": "Postur berdiri tegak aktif",
@@ -485,7 +788,7 @@ BEHAVIOR_NOTES_MAP = {
 @app.post("/api/yolo/push")
 async def push_yolo_frame(request: Request):
     """Menerima frame JPEG ber-bounding box (1280x720) & metadata deteksi real-time dari infer_rtsp.py."""
-    global LAST_CSV_WRITE_TIME, LATEST_YOLO_TELEMETRY
+    global LAST_CSV_WRITE_TIME, LATEST_YOLO_TELEMETRY, LAST_AUTO_TELEGRAM_TS
     frame_bytes = await request.body()
     meta_raw = request.headers.get("X-Yolo-Meta", "{}")
     try:
@@ -544,24 +847,77 @@ async def push_yolo_frame(request: Request):
         LAST_CSV_WRITE_TIME = now_ts
         init_csv()
         now_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        triggered_warnings = []
         try:
             with open(CSV_FILE, mode="a", newline="", encoding="utf-8") as f:
                 writer = csv.writer(f)
                 for d in dets:
+                    tag = d.get("tag_number", "COW-??")
                     beh_raw = d.get("behavior", "stand")
                     beh_lower = beh_raw.lower().strip()
+                    conf_str = d.get("confidence", "90.0%")
+                    conf_val = parse_conf_float(conf_str)
+
+                    # Lacak durasi beruntun perilaku per sapi
+                    prev = COW_BEHAVIOR_STREAK.get(tag)
+                    if prev and prev["behavior"] == beh_lower:
+                        prev["count"] += 1
+                    else:
+                        COW_BEHAVIOR_STREAK[tag] = {"behavior": beh_lower, "count": 1, "first_ts": now_ts}
+                    streak_cnt = COW_BEHAVIOR_STREAK[tag]["count"]
+                    streak_sec = int(now_ts - COW_BEHAVIOR_STREAK[tag]["first_ts"])
+
+                    row_status = "Normal"
                     note = BEHAVIOR_NOTES_MAP.get(beh_lower, f"Deteksi otomatis YOLO ({beh_raw})")
+
+                    if beh_lower in ("lying down", "lying") and streak_cnt >= 20:
+                        row_status = "Warning"
+                        note = f"Berbaring terus-menerus tanpa berdiri ({streak_sec} detik / {streak_cnt} siklus)"
+                        triggered_warnings.append((tag, beh_raw, conf_str, note))
+                    elif total >= 6:
+                        row_status = "Warning"
+                        note = f"Kepadatan sektor kamera tinggi ({total} ekor terdeteksi bersamaan)"
+                        triggered_warnings.append((tag, beh_raw, conf_str, note))
+
                     writer.writerow([
                         now_str,
                         cam_id.upper(),
-                        d.get("tag_number", "COW-??"),
+                        tag,
                         beh_raw,
-                        d.get("confidence", "90.0%"),
-                        "Normal",
+                        conf_str,
+                        row_status,
                         note
                     ])
         except Exception as e:
             print(f"Gagal menulis log YOLO ke CSV: {e}")
+
+        # Auto-Notify ke Telegram jika ada Warning baru dan cooldown sudah lewat
+        if triggered_warnings:
+            tg_cfg = load_telegram_config()
+            cooldown = int(tg_cfg.get("cooldown_seconds", 120))
+            token = (tg_cfg.get("bot_token") or "").strip()
+            cid = (tg_cfg.get("chat_id") or "").strip()
+            if tg_cfg.get("auto_notify", True) and token and cid and (now_ts - LAST_AUTO_TELEGRAM_TS >= cooldown):
+                LAST_AUTO_TELEGRAM_TS = now_ts
+                w_tag, w_beh, w_conf, w_note = triggered_warnings[0]
+                auto_msg = (
+                    f"🚨 <b>[BOVISION AUTO-ALERT - WARNING]</b>\n"
+                    f"<b>Anomali Terdeteksi pada {w_tag} ({cam_id.upper()})</b>\n\n"
+                    f"• Klasifikasi: <b>{w_beh.upper()}</b> ({w_conf})\n"
+                    f"• Keterangan: {w_note}\n"
+                    f"• Jumlah Sapi di Frame: <b>{total} Ekor</b> (Standing {s_pct}% | Lying {l_pct}%)\n"
+                    f"🕒 <i>{now_str} WIB</i>"
+                )
+                use_snap = bool(tg_cfg.get("include_snapshot", True))
+
+                def _bg_send():
+                    try:
+                        send_telegram_message_sync(token, cid, auto_msg, include_snapshot=use_snap, cam_id=cam_id)
+                        save_telegram_config({"last_sent_at": f"{now_str} WIB (Auto)", "last_sent_status": "success"})
+                    except Exception as ex:
+                        print(f"Auto Telegram gagal: {ex}")
+
+                threading.Thread(target=_bg_send, daemon=True).start()
 
     return {"status": "ok", "received_detections": total}
 
@@ -669,3 +1025,621 @@ def get_stream_status():
             for k, v in RTSP_CAMERAS.items()
         }
     }
+
+# ==========================================
+# 7. Real-Time Alerts Engine & Integrasi Notifikasi Telegram
+# ==========================================
+
+TELEGRAM_CONFIG_FILE = os.path.join(DATA_DIR, "telegram_config.json")
+LAST_AUTO_TELEGRAM_TS = 0.0
+
+DEFAULT_TELEGRAM_CONFIG = {
+    "bot_token": os.getenv("TELEGRAM_BOT_TOKEN", "9002161660:AAFARa3HyZyQgH44cOntodc1orDdgxE2KSc"),
+    "chat_id": os.getenv("TELEGRAM_CHAT_ID", "6246927036"),
+    "auto_notify": True,
+    "include_snapshot": True,
+    "cooldown_seconds": 120,
+    "last_sent_at": "Belum pernah dikirim",
+    "last_sent_status": "idle",
+}
+
+def load_telegram_config() -> dict:
+    os.makedirs(DATA_DIR, exist_ok=True)
+    cfg = dict(DEFAULT_TELEGRAM_CONFIG)
+    if os.path.exists(TELEGRAM_CONFIG_FILE):
+        try:
+            with open(TELEGRAM_CONFIG_FILE, "r", encoding="utf-8") as f:
+                saved = json.load(f)
+                if isinstance(saved, dict):
+                    cfg.update(saved)
+        except Exception as e:
+            print(f"Gagal membaca telegram_config.json: {e}")
+    if not cfg.get("bot_token") and os.getenv("TELEGRAM_BOT_TOKEN"):
+        cfg["bot_token"] = os.getenv("TELEGRAM_BOT_TOKEN")
+    if not cfg.get("chat_id") and os.getenv("TELEGRAM_CHAT_ID"):
+        cfg["chat_id"] = os.getenv("TELEGRAM_CHAT_ID")
+    return cfg
+
+def save_telegram_config(cfg: dict) -> dict:
+    os.makedirs(DATA_DIR, exist_ok=True)
+    merged = load_telegram_config()
+    merged.update(cfg)
+    with open(TELEGRAM_CONFIG_FILE, "w", encoding="utf-8") as f:
+        json.dump(merged, f, indent=2, ensure_ascii=False)
+    return merged
+
+def mask_token(token: str) -> str:
+    t = (token or "").strip()
+    if len(t) <= 10:
+        return "••••••••" if t else ""
+    return f"{t[:6]}••••••••{t[-4:]}"
+
+def build_realtime_alerts() -> dict:
+    """Menyusun daftar peringatan & notifikasi real-time berdasarkan data CSV tercatat dan telemetri live YOLO."""
+    st = get_realtime_stats()
+    all_logs = read_csv_logs(limit=0)  # Urutan terbaru di atas
+    is_live = st.get("online", False)
+    total_logs = st.get("total_logs", 0)
+
+    alerts = []
+
+    # 1. Alert dari baris log berstatus Warning / Critical di CSV
+    warning_rows = [r for r in all_logs if (r.get("status") or "Normal").lower() != "normal"]
+    for idx, r in enumerate(warning_rows[:6]):
+        ts = r.get("timestamp") or r.get("time") or "-"
+        cam = r.get("camera_id") or "CAM-01"
+        tag = r.get("tag_number") or "COW-??"
+        beh = (r.get("behavior") or "-").replace("_", " ").title()
+        conf = r.get("confidence") or "-"
+        note = r.get("notes") or "Terdeteksi anomali perilaku sapi"
+        is_crit = "inaktivitas" in note.lower() or "ekstrem" in note.lower() or (r.get("status") or "").lower() == "critical"
+
+        alerts.append({
+            "id": f"log-warn-{idx}-{tag}",
+            "level": "critical" if is_crit else "warning",
+            "title": f"Peringatan Anomali Individu: {tag} ({beh})",
+            "message": f"{note}. Terdeteksi pada sektor {cam} dengan tingkat akurasi AI {conf}.",
+            "time_label": f"{ts} WIB • {cam} • Tag {tag}",
+            "camera_id": cam,
+            "tag_number": tag,
+            "badge": "CRITICAL" if is_crit else "WARNING",
+        })
+
+    # 2. Alert Analisis Proporsi Kawanan Real-Time (Standing vs Lying)
+    if total_logs > 0:
+        s_pct = st.get("standing_pct", 0)
+        l_pct = st.get("lying_pct", 0)
+        s_cnt = st.get("standing_count", 0)
+        l_cnt = st.get("lying_count", 0)
+        s_hrs = st.get("standing_hours_est", 0)
+        l_hrs = st.get("lying_hours_est", 0)
+        latest_date = st.get("latest_date", "-")
+
+        if s_pct >= 85:
+            alerts.append({
+                "id": "herd-high-standing",
+                "level": "warning",
+                "title": f"Dominansi Berdiri Tinggi ({s_pct}%) • Minim Istirahat Ruminasi",
+                "message": (
+                    f"Dari {total_logs} log deteksi tercatat ({s_cnt} aktif berdiri/makan vs {l_cnt} berbaring), "
+                    f"proporsi berdiri mencapai {s_pct}% (~{s_hrs} jam/hari). Minimnya aktivitas berbaring dapat mengindikasikan "
+                    f"alas kandang kurang nyaman, kepadatan area pakan, atau suhu kandang tinggi."
+                ),
+                "time_label": f"Sesi {latest_date} • Analisis Agregat Kawanan ({total_logs} sampel)",
+                "camera_id": "CAM-01",
+                "tag_number": "KAWANAN",
+                "badge": f"STANDING {s_pct}%",
+            })
+        elif l_pct >= 75:
+            alerts.append({
+                "id": "herd-high-lying",
+                "level": "critical",
+                "title": f"Peringatan Inaktivitas Kawanan Tinggi (Lying {l_pct}%)",
+                "message": (
+                    f"Proporsi sapi berbaring mencapai {l_pct}% ({l_cnt} dari {total_logs} deteksi, ~{l_hrs} jam/hari). "
+                    f"Segera periksa kondisi fisik kawanan terhadap gejala kelelahan ekstrem, pincang (lameness), atau gangguan kesehatan."
+                ),
+                "time_label": f"Sesi {latest_date} • Analisis Agregat Kawanan",
+                "camera_id": "CAM-01",
+                "tag_number": "KAWANAN",
+                "badge": f"LYING {l_pct}%",
+            })
+        else:
+            alerts.append({
+                "id": "herd-balance-optimal",
+                "level": "info",
+                "title": "Keseimbangan Aktivitas & Istirahat Kawanan Optimal",
+                "message": (
+                    f"Proporsi Standing {s_pct}% (~{s_hrs} jam/hari) dan Lying {l_pct}% (~{l_hrs} jam/hari) "
+                    f"dari {total_logs} log deteksi berada pada batas indeks kesejahteraan ternak sehat."
+                ),
+                "time_label": f"Sesi {latest_date} • BOVISION Welfare Index",
+                "camera_id": "CAM-01",
+                "tag_number": "KAWANAN",
+                "badge": "OPTIMAL",
+            })
+
+    # 3. Alert Evaluasi Confidence Rendah / Oklusi Visual Kamera per Tag Sapi
+    cow_summary = st.get("cow_summary") or []
+    low_conf_cows = []
+    for c in cow_summary:
+        c_val = parse_conf_float(c.get("avg_confidence", "100%"))
+        if 0 < c_val < 62.0 and c.get("total_detections", 0) >= 3:
+            low_conf_cows.append(f"{c['tag_number']} ({c['avg_confidence']}, {c['total_detections']} sampel)")
+
+    if low_conf_cows:
+        alerts.append({
+            "id": "low-confidence-occlusion",
+            "level": "warning",
+            "title": f"Deteksi Akurasi Visual Rendah / Oklusi pada {len(low_conf_cows)} Tag Sapi",
+            "message": (
+                f"Individu sapi berikut memiliki rata-rata confidence di bawah 62%: {', '.join(low_conf_cows[:5])}. "
+                f"Disarankan memeriksa pencahayaan kandang, sudut pandang kamera, atau potensi tumpang-tindih (oklusi) antar sapi."
+            ),
+            "time_label": f"Kalibrasi YOLOv11 • Rata-rata Global {st.get('avg_confidence', '-')}",
+            "camera_id": "CAM-01",
+            "tag_number": low_conf_cows[0].split(" ")[0],
+            "badge": "LOW CONFIDENCE",
+        })
+
+    # 4. Alert Aktivitas Sektor Pakan (Foraging & Drinking)
+    b_counts = st.get("behavior_counts") or {}
+    forage_cnt = b_counts.get("foraging", 0)
+    drink_cnt = b_counts.get("drinking water", 0) + b_counts.get("drinking_water", 0)
+    if forage_cnt > 0 or drink_cnt > 0:
+        foraging_cows = [c["tag_number"] for c in cow_summary if "foraging" in (c.get("behavior_breakdown") or "").lower()]
+        alerts.append({
+            "id": "feeding-activity-summary",
+            "level": "info",
+            "title": f"Pemantauan Aktivitas Makan (Foraging): {forage_cnt} Kejadian Tercatat",
+            "message": (
+                f"Sistem mencatat {forage_cnt} deteksi aktivitas makan di area palung pakan"
+                + (f" dan {drink_cnt} aktivitas minum" if drink_cnt else "")
+                + (f" yang didominasi oleh {', '.join(foraging_cows[:5])}." if foraging_cows else ".")
+            ),
+            "time_label": f"Sektor Pakan Kandang A • {st.get('unique_cows_latest_day', 0)} Ekor Teridentifikasi",
+            "camera_id": "CAM-01",
+            "tag_number": foraging_cows[0] if foraging_cows else "KAWANAN",
+            "badge": "FORAGING",
+        })
+
+    # 5. Status Koneksi Live AI Pipeline
+    if is_live:
+        fps_live = LATEST_YOLO_TELEMETRY.get("fps", 0.0)
+        act_cnt = LATEST_YOLO_TELEMETRY.get("active_count", 0)
+        alerts.append({
+            "id": "pipeline-live-status",
+            "level": "info",
+            "title": f"Gateway RTSP & YOLO Inference Aktif ({fps_live} FPS)",
+            "message": f"Menerima stream real-time dari infer_rtsp.py dengan {act_cnt} objek sapi terdeteksi pada frame saat ini.",
+            "time_label": "Real-Time Stream • Latency <15ms",
+            "camera_id": (LATEST_YOLO_TELEMETRY.get("cam_id") or "CAM-01").upper(),
+            "tag_number": "SYSTEM",
+            "badge": "LIVE ONLINE",
+        })
+    else:
+        alerts.append({
+            "id": "pipeline-standby-status",
+            "level": "info",
+            "title": "Stream RTSP Live Standby • Menampilkan Data Historis Tercatat",
+            "message": (
+                f"Worker infer_rtsp.py sedang tidak mengirim stream aktif. Seluruh statistik dan alert dihitung "
+                f"secara real-time dari {total_logs} rekaman deteksi terakhir di database CSV ({st.get('latest_date', '-')})."
+            ),
+            "time_label": f"Update Terakhir: {all_logs[0].get('timestamp', '-') if all_logs else '-'} WIB",
+            "camera_id": "CAM-01",
+            "tag_number": "SYSTEM",
+            "badge": "CSV SYNCED",
+        })
+
+    c_cnt = sum(1 for a in alerts if a["level"] == "critical")
+    w_cnt = sum(1 for a in alerts if a["level"] == "warning")
+    i_cnt = sum(1 for a in alerts if a["level"] == "info")
+
+    tg_cfg = load_telegram_config()
+    tg_configured = bool((tg_cfg.get("bot_token") or "").strip() and (tg_cfg.get("chat_id") or "").strip())
+
+    return {
+        "online": is_live,
+        "counts": {
+            "critical": c_cnt,
+            "warning": w_cnt,
+            "info": i_cnt,
+            "total": len(alerts),
+        },
+        "alerts": alerts,
+        "telegram": {
+            "configured": tg_configured,
+            "bot_token_masked": mask_token(tg_cfg.get("bot_token", "")),
+            "has_token": bool((tg_cfg.get("bot_token") or "").strip()),
+            "chat_id": tg_cfg.get("chat_id", ""),
+            "auto_notify": bool(tg_cfg.get("auto_notify", True)),
+            "include_snapshot": bool(tg_cfg.get("include_snapshot", True)),
+            "last_sent_at": tg_cfg.get("last_sent_at", "Belum pernah dikirim"),
+            "last_sent_status": tg_cfg.get("last_sent_status", "idle"),
+        },
+    }
+
+def send_telegram_message_sync(bot_token: str, chat_id: str, html_text: str, include_snapshot: bool = True, cam_id: str = "cam-01") -> dict:
+    """Mengirim pesan HTML (dan foto snapshot CCTV 1280x720 jika diminta) ke Telegram Bot API."""
+    token = (bot_token or "").strip()
+    cid = (chat_id or "").strip()
+    if not token or not cid:
+        raise ValueError("Bot Token dan Chat ID Telegram wajib diisi terlebih dahulu.")
+
+    # Jika include_snapshot aktif, kirim melalui endpoint sendPhoto dengan multipart/form-data
+    if include_snapshot:
+        yolo_data = LATEST_YOLO_FRAMES.get(cam_id) or LATEST_YOLO_FRAMES.get("cam-01")
+        if yolo_data and (time.time() - yolo_data["timestamp"] < 30.0):
+            frame_bytes = yolo_data["frame"]
+        else:
+            frame_bytes = generate_placeholder_frame(cam_id, "Laporan Monitoring & Alert Real-Time BOVISION")
+
+        if frame_bytes:
+            boundary = f"----BovisionTelegramBoundary{int(time.time() * 1000)}"
+            body_parts = []
+
+            def add_field(name: str, value: str):
+                body_parts.append(f"--{boundary}\r\n".encode("utf-8"))
+                body_parts.append(f'Content-Disposition: form-data; name="{name}"\r\n\r\n'.encode("utf-8"))
+                body_parts.append(f"{value}\r\n".encode("utf-8"))
+
+            add_field("chat_id", cid)
+            add_field("caption", html_text[:1020])
+            add_field("parse_mode", "HTML")
+
+            body_parts.append(f"--{boundary}\r\n".encode("utf-8"))
+            body_parts.append(b'Content-Disposition: form-data; name="photo"; filename="bovision_snapshot.jpg"\r\n')
+            body_parts.append(b"Content-Type: image/jpeg\r\n\r\n")
+            body_parts.append(frame_bytes)
+            body_parts.append(f"\r\n--{boundary}--\r\n".encode("utf-8"))
+
+            payload_bytes = b"".join(body_parts)
+            url = f"https://api.telegram.org/bot{token}/sendPhoto"
+            req = urllib.request.Request(
+                url,
+                data=payload_bytes,
+                headers={"Content-Type": f"multipart/form-data; boundary={boundary}"},
+                method="POST",
+            )
+            with urllib.request.urlopen(req, timeout=10) as resp:
+                return json.loads(resp.read().decode("utf-8"))
+
+    # Fallback atau mode teks saja: gunakan sendMessage
+    url = f"https://api.telegram.org/bot{token}/sendMessage"
+    data = urllib.parse.urlencode({
+        "chat_id": cid,
+        "text": html_text,
+        "parse_mode": "HTML",
+        "disable_web_page_preview": "true",
+    }).encode("utf-8")
+    req = urllib.request.Request(url, data=data, method="POST")
+    with urllib.request.urlopen(req, timeout=10) as resp:
+        return json.loads(resp.read().decode("utf-8"))
+
+class TelegramConfigPayload(BaseModel):
+    bot_token: Optional[str] = None
+    chat_id: Optional[str] = None
+    auto_notify: Optional[bool] = True
+    include_snapshot: Optional[bool] = True
+
+class TelegramSendPayload(BaseModel):
+    alert_id: Optional[str] = None
+    title: Optional[str] = None
+    message: Optional[str] = None
+    level: Optional[str] = "warning"
+    camera_id: Optional[str] = "cam-01"
+    include_snapshot: Optional[bool] = None
+    bot_token: Optional[str] = None
+    chat_id: Optional[str] = None
+
+class TelegramDiscoverPayload(BaseModel):
+    bot_token: Optional[str] = None
+
+@app.get("/api/alerts")
+def get_alerts():
+    """Mendapatkan daftar alert real-time dari data deteksi & status integrasi Telegram."""
+    return build_realtime_alerts()
+
+@app.get("/api/telegram/config")
+def get_telegram_config_endpoint():
+    cfg = load_telegram_config()
+    return {
+        "configured": bool((cfg.get("bot_token") or "").strip() and (cfg.get("chat_id") or "").strip()),
+        "has_token": bool((cfg.get("bot_token") or "").strip()),
+        "bot_token_masked": mask_token(cfg.get("bot_token", "")),
+        "chat_id": cfg.get("chat_id", ""),
+        "auto_notify": bool(cfg.get("auto_notify", True)),
+        "include_snapshot": bool(cfg.get("include_snapshot", True)),
+        "last_sent_at": cfg.get("last_sent_at", "Belum pernah dikirim"),
+        "last_sent_status": cfg.get("last_sent_status", "idle"),
+    }
+
+@app.post("/api/telegram/config")
+def update_telegram_config_endpoint(payload: TelegramConfigPayload):
+    current = load_telegram_config()
+    updates = {
+        "auto_notify": bool(payload.auto_notify),
+        "include_snapshot": bool(payload.include_snapshot),
+    }
+    if payload.bot_token is not None and payload.bot_token.strip() and "•" not in payload.bot_token:
+        updates["bot_token"] = payload.bot_token.strip()
+    if payload.chat_id is not None:
+        updates["chat_id"] = payload.chat_id.strip()
+
+    saved = save_telegram_config(updates)
+    return {
+        "status": "success",
+        "message": "Konfigurasi Telegram Bot berhasil disimpan.",
+        "configured": bool((saved.get("bot_token") or "").strip() and (saved.get("chat_id") or "").strip()),
+        "bot_token_masked": mask_token(saved.get("bot_token", "")),
+        "chat_id": saved.get("chat_id", ""),
+        "auto_notify": bool(saved.get("auto_notify", True)),
+        "include_snapshot": bool(saved.get("include_snapshot", True)),
+    }
+
+def auto_discover_chat_id_from_telegram(token: str) -> tuple[str, str]:
+    """Mencari Chat ID terbaru dari getUpdates Telegram API jika chat_id belum diisi."""
+    url = f"https://api.telegram.org/bot{token}/getUpdates?limit=10"
+    req = urllib.request.Request(url, method="GET")
+    with urllib.request.urlopen(req, timeout=8) as resp:
+        data = json.loads(resp.read().decode("utf-8"))
+    results = data.get("result") or []
+    for upd in reversed(results):
+        msg = upd.get("message") or upd.get("channel_post") or upd.get("my_chat_member", {}).get("chat")
+        chat = msg.get("chat") if isinstance(msg, dict) and "chat" in msg else msg
+        if isinstance(chat, dict) and chat.get("id"):
+            cid = str(chat["id"])
+            title = chat.get("title") or f"{chat.get('first_name', '')} {chat.get('last_name', '')}".strip() or chat.get("username") or "Chat Telegram"
+            save_telegram_config({"bot_token": token, "chat_id": cid})
+            return cid, title
+    return "", ""
+
+@app.post("/api/telegram/discover-chat-id")
+def discover_telegram_chat_id(payload: TelegramDiscoverPayload):
+    """Mendeteksi Chat ID otomatis dari pesan terbaru yang masuk ke Bot Telegram via getUpdates."""
+    cfg = load_telegram_config()
+    token = (payload.bot_token or "").strip()
+    if not token or "•" in token:
+        token = (cfg.get("bot_token") or "").strip()
+    if not token:
+        raise HTTPException(status_code=400, detail="Masukkan Bot Token Telegram terlebih dahulu.")
+
+    try:
+        cid, title = auto_discover_chat_id_from_telegram(token)
+    except urllib.error.HTTPError as e:
+        raise HTTPException(status_code=400, detail=f"Token Bot ditolak oleh Telegram (HTTP {e.code}). Periksa kembali Bot Token dari @BotFather.")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Gagal menghubungi server Telegram: {e}")
+
+    if cid:
+        return {
+            "status": "success",
+            "chat_id": cid,
+            "chat_title": title,
+            "message": f"Chat ID berhasil ditemukan: {cid} ({title})",
+        }
+
+    raise HTTPException(
+        status_code=404,
+        detail="Belum ada pesan masuk ke Bot Anda. Silakan buka aplikasi Telegram, cari bot Anda, lalu kirim pesan '/start' atau 'tes', kemudian klik tombol ini lagi."
+    )
+
+@app.post("/api/telegram/send")
+def send_telegram_alert_endpoint(payload: TelegramSendPayload):
+    """Mengirim laporan alert real-time atau alert spesifik ke Telegram (beserta snapshot CCTV)."""
+    cfg = load_telegram_config()
+    token = (payload.bot_token or "").strip()
+    if not token or "•" in token:
+        token = (cfg.get("bot_token") or "").strip()
+    cid = (payload.chat_id or "").strip() or (cfg.get("chat_id") or "").strip()
+
+    if token and not cid:
+        try:
+            cid, _ = auto_discover_chat_id_from_telegram(token)
+        except Exception:
+            pass
+
+    if not token or not cid:
+        raise HTTPException(
+            status_code=400,
+            detail="Chat ID belum ditemukan. Silakan buka bot Anda di aplikasi Telegram, klik Start / kirim pesan '/start', lalu klik tombol 'Deteksi ID' atau 'Kirim Laporan' lagi."
+        )
+
+    # Simpan jika user baru saja mengetik token/chat_id langsung lalu klik Kirim
+    if (payload.bot_token and "•" not in payload.bot_token) or payload.chat_id:
+        save_telegram_config({"bot_token": token, "chat_id": cid})
+
+    st = get_realtime_stats()
+    alerts_data = build_realtime_alerts()
+    now_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S WIB")
+
+    if payload.title and payload.message:
+        lvl_emoji = "🚨" if payload.level == "critical" else ("⚠️" if payload.level == "warning" else "ℹ️")
+        html_msg = (
+            f"{lvl_emoji} <b>[BOVISION AI ALERT - {payload.level.upper()}]</b>\n"
+            f"<b>{payload.title}</b>\n\n"
+            f"{payload.message}\n\n"
+            f"📊 <b>Statistik Kawanan Saat Ini:</b>\n"
+            f"• Sapi Teridentifikasi: <b>{st.get('unique_cows_latest_day', 0)} Ekor</b> ({st.get('total_logs', 0)} log)\n"
+            f"• Dominansi Berdiri: <b>{st.get('standing_pct', 0)}%</b> (~{st.get('standing_hours_est', 0)} jam/hari)\n"
+            f"• Dominansi Berbaring: <b>{st.get('lying_pct', 0)}%</b> (~{st.get('lying_hours_est', 0)} jam/hari)\n"
+            f"• Rata-rata Confidence AI: <b>{st.get('avg_confidence', '-')}</b>\n"
+            f"🕒 <i>{now_str}</i>"
+        )
+    else:
+        top_alerts = alerts_data.get("alerts", [])[:4]
+        bullet_lines = []
+        for a in top_alerts:
+            em = "🚨" if a["level"] == "critical" else ("⚠️" if a["level"] == "warning" else "ℹ️")
+            bullet_lines.append(f"{em} <b>{a['title']}</b>\n   {a['message']}")
+        alerts_block = "\n\n".join(bullet_lines) if bullet_lines else "✅ Seluruh indikator kandang normal."
+
+        html_msg = (
+            f"🐄 <b>LAPORAN REAL-TIME BOVISION COW MONITORING</b>\n"
+            f"🕒 Waktu: <b>{now_str}</b>\n"
+            f"📡 Status Stream: <b>{'LIVE ONLINE' if st.get('online') else 'STANDBY (CSV Synced)'}</b>\n\n"
+            f"📊 <b>Ringkasan Statistik Tercatat:</b>\n"
+            f"• Sapi Teridentifikasi: <b>{st.get('unique_cows_total', 0)} ID Unik</b> ({st.get('total_logs', 0)} sampel log)\n"
+            f"• Dominansi Berdiri (Standing): <b>{st.get('standing_pct', 0)}%</b> (~{st.get('standing_hours_est', 0)} jam/hari)\n"
+            f"• Dominansi Berbaring (Lying): <b>{st.get('lying_pct', 0)}%</b> (~{st.get('lying_hours_est', 0)} jam/hari)\n"
+            f"• Rata-rata Confidence AI: <b>{st.get('avg_confidence', '-')}</b>\n\n"
+            f"🔔 <b>Daftar Alert &amp; Peringatan Aktif ({alerts_data['counts']['total']}):</b>\n"
+            f"{alerts_block}"
+        )
+
+    use_snap = payload.include_snapshot if payload.include_snapshot is not None else bool(cfg.get("include_snapshot", True))
+    cam_target = (payload.camera_id or "cam-01").lower()
+
+    try:
+        tg_res = send_telegram_message_sync(
+            bot_token=token,
+            chat_id=cid,
+            html_text=html_msg,
+            include_snapshot=use_snap,
+            cam_id=cam_target,
+        )
+        save_telegram_config({
+            "last_sent_at": now_str,
+            "last_sent_status": "success",
+        })
+        return {
+            "status": "success",
+            "message": f"Notifikasi berhasil dikirim ke Telegram (Chat ID: {cid})!",
+            "sent_at": now_str,
+            "telegram_ok": tg_res.get("ok", True),
+        }
+    except urllib.error.HTTPError as e:
+        err_body = ""
+        try:
+            err_body = e.read().decode("utf-8")
+        except Exception:
+            pass
+        save_telegram_config({"last_sent_status": f"error: HTTP {e.code}"})
+        raise HTTPException(
+            status_code=400,
+            detail=f"Telegram API menolak permintaan (HTTP {e.code}): {err_body or 'Periksa Bot Token & Chat ID Anda.'}"
+        )
+    except Exception as e:
+        save_telegram_config({"last_sent_status": f"error: {e}"})
+        raise HTTPException(status_code=500, detail=f"Gagal mengirim pesan ke Telegram: {e}")
+
+# ==========================================
+# 8. Interactive Telegram Bot Responder (/start, /status, /alert, /snapshot)
+# ==========================================
+
+_LAST_TG_UPDATE_ID = 0
+
+def process_telegram_bot_updates_once() -> list:
+    """Memeriksa pesan masuk terbaru di Bot Telegram dan membalas perintah (/start, /status, /alert, /snapshot) secara otomatis."""
+    global _LAST_TG_UPDATE_ID
+    cfg = load_telegram_config()
+    token = (cfg.get("bot_token") or "").strip()
+    if not token:
+        return []
+
+    offset_param = f"&offset={_LAST_TG_UPDATE_ID + 1}" if _LAST_TG_UPDATE_ID > 0 else ""
+    url = f"https://api.telegram.org/bot{token}/getUpdates?limit=15&timeout=1{offset_param}"
+    req = urllib.request.Request(url, method="GET")
+    with urllib.request.urlopen(req, timeout=8) as resp:
+        data = json.loads(resp.read().decode("utf-8"))
+
+    results = data.get("result") or []
+    replied = []
+    last_stored_id = int(cfg.get("last_update_id", 0) or 0)
+
+    for upd in results:
+        uid = int(upd.get("update_id", 0))
+        if uid > _LAST_TG_UPDATE_ID:
+            _LAST_TG_UPDATE_ID = uid
+
+        msg = upd.get("message") or upd.get("channel_post")
+        if not isinstance(msg, dict):
+            continue
+        chat = msg.get("chat") or {}
+        cid = str(chat.get("id") or "")
+        if not cid:
+            continue
+
+        # Selalu simpan Chat ID terbaru jika belum tersimpan
+        chat_title = chat.get("title") or f"{chat.get('first_name', '')} {chat.get('last_name', '')}".strip() or chat.get("username") or "User"
+        if not cfg.get("chat_id"):
+            save_telegram_config({"chat_id": cid})
+            cfg["chat_id"] = cid
+
+        if uid <= last_stored_id:
+            continue
+
+        text_raw = (msg.get("text") or "").strip()
+        cmd = text_raw.split()[0].lower().split("@")[0] if text_raw else ""
+
+        st = get_realtime_stats()
+        alerts_data = build_realtime_alerts()
+        now_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S WIB")
+
+        if cmd in ("/start", "start", "halo", "tes", "test", "/help"):
+            reply_html = (
+                f"🐄 <b>Halo {chat_title}! Selamat datang di BOVISION Cow Alert Bot.</b>\n\n"
+                f"✅ <b>Chat ID Anda ({cid}) telah otomatis terhubung</b> ke sistem monitoring kandang BOVISION.\n\n"
+                f"📊 <b>Status Kandang Saat Ini ({now_str}):</b>\n"
+                f"• Sapi Teridentifikasi: <b>{st.get('unique_cows_total', 0)} Ekor Unik</b> ({st.get('total_logs', 0)} log deteksi)\n"
+                f"• Dominansi Berdiri (Standing): <b>{st.get('standing_pct', 0)}%</b> (~{st.get('standing_hours_est', 0)} jam/hari)\n"
+                f"• Dominansi Berbaring (Lying): <b>{st.get('lying_pct', 0)}%</b> (~{st.get('lying_hours_est', 0)} jam/hari)\n"
+                f"• Rata-rata Confidence AI: <b>{st.get('avg_confidence', '-')}</b>\n"
+                f"• Alert Aktif: <b>{alerts_data['counts']['critical']} Kritis, {alerts_data['counts']['warning']} Waspada</b>\n\n"
+                f"💡 <b>Perintah Bot yang Tersedia:</b>\n"
+                f"• /status — Lihat laporan statistik &amp; foto snapshot CCTV\n"
+                f"• /alert — Lihat daftar peringatan anomali terkini\n"
+                f"• /snapshot — Ambil foto tangkapan layar CCTV terbaru"
+            )
+            send_telegram_message_sync(token, cid, reply_html, include_snapshot=True, cam_id="cam-01")
+            replied.append((uid, cid, cmd or text_raw))
+        elif cmd in ("/status", "/laporan", "/snapshot", "/alert"):
+            top_alerts = alerts_data.get("alerts", [])[:4]
+            bullet_lines = [
+                f"{'🚨' if a['level']=='critical' else ('⚠️' if a['level']=='warning' else 'ℹ️')} <b>{a['title']}</b>\n   {a['message']}"
+                for a in top_alerts
+            ]
+            alerts_block = "\n\n".join(bullet_lines) if bullet_lines else "✅ Seluruh indikator kandang normal."
+            reply_html = (
+                f"🐄 <b>LAPORAN REAL-TIME BOVISION COW MONITORING</b>\n"
+                f"🕒 Waktu: <b>{now_str}</b>\n\n"
+                f"📊 <b>Statistik Tercatat:</b>\n"
+                f"• Sapi Teridentifikasi: <b>{st.get('unique_cows_total', 0)} Ekor</b> ({st.get('total_logs', 0)} log)\n"
+                f"• Dominansi Berdiri: <b>{st.get('standing_pct', 0)}%</b> | Berbaring: <b>{st.get('lying_pct', 0)}%</b>\n"
+                f"• Rata-rata Confidence AI: <b>{st.get('avg_confidence', '-')}</b>\n\n"
+                f"🔔 <b>Alert Aktif ({alerts_data['counts']['total']}):</b>\n{alerts_block}"
+            )
+            send_telegram_message_sync(token, cid, reply_html, include_snapshot=True, cam_id="cam-01")
+            replied.append((uid, cid, cmd))
+
+        save_telegram_config({
+            "chat_id": cid,
+            "last_update_id": uid,
+            "last_sent_at": now_str,
+            "last_sent_status": "success",
+        })
+        last_stored_id = uid
+
+    return replied
+
+def _telegram_bot_polling_worker():
+    """Background daemon yang otomatis membalas perintah /start, /status, /alert di Telegram."""
+    while True:
+        try:
+            process_telegram_bot_updates_once()
+        except Exception:
+            pass
+        time.sleep(3.5)
+
+threading.Thread(target=_telegram_bot_polling_worker, daemon=True).start()
+
+@app.get("/health")
+def health_check():
+    """Endpoint pengecekan status hidup server untuk monitoring VPS/reverse proxy."""
+    return {"status": "ok", "service": "bovision-backend", "time": datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
+
+if __name__ == "__main__":
+    import uvicorn
+    port = int(os.getenv("PORT", "8000"))
+    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=False)

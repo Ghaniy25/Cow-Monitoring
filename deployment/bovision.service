@@ -1,0 +1,19 @@
+[Unit]
+Description=BOVISION Cow Monitoring Web & Backend Service
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+# Sesuaikan User dan WorkingDirectory dengan akun & path di VPS Kampus Anda
+User=ubuntu
+WorkingDirectory=/home/ubuntu/Cow-Monitoring-CV
+Environment="PORT=8000"
+ExecStart=/home/ubuntu/Cow-Monitoring-CV/.venv/bin/python main.py
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

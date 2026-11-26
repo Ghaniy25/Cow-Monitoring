@@ -1,0 +1,10 @@
+{
+  "bot_token": "9002161660:AAFARa3HyZyQgH44cOntodc1orDdgxE2KSc",
+  "chat_id": "-5571155418",
+  "auto_notify": true,
+  "include_snapshot": true,
+  "cooldown_seconds": 120,
+  "last_sent_at": "2026-11-26 17:00:19 WIB (Auto)",
+  "last_sent_status": "success",
+  "last_update_id": 902161344
+}
