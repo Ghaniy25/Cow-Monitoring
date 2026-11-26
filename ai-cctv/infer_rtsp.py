@@ -16,7 +16,7 @@ import torch
 from ultralytics import YOLO
 
 SOURCE = "rtsp://localhost:8554/kandang-raw"
-WEIGHTS = r"D:\project\pmld 2026\Cow-Monitoring-CV\ai-cctv\exp-3.pt"
+WEIGHTS = r"D:\project\pmld 2026\Cow-Monitoring-CV\ai-cctv\exp-4.pt"
 CONF = 0.4
 IMGSZ = 480              # samakan dengan imgsz saat training
 SHOW = True              # False jika dijalankan di server tanpa layar
